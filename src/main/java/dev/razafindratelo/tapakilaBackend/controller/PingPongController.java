@@ -3,12 +3,12 @@ package dev.razafindratelo.tapakilaBackend.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/api/ping-pong")
+@RestController
 public class PingPongController {
 
-    @GetMapping
+    @GetMapping("/api/ping-pong")
     public String pingPong() {
-        return "<h1> Pong-Pong controller </h1>";
+        return "Ping-Pong controller";
     }
 
 }
