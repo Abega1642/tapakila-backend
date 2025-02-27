@@ -1,7 +1,10 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
-import dev.razafindratelo.tapakilaBackend.entity.enums.TicketType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -14,6 +17,6 @@ public class TicketPriceInfo {
     private double price;
     private LocalDateTime createdAt;
     private long maxNumber;
-    private TicketType ticketType;
+    private Ticket ticketType;
     private Event associatedEvent;
 }
