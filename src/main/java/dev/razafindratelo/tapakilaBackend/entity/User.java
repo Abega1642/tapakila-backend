@@ -1,7 +1,10 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
+import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +17,6 @@ public class User {
     private String firstName;
     private String password;
     private UserRole userRole;
-    private boolean isDisabled;
+    private boolean status;
+    private List<EventCategory> favoriteEventCategories;
 }

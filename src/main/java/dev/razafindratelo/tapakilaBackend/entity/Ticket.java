@@ -1,26 +1,17 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
 import dev.razafindratelo.tapakilaBackend.entity.enums.TicketType;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
-import java.time.LocalDateTime;
 
-@Getter
+@AllArgsConstructor
+@Data
 @EqualsAndHashCode
 @ToString
-@Builder
 public class Ticket {
     private String id;
-    private long ticketNumber;
-    private boolean isEnabled;
-    private LocalDateTime purchasedAt;
-    private String qrCodePath;
-    private String paymentRef;
-    private String ticketOwnerName;
+    private String description;
     private TicketType ticketType;
-    private User purchasedBy;
-    private Event associatedEvent;
-    private PaymentMode paymentMode;
 }
