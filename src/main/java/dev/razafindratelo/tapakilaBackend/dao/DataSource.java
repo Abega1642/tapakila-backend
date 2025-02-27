@@ -2,11 +2,14 @@ package dev.razafindratelo.tapakilaBackend.dao;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Slf4j
+@Repository
 public class DataSource {
     private final String url;
     private final String username;
