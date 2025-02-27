@@ -12,7 +12,7 @@ public enum AvailableColumn {
     EVENT_LOCATION("e.location"),
     EVENT_CATEGORY("e.category"),
     EVENT_STATUS("e.status"),
-
+    EVENT_ORGANIZER("(SELECT u.last_name, u.first_name AS organizer)"),
     // User columns:
     USER_EMAIL("u.email"),
     USER_LAST_NAME("u.last_name"),
@@ -28,6 +28,7 @@ public enum AvailableColumn {
     TICKET_PAYMENT_REFERENCE("t.payment_ref"),
     TICKET_OWNER_NAME("t.ticket_owner_name"),
     TICKET_EVENT("t.event"),
+    TICKET_DESCRIPTION("tk.description"),
 
     // Payement_mode :
     PAYMENT_DESCRIPTION("p.payment_description"),

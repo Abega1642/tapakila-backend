@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum OperatorType {
-    BETWEEN("BETWEEN"),
     EQUAL("="),
     GREATER_THAN(">"),
     GREATER_THAN_OR_EQUAL(">="),
@@ -12,9 +11,8 @@ public enum OperatorType {
     LESS_THAN_OR_EQUAL("<="),
     NOT_EQUAL("<>"),
 
-    ILIKE_CONTAINS("ILIKE"),
-    ILIKE_BEGINS_WITH("ILIKE"),
-    ILIKE_ENDS_WITH("ILIKE");
+    CONTAINS("ILIKE"),
+    BETWEEN("BETWEEN");
 
     private final String representation;
 
