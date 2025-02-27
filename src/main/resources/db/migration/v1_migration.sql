@@ -200,7 +200,7 @@ CREATE TABLE "user" (
     first_name      VARCHAR(255) NOT NULL,
     password        TEXT NOT NULL,
     user_role       user_role NOT NULL,
-    is_disabled     BOOLEAN DEFAULT false,
+    status     BOOLEAN DEFAULT false,
 
     UNIQUE (last_name, first_name, user_role)
 );
@@ -234,12 +234,13 @@ CREATE TABLE creates (
 
 CREATE TABLE payment_mode (
     id              VARCHAR(41) PRIMARY KEY,
-    name            VARCHAR(50) NOT NULL,
+    description     TEXT NOT NULL,
+    payment_api_url TEXT NOT NULL,
     provider        payment_mode_provider NOT NULL,
     type            payment_mode_type NOT NULL,
     created_at      TIMESTAMP DEFAULT current_timestamp,
     updated_at      TIMESTAMP DEFAULT current_timestamp,
-    is_disabled     BOOLEAN DEFAULT false,
+    status     BOOLEAN DEFAULT false,
 
     UNIQUE (provider, type)
 );
@@ -247,7 +248,7 @@ CREATE TABLE payment_mode (
 CREATE TABLE ticket (
     id                  VARCHAR(41) PRIMARY KEY,
     ticket_number       SERIAL8 NOT NULL,
-    is_enabled          BOOLEAN NOT NULL DEFAULT true,
+    status	            BOOLEAN NOT NULL DEFAULT true,
     purchased_at        TIMESTAMP NOT NULL DEFAULT current_timestamp,
     qr_code_path        TEXT NOT NULL,
     payement_ref        TEXT NOT NULL,
