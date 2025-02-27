@@ -14,10 +14,11 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class PaymentMode {
     private String id;
-    private String name;
+    private String description;
     private PaymentType paymentType;
+    private String paymentAPIUrl;
     private PaymnetProvider paymnetProvider;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean isDisabled;
+    private boolean status;
 }
