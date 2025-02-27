@@ -1,6 +1,5 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
