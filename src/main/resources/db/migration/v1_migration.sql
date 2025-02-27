@@ -226,10 +226,13 @@ CREATE TABLE ticket_price (
 );
 
 CREATE TABLE creates (
-    id_user           VARCHAR(41) NOT NULL,
+    user_email        VARCHAR(255) NOT NULL,
     id_event          VARCHAR(41) NOT NULL,
     created_at        TIMESTAMP DEFAULT current_timestamp,
-    updated_at        TIMESTAMP DEFAULT current_timestamp
+    updated_at        TIMESTAMP DEFAULT current_timestamp,
+
+    FOREIGN KEY (user_email) REFERENCES "user"(email),
+    FOREIGN KEY (id_event) REFERENCES "event"(id)
 );
 
 CREATE TABLE payment_mode (
