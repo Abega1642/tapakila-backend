@@ -5,20 +5,40 @@ import lombok.Getter;
 @Getter
 public enum AvailableColumn {
     // Event columns:
+    EVENT_ID("e.id"),
     EVENT_TITLE("e.title"),
     EVENT_DESCRIPTION("e.description"),
     EVENT_DATE_TIME("e.date_time"),
     EVENT_TIME_ZONE("e.time_zone"),
     EVENT_LOCATION("e.location"),
+    EVENT_IMAGE_PATH("e.image_path"),
+    EVENT_LOCATION_URL("e.location_url"),
+    EVENT_NUMBER_OF_TICKET("e.number_of_ticket"),
+    EVENT_MAX_TICKET_PER_USER("e.max_ticket_per_user"),
     EVENT_CATEGORY("e.category"),
     EVENT_STATUS("e.status"),
-    EVENT_ORGANIZER("(SELECT u.last_name, u.first_name AS organizer)"),
+    EVENT_ORGANIZER("e.organizer"),
+
     // User columns:
     USER_EMAIL("u.email"),
     USER_LAST_NAME("u.last_name"),
     USER_FIRST_NAME("u.first_name"),
-    USER_ROLE("u.role"),
-    USER_EVENTS("u.events"),
+    USER_ROLE("u.user_role"),
+    USER_STATUS("u.status"),
+
+    //  Event type columns :
+    EVENT_TYPE_ID("ety.id"),
+    EVENT_TYPE__("ety.event_type"),
+    EVENT_TYPE_DESCRIPTION("ety.description"),
+
+    //  Event category columns :
+    EVENT_CATEGORY_ID("ec.id"),
+    EVENT_CATEGORY_DESCRIPTION("ec.description"),
+    EVENT_CATEGORY__("ec.event_category"),
+
+    //  Creates Columns :
+    CREATES_CREATED_AT("c.created_at"),
+    CREATES_UPDATED_AT("c.updated_at"),
 
     // Ticket :
     TICKET_PRICE("tp.price"),

@@ -3,6 +3,9 @@ package dev.razafindratelo.tapakilaBackend.entity;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class Event {
     private String id;
+    private String organizer;
     private String title;
     private String description;
     private LocalDateTime dateTime;
@@ -20,7 +24,7 @@ public class Event {
     private String location;
     private String locationUrl;
     private String imagePath;
-    private EventsType eventsType                                                       ;
+    private Set<EventsType> eventsType;
     private EventsCategory category;
     private EventStatus status;
     private long numberOfTickets;
@@ -31,6 +35,7 @@ public class Event {
 
     private Event(
             String id,
+            String organizer,
             String title,
             String description,
             LocalDateTime dateTime,
@@ -38,7 +43,7 @@ public class Event {
             String location,
             String locationUrl,
             String imagePath,
-            EventsType eventsType,
+            Set<EventsType> eventsType,
             EventsCategory category,
             EventStatus status,
             long numberOfTickets,
@@ -48,6 +53,7 @@ public class Event {
             LocalDateTime updatedAt
     ) {
         this.id = id;
+        this.organizer = organizer;
         this.title = title;
         this.description = description;
         this.dateTime = dateTime;
@@ -67,6 +73,7 @@ public class Event {
 
     public static class Builder {
         private String id = "No id";
+        private String organizer = "No organizer";
         private String title = "No title";
         private String description = "No description to this event";
         private LocalDateTime dateTime = LocalDateTime.now();
@@ -74,7 +81,7 @@ public class Event {
         private String location = "No where";
         private String locationUrl = "https://_no_url_found.com";
         private String imagePath = "No image founded";
-        private EventsType eventsType  = null;
+        private Set<EventsType> eventsType  = null;
         private EventsCategory category = null;
         private EventStatus status = EventStatus.DRAFT;
         private long numberOfTickets = 0;
@@ -87,6 +94,11 @@ public class Event {
 
         public Builder id(String id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder organizer(String organizer) {
+            this.organizer = organizer;
             return this;
         }
 
@@ -125,7 +137,7 @@ public class Event {
             return this;
         }
 
-        public Builder eventsType(EventsType eventsType) {
+        public Builder eventsType(Set<EventsType> eventsType) {
             this.eventsType = eventsType;
             return this;
         }
@@ -167,6 +179,7 @@ public class Event {
         public Event build() {
             return new Event(
                     this.id,
+                    this.organizer,
                     this.title,
                     this.description,
                     this.dateTime,
