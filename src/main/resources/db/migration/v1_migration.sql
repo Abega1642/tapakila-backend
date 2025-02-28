@@ -172,6 +172,17 @@ CREATE TYPE time_zone AS ENUM (
     'UTC_14_KIRIBATI_TIME'
 );
 
+CREATE TYPE event_type AS ENUM (
+    'BUSINESS_PROFESSIONAL',
+    'ENTERTAINMENT_ARTS',
+    'SPORTS_OUTDOOR',
+    'TECH_INNOVATION',
+    'COMMUNITY_SOCIAL',
+    'EDUCATION_TRAINING',
+    'FOOD_DRINKS',
+    'HEATH_WELLNESS'
+);
+
 
 CREATE TABLE "event" (
     id                      VARCHAR(41) PRIMARY KEY,
@@ -194,13 +205,39 @@ CREATE TABLE "event" (
     )
 );
 
+CREATE TABLE events_type (
+    id             VARCHAR(41) PRIMARY KEY,
+    event_type     event_type NOT NULL,
+    description    TEXT NOT NULL,
+
+    UNIQUE (event_type)
+);
+
+CREATE TABLE has_type (
+    id_event        VARCHAR(41) NOT NULL,
+    id_events_type  VARCHAR(41) NOT NULL,
+
+    FOREIGN KEY (id_event) REFERENCES "event"(id),
+    FOREIGN KEY (id_events_type) REFERENCES "events_type"(id)
+);
+
+CREATE TABLE events_category (
+    id                  VARCHAR(41) PRIMARY KEY,
+    event_category      event_category NOT NULL,
+    description         TEXT NOT NULL,
+    id_event_type       VARCHAR(41) NOT NULL,
+
+    UNIQUE (event_category),
+    FOREIGN KEY (id_event_type) REFERENCES "events_type"(id)
+);
+
 CREATE TABLE "user" (
     email           VARCHAR(255) PRIMARY KEY ,
     last_name       VARCHAR(255) NOT NULL,
     first_name      VARCHAR(255) NOT NULL,
     password        TEXT NOT NULL,
     user_role       user_role NOT NULL,
-    is_disabled     BOOLEAN DEFAULT false,
+    status          BOOLEAN DEFAULT false,
 
     UNIQUE (last_name, first_name, user_role)
 );
@@ -226,20 +263,24 @@ CREATE TABLE ticket_price (
 );
 
 CREATE TABLE creates (
-    id_user           VARCHAR(41) NOT NULL,
+    user_email        VARCHAR(255) NOT NULL,
     id_event          VARCHAR(41) NOT NULL,
     created_at        TIMESTAMP DEFAULT current_timestamp,
-    updated_at        TIMESTAMP DEFAULT current_timestamp
+    updated_at        TIMESTAMP DEFAULT current_timestamp,
+
+    FOREIGN KEY (user_email) REFERENCES "user"(email),
+    FOREIGN KEY (id_event) REFERENCES "event"(id)
 );
 
 CREATE TABLE payment_mode (
     id              VARCHAR(41) PRIMARY KEY,
-    name            VARCHAR(50) NOT NULL,
+    description     TEXT NOT NULL,
+    payment_api_url TEXT NOT NULL,
     provider        payment_mode_provider NOT NULL,
     type            payment_mode_type NOT NULL,
     created_at      TIMESTAMP DEFAULT current_timestamp,
     updated_at      TIMESTAMP DEFAULT current_timestamp,
-    is_disabled     BOOLEAN DEFAULT false,
+    status     BOOLEAN DEFAULT false,
 
     UNIQUE (provider, type)
 );
@@ -247,7 +288,7 @@ CREATE TABLE payment_mode (
 CREATE TABLE ticket (
     id                  VARCHAR(41) PRIMARY KEY,
     ticket_number       SERIAL8 NOT NULL,
-    is_enabled          BOOLEAN NOT NULL DEFAULT true,
+    status	            BOOLEAN NOT NULL DEFAULT true,
     purchased_at        TIMESTAMP NOT NULL DEFAULT current_timestamp,
     qr_code_path        TEXT NOT NULL,
     payement_ref        TEXT NOT NULL,

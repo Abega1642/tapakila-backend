@@ -1,17 +1,19 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
-import dev.razafindratelo.tapakilaBackend.entity.enums.TicketType;
+import dev.razafindratelo.tapakilaBackend.entity.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import java.util.List;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Ticket {
+public class EventsType {
     private String id;
+    private EventType eventType;
     private String description;
-    private TicketType ticketType;
+    private List<EventsCategory> correspondingCategories;
 }

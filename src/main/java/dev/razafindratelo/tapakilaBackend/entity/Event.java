@@ -1,10 +1,12 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
-import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
-import lombok.*;
 import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.Builder;
 
 
 @Data
@@ -19,7 +21,8 @@ public class Event {
     private TimeZone timeZone;
     private String location;
     private String imagePath;
-    private EventCategory category;
+    private EventsType eventsType                                                       ;
+    private EventsCategory category;
     private EventStatus status;
     private long numberOfTickets;
     private int maxTicketPerUser = 5;
