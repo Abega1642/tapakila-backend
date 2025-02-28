@@ -184,8 +184,9 @@ CREATE TYPE event_type AS ENUM (
 );
 
 
-CREATE TABLE "event" (
+CREATE TABLE "event"(
     id                      VARCHAR(41) PRIMARY KEY,
+    organizer               VARCHAR(255) NOT NULL,
     title                   VARCHAR(255) NOT NULL,
     description             TEXT NOT NULL,
     date_time               TIMESTAMP NOT NULL,
@@ -198,12 +199,14 @@ CREATE TABLE "event" (
     number_of_ticket        INT8 DEFAULT 0,
     max_ticket_per_user     INT DEFAULT 5,
 
+
     UNIQUE (
         title, description, date_time, time_zone,
         location, location_url, image_path, category, status,
         number_of_ticket, max_ticket_per_user
     )
 );
+
 
 CREATE TABLE events_type (
     id             VARCHAR(41) PRIMARY KEY,
