@@ -172,6 +172,17 @@ CREATE TYPE time_zone AS ENUM (
     'UTC_14_KIRIBATI_TIME'
 );
 
+CREATE TYPE event_type AS ENUM (
+    'BUSINESS_PROFESSIONAL',
+    'ENTERTAINMENT_ARTS',
+    'SPORTS_OUTDOOR',
+    'TECH_INNOVATION',
+    'COMMUNITY_SOCIAL',
+    'EDUCATION_TRAINING',
+    'FOOD_DRINKS',
+    'HEATH_WELLNESS'
+);
+
 
 CREATE TABLE "event" (
     id                      VARCHAR(41) PRIMARY KEY,
@@ -194,13 +205,39 @@ CREATE TABLE "event" (
     )
 );
 
+CREATE TABLE events_type (
+    id             VARCHAR(41) PRIMARY KEY,
+    event_type     event_type NOT NULL,
+    description    TEXT NOT NULL,
+
+    UNIQUE (event_type)
+);
+
+CREATE TABLE has_type (
+    id_event        VARCHAR(41) NOT NULL,
+    id_events_type  VARCHAR(41) NOT NULL,
+
+    FOREIGN KEY (id_event) REFERENCES "event"(id),
+    FOREIGN KEY (id_events_type) REFERENCES "events_type"(id)
+);
+
+CREATE TABLE events_category (
+    id                  VARCHAR(41) PRIMARY KEY,
+    event_category      event_category NOT NULL,
+    description         TEXT NOT NULL,
+    id_event_type       VARCHAR(41) NOT NULL,
+
+    UNIQUE (event_category),
+    FOREIGN KEY (id_event_type) REFERENCES "events_type"(id)
+);
+
 CREATE TABLE "user" (
     email           VARCHAR(255) PRIMARY KEY ,
     last_name       VARCHAR(255) NOT NULL,
     first_name      VARCHAR(255) NOT NULL,
     password        TEXT NOT NULL,
     user_role       user_role NOT NULL,
-    status     BOOLEAN DEFAULT false,
+    status          BOOLEAN DEFAULT false,
 
     UNIQUE (last_name, first_name, user_role)
 );
