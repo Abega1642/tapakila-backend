@@ -79,6 +79,7 @@ INSERT INTO creates (user_email, id_event, created_at, updated_at) VALUES
 
 INSERT INTO has_type (id_event, id_events_type) VALUES
 ((SELECT id FROM "event" WHERE title = 'Tech Conference 2025'), (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-((SELECT id FROM "event" WHERE title = 'International Music Festival'), (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS'));
+((SELECT id FROM "event" WHERE title = 'International Music Festival'), (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
+((SELECT id FROM "event" WHERE title = 'International Music Festival'), (SELECT id FROM events_type WHERE event_type = 'EDUCATION_TRAINING'));
 
 
