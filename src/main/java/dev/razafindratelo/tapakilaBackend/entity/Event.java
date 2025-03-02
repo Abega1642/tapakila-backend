@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode
-@ToString
 public class Event {
     private String id;
     private String organizer;
@@ -43,6 +43,7 @@ public class Event {
             String location,
             String locationUrl,
             String imagePath,
+            @JsonProperty("event_types")
             Set<EventsType> eventsType,
             EventsCategory category,
             EventStatus status,
@@ -197,6 +198,28 @@ public class Event {
                     this.updatedAt
             );
         }
+    }
 
+    @Override
+    public String toString() {
+        return "Event { \n" +
+                "\n \t  id='" + id + '\'' +
+                ",\n \t  organizer='" + organizer + '\'' +
+                ",\n \t  title='" + title + '\'' +
+                ",\n \t  description='" + description + '\'' +
+                ",\n \t  dateTime=" + dateTime +
+                ",\n \t  timeZone=" + timeZone +
+                ",\n \t  location='" + location + '\'' +
+                ",\n \t  locationUrl='" + locationUrl + '\'' +
+                ",\n \t  imagePath='" + imagePath + '\'' +
+                ",\n \t  eventsType= \n \t" + eventsType +
+                ",\n \t  category=" + category +
+                ",\n \t  status=" + status +
+                ",\n \t  numberOfTickets=" + numberOfTickets +
+                ",\n \t  maxTicketPerUser=" + maxTicketPerUser +
+                ",\n \t  createdBy=\n \t" + createdBy +
+                ",\n \t  createdAt=" + createdAt +
+                ",\n \t  updatedAt=" + updatedAt +
+                "\n }";
     }
 }

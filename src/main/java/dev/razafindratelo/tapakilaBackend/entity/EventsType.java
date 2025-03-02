@@ -1,19 +1,32 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
+
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
+@NoArgsConstructor
 public class EventsType {
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("event_type")
     private EventType eventType;
+    @JsonProperty("description")
     private String description;
+    @JsonProperty("corresponding_categories")
     private List<EventsCategory> correspondingCategories;
+
+    @Override
+    public String toString() {
+        return "EventsType {" +
+                "\n \t   id='" + id + '\'' +
+                ",\n \t  eventType=" + eventType +
+                ",\n \t  description='" + description + '\'' +
+                ",\n \t  correspondingCategories= \n \t " + correspondingCategories +
+                "\n }";
+    }
 }
