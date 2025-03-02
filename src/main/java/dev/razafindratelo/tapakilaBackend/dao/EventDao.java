@@ -2,15 +2,11 @@ package dev.razafindratelo.tapakilaBackend.dao;
 
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
+import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventsType;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.ValueType;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
@@ -29,11 +25,6 @@ import java.util.*;
 @Getter
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
-
-    @Override
-    public Event save(Event entity) {
-        throw new NotImplementedException("Saving event not implemented yet");
-    }
 
     private List<Column> getColumns() {
         return List.of (
@@ -56,13 +47,13 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_LAST_NAME, "user_last_name"),
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
-                new Column (AvailableColumn.USER_STATUS, "user_status"),
-                new Column (AvailableColumn.EVENT_TYPE_ID, "event_type_id"),
-                new Column (AvailableColumn.EVENT_TYPE__, "event_type"),
-                new Column (AvailableColumn.EVENT_TYPE_DESCRIPTION, "event_type_description"),
-                new Column (AvailableColumn.EVENT_CATEGORY_ID, "event_category_id"),
-                new Column (AvailableColumn.EVENT_CATEGORY_DESCRIPTION, "event_category_description")
+                new Column (AvailableColumn.USER_STATUS, "user_status")
         );
+    }
+
+    @Override
+    public Event save(Event entity) {
+        throw new NotImplementedException("Saving event not implemented yet");
     }
 
     private List<InnerJoinQuery> getInnerJoinQueries() {
@@ -75,37 +66,133 @@ public class EventDao implements DAO<Event> {
         );
     }
 
-    @Override
-    public Optional<Event> findById(String id) {
-        Connection connection = dataSource.getConnection();
+    private QueryResult makeQuery(List<Criteria> criteria, List<Criteria> extraCriteria) {
+        List<Column> columns = new ArrayList<>(getColumns());
+        String requestAsColumn =
+                """
+                COALESCE(
+                      JSON_AGG(
+                            DISTINCT JSONB_BUILD_OBJECT(
+                                 'id', ety.id,
+                                     'event_type', ety.event_type,
+                                     'description', ety.description,
+                                     'corresponding_categories',
+                                     (SELECT JSONB_AGG(
+                                          DISTINCT JSONB_BUILD_OBJECT(
+                                               'id', ec2.id,
+                                               'event_category', ec2.event_category,
+                                               'description', ec2.description
+                                          )
+                                     )
+                                     FROM events_category ec2
+                                     WHERE ec2.id_event_type = ety.id)
+                            )
+                      ) FILTER (WHERE ety.id IS NOT NULL),
+                      '[]'
+                ) AS event_types
+                """;
+        String eventCategoryIDRequest =
+                """
+                (
+                    SELECT ecy.id from event ev
+                    INNER JOIN events_category ecy ON ev.category = ecy.event_category WHERE ev.id = e.id
+                )   AS event_category_id
+                """;
+        String eventCategoryNameRequest =
+                """
+               (
+                   SELECT ecy.event_category from event ev
+                   INNER JOIN events_category ecy ON ev.category = ecy.event_category WHERE ev.id = e.id
+               )   AS event_category_id
+               """;
+        String eventCategoryDescriptionRequest =
+                """
+               (
+                   SELECT ecy.description from event ev
+                   INNER JOIN events_category ecy ON ev.category = ecy.event_category WHERE ev.id = e.id
+               )   AS event_category_description
+               """;
 
-        List<Column> columns = getColumns();
+        columns.addAll(List.of(
+                new Column (AvailableColumn.REQUEST_AS_COLUMN, requestAsColumn),
+                new Column(AvailableColumn.REQUEST_AS_COLUMN, eventCategoryIDRequest),
+                new Column(AvailableColumn.REQUEST_AS_COLUMN, eventCategoryNameRequest),
+                new Column(AvailableColumn.REQUEST_AS_COLUMN,eventCategoryDescriptionRequest)
+        ));
+        List<Criteria> finalCriteria = new ArrayList<>(criteria);
+        finalCriteria.addAll(extraCriteria);
+
+
         List<InnerJoinQuery> innerJoins = getInnerJoinQueries();
+        GroupBy groupBy = new GroupBy(List.of(
+                AvailableColumn.EVENT_ID,
+                AvailableColumn.CREATES_CREATED_AT,
+                AvailableColumn.CREATES_UPDATED_AT,
+                AvailableColumn.USER_EMAIL,
+                AvailableColumn.USER_LAST_NAME,
+                AvailableColumn.USER_FIRST_NAME,
+                AvailableColumn.USER_ROLE,
+                AvailableColumn.USER_STATUS
+        ));
 
-        Query query = new Query.Builder()
+        Query mainQuery = new Query.Builder()
                 .tableName(TableName.EVENT)
                 .column(columns)
                 .innerJoin(innerJoins)
-                .criteria(List.of (
-                        new Filter(AvailableColumn.EVENT_ID, OperatorType.EQUAL, id, ValueType.STRING)
-                ))
+                .criteria(finalCriteria)
+                .groupBy(groupBy)
                 .build();
 
-        try (PreparedStatement findStmt = connection.prepareStatement(query.getSelectQuery().toString())) {
-            findStmt.setString(1, id);
+        String sqlQuery = """
+                WITH EventCounts AS (
+                    SELECT id_event, COUNT(*) AS all_events_by_id
+                    FROM has_type
+                    GROUP BY id_event
+                    ORDER BY id_event
+                    LIMIT ? OFFSET ?
+                ),
+                EventTypes AS (
+                    SELECT
+                        e.id AS event_id,
+                        ety.id AS event_type_id,
+                        ety.event_type,
+                        ety.description AS event_type_description,
+                        ec.id AS event_category_id,
+                        ec.event_category,
+                        ec.description AS event_category_description
+                    FROM event e
+                    LEFT JOIN has_type h ON e.id = h.id_event
+                    LEFT JOIN events_type ety ON ety.id = h.id_events_type
+                    LEFT JOIN events_category ec ON ec.id_event_type = ety.id
+                )
+                """ +
+                mainQuery.getSelectQuery();
+        return new QueryResult(sqlQuery, mainQuery);
+    }
+
+    @Override
+    public Optional<Event> findById(String id) {
+        Connection connection = dataSource.getConnection();
+        List<Criteria> criteria = List.of (
+                new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id, ValueType.STRING)
+        );
+
+        QueryResult sqlQuery = makeQuery(criteria, List.of());
+        String finaLQuery = sqlQuery.sql();
+
+
+        try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
+            findStmt.setLong(1, 1);
+            findStmt.setLong(2, 0);
+            findStmt.setString(3, id);
 
             ResultSet rs = findStmt.executeQuery();
 
             Event event = new Event.Builder().build();
             Set<EventsType> eventTypes = new HashSet<>();
 
-            while (rs.next()) {
-                Event e = new EventMapper().mapFrom(rs);
-                if (!e.equals(event)) {
-                    event = e;
-                }
-                EventsType ety = new EventsTypeMapper().mapFrom(rs);
-                eventTypes.add(ety);
+            if (rs.next()) {
+                return Optional.of(new EventMapper().mapFrom(rs));
             }
 
             event.setEventsType(eventTypes);
@@ -117,64 +204,44 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public List<Event> findAll(long page, long size) {
-        throw new NotImplementedException("Finding all events not implemented yet");
+        return findAllByCriteria(List.of(), page, size);
     }
 
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
-        List<Column> columns = getColumns();
-        List<InnerJoinQuery> innerJoins = getInnerJoinQueries();
-
-        Query query = new Query.Builder()
-                .tableName(TableName.EVENT)
-                .column(columns)
-                .innerJoin(innerJoins)
-                .criteria(criteria)
-                .build();
+        List<Criteria> extraCriteria = List.of(
+                new Filter(AvailableColumn.EVENT_ID, OperatorType.IN, "(SELECT id_event FROM EventCounts)", ValueType.REQUEST)
+        );
+        QueryResult sqlQuery = makeQuery(criteria, extraCriteria);
+        String finaLQuery = sqlQuery.sql()
+                + """
+                   LIMIT (SELECT COALESCE(SUM(all_events_by_id), 0) FROM EventCounts)
+                  OFFSET 0;
+                  """;
 
         List<Event> events = new ArrayList<>();
         Connection connection = dataSource.getConnection();
-        try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(
-                query.getSelectQuery()
-                        .append(" LIMIT ? OFFSET ?")
-                        .toString()
-        )) {
-            int paramIndex = query.completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt);
-            findAllByCriteriaStmt.setLong(paramIndex + 1, size);
-            findAllByCriteriaStmt.setLong(paramIndex + 2, size * (page - 1));
+
+        try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(finaLQuery)) {
+
+            sqlQuery.query().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, 2);
+
+            findAllByCriteriaStmt.setLong(1, size);
+            findAllByCriteriaStmt.setLong(2, size * (page - 1));
+
 
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
-            Map<String, Event> evs = new HashMap<>();
+
             while (rs.next()) {
                 Event ev = new EventMapper().mapFrom(rs);
-
-                Event e = evs.get(ev.getId());
-
-                if (e == null) {
-                    evs.put(ev.getId(), ev);
-                    e = evs.get(ev.getId());
-
-                    e.setEventsType(new HashSet<>());
-                    e.getEventsType().add(new EventsTypeMapper().mapFrom(rs));
-                    events.add(ev);
-
-                } else {
-                    e.getEventsType().add(new EventsTypeMapper().mapFrom(rs));
-                }
+                events.add(ev);
             }
-
+            return events;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return events;
     }
 
-    public static void main(String[] args) {
-        var d = new EventDao(new DataSource());
-
-        d.findAllByCriteria(List.of(
-        ), 2, 2).forEach(System.out::println);
-    }
 
     @Override
     public Event update(String id, Event entity) {
