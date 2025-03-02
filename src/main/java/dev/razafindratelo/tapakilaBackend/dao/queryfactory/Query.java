@@ -1,11 +1,13 @@
 package dev.razafindratelo.tapakilaBackend.dao.queryfactory;
 
-import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
-import dev.razafindratelo.tapakilaBackend.entity.criteria.QueryFilter;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.ValueType;
 import lombok.Data;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,18 +18,22 @@ public class Query {
     private List<InnerJoinQuery> innerJoins;
     private List<QueryFilter> queryFilters;
     private List<Criteria> criteria;
+    private GroupBy groupBy;
+    private StringBuilder query;
 
-    public Query(
+    private Query(
             TableName tableName,
             List<Column> columns,
             List<InnerJoinQuery> innerJoins,
             List<QueryFilter> queryFilters,
+            GroupBy groupBy,
             List<Criteria> criteria
     ) {
         this.tableName = tableName;
         this.columns = columns;
         this.innerJoins = innerJoins;
         this.queryFilters = queryFilters;
+        this.groupBy = groupBy;
         this.criteria = criteria;
     }
 
@@ -36,10 +42,12 @@ public class Query {
         private List<Column> columns;
         private List<InnerJoinQuery> innerJoins;
         private List<QueryFilter> queryFilters;
+        private GroupBy groupBy;
         private List<Criteria> criteria;
 
         public Builder() {
             this.tableName = null;
+            this.groupBy = new GroupBy(List.of());
             this.columns = new ArrayList<>();
             this.innerJoins = new ArrayList<>();
             this.queryFilters = new ArrayList<>();
@@ -62,6 +70,10 @@ public class Query {
             this.queryFilters = queryFilters;
             return this;
         }
+        public Builder groupBy(GroupBy groupBy) {
+            this.groupBy = groupBy;
+            return this;
+        }
         public Builder criteria(List<Criteria> criteria) {
             this.criteria = criteria;
             return this;
@@ -72,6 +84,7 @@ public class Query {
                     this.columns,
                     this.innerJoins,
                     this.queryFilters,
+                    this.groupBy,
                     this.criteria
             );
         }
@@ -91,15 +104,39 @@ public class Query {
         StringBuilder oQuery = oqFactory.makeQuery(CriteriaSeparator.extractOrders(criteria));
 
 
-        return new StringBuilder("SELECT ")
-                .append(cols)
-                .append(" FROM ")
-                .append(tableName.getValue())
-                .append(" ")
-                .append(innerJoinsQuery)
-                .append("WHERE 1=1")
-                .append(qrFilters)
-                .append(fQuery)
-                .append(oQuery);
+        this.query = new StringBuilder("SELECT ")
+                                    .append(cols)
+                                    .append(" FROM ")
+                                    .append(tableName.getValue())
+                                    .append(" ")
+                                    .append(innerJoinsQuery)
+                                    .append("WHERE 1=1")
+                                    .append(qrFilters)
+                                    .append(fQuery)
+                                    .append(GroupByFactory.makeQuery(groupBy))
+                                    .append(oQuery);
+        return this.query;
+    }
+
+    public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {
+        List<Filter> filters = CriteriaSeparator.extractFilters(criteria);
+        int parameterIndex = startParamIndex;
+
+        for (Filter f : filters) {
+            if (!f.getValueSQLType().equals(ValueType.REQUEST)) {
+                parameterIndex++;
+
+                if (f.getOperatorType().equals(OperatorType.BETWEEN)) {
+                    List<Object> values = (List<Object>) f.getValue();
+                    statement.setObject(parameterIndex, values.getFirst());
+                    statement.setObject(parameterIndex + 1, values.getLast());
+
+                } else {
+                    statement.setObject(parameterIndex, f.getValue());
+                }
+            }
+
+        }
+        return parameterIndex;
     }
 }

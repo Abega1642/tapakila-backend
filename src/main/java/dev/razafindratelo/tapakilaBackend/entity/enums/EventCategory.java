@@ -1,5 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum EventCategory {
     // Business & Professional categories
     CONFERENCE,
@@ -62,4 +64,14 @@ public enum EventCategory {
     FITNESS_BOOTCAMP,
     MENTAL_HEALTH_TALK,
     WELLNESS_CONFERENCE;
+
+    @JsonCreator
+    public static EventCategory fromString(String value) {
+        for (EventCategory category : EventCategory.values()) {
+            if (category.name().equalsIgnoreCase(value)) {
+                return category;
+            }
+        }
+        return null;
+    }
 }

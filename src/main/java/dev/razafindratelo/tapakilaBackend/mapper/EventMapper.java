@@ -1,16 +1,39 @@
 package dev.razafindratelo.tapakilaBackend.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventsCategory;
+import dev.razafindratelo.tapakilaBackend.entity.EventsType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class EventMapper implements Mapper<Event> {
 
     @Override
     public Event mapFrom(ResultSet rs) throws SQLException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String eventTypesJson = rs.getString("event_types");
+        Set<EventsType> eventTypes = new HashSet<>();
+
+        try {
+            if (eventTypesJson != null && !eventTypesJson.isEmpty()) {
+                eventTypes = objectMapper.readValue(
+                        eventTypesJson,
+                        objectMapper.getTypeFactory().constructCollectionType(Set.class, EventsType.class)
+                );
+            }
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         return new Event.Builder()
                 .id(rs.getString("event_id"))
                 .organizer(rs.getString("event_organizer"))
@@ -21,7 +44,7 @@ public class EventMapper implements Mapper<Event> {
                 .location(rs.getString("event_location"))
                 .locationUrl(rs.getString("event_location_url"))
                 .category(new EventsCategoryMapper().mapFrom(rs))
-                .eventsType(null)
+                .eventsType(eventTypes)
                 .imagePath(rs.getString("event_image_path"))
                 .status(EventStatus.valueOf(rs.getString("event_status")))
                 .numberOfTickets(rs.getLong("event_number_of_ticket"))
