@@ -34,11 +34,15 @@ class ColumnAliasQueryFactoryTest {
                 Column.from(AvailableColumn.EVENT_MAX_TICKET_PER_USER)
         );
 
-        String expected = " (id, organizer, title, description, date_time, time_zone, location, "+
+        String expectedColumns = " (id, organizer, title, description, date_time, time_zone, location, "+
                 "location_url, image_path, category, status, number_of_ticket, max_ticket_per_user)";
-        String actual = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String expectedParamFields = " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        assertEquals(expected, actual);
+        String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
+
+        assertEquals(expectedColumns, actualColumns);
+        assertEquals(expectedParamFields, actualParamFields);
     }
 
     @Test
@@ -49,10 +53,14 @@ class ColumnAliasQueryFactoryTest {
               Column.from(AvailableColumn.EVENT_TYPE_DESCRIPTION)
         );
 
-        String expected = " (id, event_type, description)";
-        String actual = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String expectedColumns = " (id, event_type, description)";
+        String expectedParamFields = " (?, ?, ?)";
 
-        assertEquals(expected, actual);
+        String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
+
+        assertEquals(expectedColumns, actualColumns);
+        assertEquals(expectedParamFields, actualParamFields);
     }
 
     @Test
@@ -63,9 +71,13 @@ class ColumnAliasQueryFactoryTest {
                 Column.from(AvailableColumn.EVENT_CATEGORY_DESCRIPTION)
         );
 
-        String expected = " (id, event_category, description)";
-        String actual = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String expectedColumns = " (id, event_category, description)";
+        String expectedParamFields = " (?, ?, ?)";
 
-        assertEquals(expected, actual);
+        String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
+        String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
+
+        assertEquals(expectedColumns, actualColumns);
+        assertEquals(expectedParamFields, actualParamFields);
     }
 }

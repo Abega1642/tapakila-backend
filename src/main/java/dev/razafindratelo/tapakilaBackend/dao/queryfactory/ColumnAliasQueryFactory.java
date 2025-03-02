@@ -34,4 +34,15 @@ public class ColumnAliasQueryFactory implements SubQueryFactory<Column> {
         return new StringBuilder(joiner.toString());
     }
 
+    public static StringBuilder makeSubInsertValuesFieldQuery(List<Column> columns) {
+        if (columns.isEmpty()) {
+            return new StringBuilder();
+        }
+        StringJoiner joiner = new StringJoiner(", ", " (", ")");
+        for (var col : columns) {
+            joiner.add("?");
+        }
+        return new StringBuilder(joiner.toString());
+    }
+
 }
