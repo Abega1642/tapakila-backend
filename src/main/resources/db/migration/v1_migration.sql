@@ -47,14 +47,11 @@ CREATE TYPE event_type AS ENUM (
 
 CREATE TYPE event_category AS ENUM (
     -- Entertainment
-    'STAND_UP_COMEDY',
     'MAGIC_AND_ILLUSIONS',
     'ARTISTIC_PERFORMANCES',
     'STREET_PERFORMANCES',
-    'COMEDY_FESTIVAL',
     'CIRCUS_SHOW',
     'VARIETY_SHOW',
-    'IMPROV_COMEDY',
     'PUPPETRY',
     'STORYTELLING',
 
@@ -238,7 +235,7 @@ CREATE TYPE event_category AS ENUM (
     -- Health & Wellness
     'YOGA_CLASS',
     'MEDITATION_SESSION',
-    'FITNESS_CHALLENGE',
+    'HEALTH_FITNESS_CHALLENGE',
     'WELLNESS_RETREAT',
     'HEALTH_FAIR',
 
@@ -251,15 +248,15 @@ CREATE TYPE event_category AS ENUM (
 
     -- Comedy
     'STAND_UP_COMEDY',
-    'IMPROV_COMEDY',
     'COMEDY_CLUB_NIGHT',
     'SATIRE_SHOW',
+    'IMPROV_COMEDY',
     'COMEDY_FESTIVAL',
 
     -- Nightlife
     'NIGHTCLUB_EVENT',
     'LOUNGE_PARTY',
-    'KARAOKE_NIGHT',
+    'NIGHTLIFE_KARAOKE_NIGHT',
     'THEMED_NIGHT',
     'AFTER_PARTY',
 
@@ -320,7 +317,7 @@ CREATE TYPE payment_mode_type AS ENUM (
     'MASTERCARD',
     'PAYPAL',
     'CRYPTOCURRENCY',
-    'BANK_TRANSFER',
+    'BITCOIN',
     'CASH'
 );
 
@@ -331,6 +328,7 @@ CREATE TYPE payment_mode_provider AS ENUM (
     'PAYPAL',
     'STRIPE',
     'VISA',
+    'BANK_TRANSFER',
     'MASTERCARD',
     'MTN_MOBILE_MONEY',
     'GOOGLE_PAY',
@@ -406,7 +404,7 @@ CREATE TABLE "event"(
     location                TEXT NOT NULL,
     location_url            TEXT NOT NULL ,
     image_path              TEXT NOT NULL,
-    category                event_category DEFAULT 'CONCERT',
+    category                event_category NOT NULL,
     status                  event_status NOT NULL,
     number_of_ticket        INT8 DEFAULT 0,
     max_ticket_per_user     INT DEFAULT 5,
@@ -557,14 +555,11 @@ INSERT INTO events_type (id, event_type, description) VALUES
 -- Insert into events_category :
 -- Entertainment
 INSERT INTO events_category (id, event_category, description, id_event_type) VALUES
-('$EvC-' || gen_random_uuid(), 'STAND_UP_COMEDY', 'Live performances by comedians delivering humorous monologues.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'MAGIC_AND_ILLUSIONS', 'Shows featuring magic tricks and illusions to amaze the audience.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'ARTISTIC_PERFORMANCES', 'Performances showcasing artistic expression, such as dance or theater.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'STREET_PERFORMANCES', 'Live performances held in public spaces, often interactive.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
-('$EvC-' || gen_random_uuid(), 'COMEDY_FESTIVAL', 'A festival dedicated to comedy performances and stand-up acts.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'CIRCUS_SHOW', 'Circus performances featuring acrobatics, clowns, and animal acts.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'VARIETY_SHOW', 'A show featuring a mix of performances, such as music, comedy, and magic.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
-('$EvC-' || gen_random_uuid(), 'IMPROV_COMEDY', 'Comedy performances where actors create scenes on the spot.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'PUPPETRY', 'Shows featuring puppets as the main performers.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 ('$EvC-' || gen_random_uuid(), 'STORYTELLING', 'Events where storytellers narrate tales to an audience.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')),
 
@@ -747,7 +742,7 @@ INSERT INTO events_category (id, event_category, description, id_event_type) VAL
 -- Health & Wellness
 ('$EvC-' || gen_random_uuid(), 'YOGA_CLASS', 'Classes focused on yoga and mindfulness.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
 ('$EvC-' || gen_random_uuid(), 'MEDITATION_SESSION', 'Sessions focused on meditation and relaxation.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
-('$EvC-' || gen_random_uuid(), 'FITNESS_CHALLENGE', 'Events focused on physical fitness and challenges.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
+('$EvC-' || gen_random_uuid(), 'HEALTH_FITNESS_CHALLENGE', 'Events focused on physical fitness and challenges.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
 ('$EvC-' || gen_random_uuid(), 'WELLNESS_RETREAT', 'Retreats focused on health and wellness.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
 ('$EvC-' || gen_random_uuid(), 'HEALTH_FAIR', 'Fairs focused on health education and services.', (SELECT id FROM events_type WHERE event_type = 'HEALTH_AND_WELLNESS')),
 
@@ -768,7 +763,7 @@ INSERT INTO events_category (id, event_category, description, id_event_type) VAL
 -- Nightlife
 ('$EvC-' || gen_random_uuid(), 'NIGHTCLUB_EVENT', 'Events held at nightclubs featuring music and dancing.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
 ('$EvC-' || gen_random_uuid(), 'LOUNGE_PARTY', 'Parties held in lounges with a relaxed atmosphere.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
-('$EvC-' || gen_random_uuid(), 'KARAOKE_NIGHT', 'Nights where participants sing along to recorded music.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
+('$EvC-' || gen_random_uuid(), 'NIGHTLIFE_KARAOKE_NIGHT', 'Nights where participants sing along to recorded music.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
 ('$EvC-' || gen_random_uuid(), 'THEMED_NIGHT', 'Nights with a specific theme for music and decorations.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
 ('$EvC-' || gen_random_uuid(), 'AFTER_PARTY', 'Parties held after a main event, often late into the night.', (SELECT id FROM events_type WHERE event_type = 'NIGHTLIFE')),
 
@@ -820,7 +815,6 @@ INSERT INTO payment_mode (id, description, payment_api_url, provider, type) VALU
 ('$PmD-' || gen_random_uuid(), 'Mobile money payment via Mvola Madagascar.', 'https://api.mvola.mg/payment', 'MVOLA_MADAGASCAR', 'MOBILE_MONEY'),
 ('$PmD-' || gen_random_uuid(), 'Mobile money payment via Orange Money.', 'https://api.orange.money/payment', 'ORANGE_MONEY', 'MOBILE_MONEY'),
 ('$PmD-' || gen_random_uuid(), 'Mobile money payment via Airtel Money.', 'https://api.airtel.money/payment', 'AIRTEL_MONEY', 'MOBILE_MONEY'),
-('$PmD-' || gen_random_uuid(), 'Mobile money payment via MTN Mobile Money.', 'https://api.mtn.money/payment', 'MTN_MOBILE_MONEY', 'MOBILE_MONEY'),
 ('$PmD-' || gen_random_uuid(), 'Payment via Visa credit or debit card.', 'https://api.visa.com/payment', 'VISA', 'VISA'),
 ('$PmD-' || gen_random_uuid(), 'Payment via Mastercard credit or debit card.', 'https://api.mastercard.com/payment', 'MASTERCARD', 'MASTERCARD'),
 ('$PmD-' || gen_random_uuid(), 'Payment via PayPal for online transactions.', 'https://api.paypal.com/payment', 'PAYPAL', 'PAYPAL'),
@@ -829,5 +823,4 @@ INSERT INTO payment_mode (id, description, payment_api_url, provider, type) VALU
 ('$PmD-' || gen_random_uuid(), 'Payment via Google Pay for online and in-store transactions.', 'https://api.googlepay.com/payment', 'GOOGLE_PAY', 'VISA'),
 ('$PmD-' || gen_random_uuid(), 'Payment via Apple Pay for online and in-store transactions.', 'https://api.applepay.com/payment', 'APPLE_PAY', 'VISA'),
 ('$PmD-' || gen_random_uuid(), 'Payment via Bitcoin for cryptocurrency transactions.', 'https://api.bitcoin.com/payment', 'BITCOIN', 'CRYPTOCURRENCY'),
-('$PmD-' || gen_random_uuid(), 'Payment via bank transfer for direct transactions.', 'https://api.banktransfer.com/payment', 'BANK_TRANSFER', 'BANK_TRANSFER'),
 ('$PmD-' || gen_random_uuid(), 'Payment via cash for in-person transactions.', 'N/A', 'CASH', 'CASH');
