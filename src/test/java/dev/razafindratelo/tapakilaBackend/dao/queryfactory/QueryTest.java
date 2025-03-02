@@ -72,7 +72,7 @@ class QueryTest {
 
         List<Criteria> criteria = List.of (
                 new Filter(AvailableColumn.EVENT_DESCRIPTION, OperatorType.CONTAINS, "some_random_value", ValueType.STRING),
-                new Filter(AvailableColumn.EVENT_CATEGORY, OperatorType.EQUAL, EventCategory.CONFERENCE, ValueType.EVENT_CATEGORY),
+                new Filter(AvailableColumn.EVENT_CATEGORY, OperatorType.EQUAL, EventCategory.LIVE_CONCERT, ValueType.EVENT_CATEGORY),
                 new Order (AvailableColumn.EVENT_DATE_TIME, OrderType.DESC),
                 new Order (AvailableColumn.EVENT_LOCATION, OrderType.ASC)
         );
@@ -115,7 +115,7 @@ class QueryTest {
 
         List<Criteria> criteria = List.of (
                 new Filter(AvailableColumn.EVENT_DESCRIPTION, OperatorType.CONTAINS, "some_random_value", ValueType.STRING),
-                new Filter(AvailableColumn.EVENT_CATEGORY, OperatorType.EQUAL, EventCategory.CONFERENCE, ValueType.EVENT_CATEGORY),
+                new Filter(AvailableColumn.EVENT_CATEGORY, OperatorType.EQUAL, EventCategory.LIVE_CONCERT, ValueType.EVENT_CATEGORY),
                 new Order (AvailableColumn.EVENT_DATE_TIME, OrderType.DESC),
                 new Order (AvailableColumn.EVENT_LOCATION, OrderType.ASC)
         );
@@ -130,7 +130,7 @@ class QueryTest {
 
         String expected = "SELECT " +
                 "e.category AS category_of_the_event, e.location AS location_of_the_event, e.date_time AS d_day_of_the_event," +
-                " (SELECT u.last_name, u.first_name AS organizer)" +
+                " e.organizer" +
                 " FROM \"event\" e "+
                 "INNER JOIN creates c ON c.id_event = e.id_event " +
                 "INNER JOIN \"user\" u ON c.id_user = u.id_user " +
