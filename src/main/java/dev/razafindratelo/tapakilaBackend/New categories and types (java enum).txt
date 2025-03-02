@@ -1,0 +1,76 @@
+// Enum for Event Type
+public enum EventType {
+    ENTERTAINMENT,
+    MUSIC,
+    SPORTS,
+    THEATER_AND_SHOWS,
+    EDUCATION,
+    CINEMA,
+    EXHIBITIONS_AND_CULTURE,
+    FESTIVALS_AND_FAIRS,
+    PARTIES,
+    GAMING,
+    BUSINESS,
+    RELIGIOUS;
+}
+
+// Enum for Event Category
+public enum EventCategory {
+    // Entertainment
+    STAND_UP_COMEDY,
+    MAGIC_AND_ILLUSIONS,
+    ARTISTIC_PERFORMANCES,
+
+    // Music
+    LIVE_CONCERT,
+    MUSIC_FESTIVAL,
+    DJ_SET,
+
+    // Sports
+    MATCH,
+    TOURNAMENT,
+    MARATHON_AND_RACE,
+    BATTLE,
+
+    // Theater & Shows
+    THEATER_PLAY,
+    MUSICAL_COMEDY,
+    OPERA,
+    BALLET_AND_DANCE,
+
+    // Education
+    WORKSHOP,
+    MASTERCLASS,
+
+    // Cinema
+    PREMIERE_SCREENING,
+    MOVIE_SCREENING,
+    OPEN_AIR_CINEMA,
+
+    // Exhibitions & Culture
+    ART_EXHIBITION,
+    FAIR,
+
+    // Festivals & Fairs
+    CULTURAL_FESTIVAL,
+    EXPO,
+    CARNIVAL,
+    GEEK_CONVENTION,
+
+    // Parties
+    NIGHTCLUB_PARTY,
+    POOL_PARTY,
+    COSTUME_PARTY,
+
+    // Gaming
+    ESPORT_TOURNAMENT,
+    GAMING_CONFERENCE,
+
+    // Business
+    PROFESSIONAL_FAIR,
+    BUSINESS_CONFERENCE,
+
+    // Religious
+    RELIGIOUS_CEREMONY,
+    SPIRITUAL_SONGS_AND_MUSIC;
+}
