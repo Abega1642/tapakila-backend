@@ -8,8 +8,8 @@ public class ColumnAliasQueryFactory implements SubQueryFactory<Column> {
     public StringBuilder makeQuery(List<Column> columns) {
         StringBuilder query = new StringBuilder();
         for (var col : columns) {
-            if (col.getColumn().getValue().equals(col.getAlias())) {
-                query.append(col.getColumn().getValue()).append(", ");
+            if (col.getColumn().getValue().equals(col.getAlias()) || col.getColumn().getValue().equals("REQUEST")) {
+                query.append(col.getAlias()).append(", ");
             } else {
                 query.append(col.getColumn().getValue()).append(" AS ").append(col.getAlias()).append(", ");
             }
