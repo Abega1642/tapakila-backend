@@ -143,4 +143,50 @@ class QueryTest {
         assertEquals(expected, actual.toString());
 
     }
+
+
+    @Test
+    void test_makeInsertQuery_into_event_table() {
+        List<Column> columns = List.of(
+                Column.from(AvailableColumn.EVENT_ID),
+                Column.from(AvailableColumn.EVENT_ORGANIZER),
+                Column.from(AvailableColumn.EVENT_TITLE),
+                Column.from(AvailableColumn.EVENT_DESCRIPTION),
+                Column.from(AvailableColumn.EVENT_DATE_TIME),
+                Column.from(AvailableColumn.EVENT_TIME_ZONE),
+                Column.from(AvailableColumn.EVENT_LOCATION),
+                Column.from(AvailableColumn.EVENT_LOCATION_URL),
+                Column.from(AvailableColumn.EVENT_IMAGE_PATH),
+                Column.from(AvailableColumn.EVENT_CATEGORY),
+                Column.from(AvailableColumn.EVENT_STATUS),
+                Column.from(AvailableColumn.EVENT_NUMBER_OF_TICKET),
+                Column.from(AvailableColumn.EVENT_MAX_TICKET_PER_USER)
+        );
+        String expected = "INSERT INTO event " +
+                "(id, organizer, title, description, date_time, time_zone, location, "+
+                "location_url, image_path, category, status, number_of_ticket, max_ticket_per_user) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        Query subject = new Query.Builder().tableName(TableName.EVENT).column(columns).build();
+        String actual = subject.getInsertQuery().toString();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void test_makeInsertQuery_into_event_type_table() {
+        List<Column> columns = List.of(
+                Column.from(AvailableColumn.EVENT_TYPE_ID),
+                Column.from(AvailableColumn.EVENT_TYPE__),
+                Column.from(AvailableColumn.EVENT_TYPE_DESCRIPTION)
+        );
+
+        String expected = "INSERT INTO events_type (id, event_type, description) VALUES (?, ?, ?)";
+
+        Query subject = new Query.Builder().tableName(TableName.EVENTS_TYPE).column(columns).build();
+
+        String actual = subject.getInsertQuery().toString();
+
+        assertEquals(expected, actual);
+    }
 }

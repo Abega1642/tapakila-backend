@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Data
 public class Query {
@@ -119,7 +120,12 @@ public class Query {
     }
 
     public StringBuilder getInsertQuery() {
-        return null;
+
+        return new StringBuilder("INSERT INTO ")
+                .append(tableName.getValue().split(" ")[0])
+                .append(ColumnAliasQueryFactory.makeSubInsertQuery(columns))
+                .append(" VALUES")
+                .append(ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns));
     }
 
     public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {
