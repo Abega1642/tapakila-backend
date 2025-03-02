@@ -7,10 +7,8 @@ import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventsType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
-import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
-import dev.razafindratelo.tapakilaBackend.mapper.EventsTypeMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -46,6 +44,7 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_EMAIL, "user_email"),
                 new Column (AvailableColumn.USER_LAST_NAME, "user_last_name"),
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
+                new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
                 new Column (AvailableColumn.USER_STATUS, "user_status")
         );
@@ -131,6 +130,7 @@ public class EventDao implements DAO<Event> {
                 AvailableColumn.USER_EMAIL,
                 AvailableColumn.USER_LAST_NAME,
                 AvailableColumn.USER_FIRST_NAME,
+                AvailableColumn.USER_PROFILE_IMAGE_PATH,
                 AvailableColumn.USER_ROLE,
                 AvailableColumn.USER_STATUS
         ));

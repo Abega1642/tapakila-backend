@@ -25,6 +25,7 @@ public enum AvailableColumn {
     USER_EMAIL("u.email"),
     USER_LAST_NAME("u.last_name"),
     USER_FIRST_NAME("u.first_name"),
+    USER_PROFILE_IMAGE_PATH("u.profile_img_path"),
     USER_ROLE("u.user_role"),
     USER_STATUS("u.status"),
 
@@ -44,6 +45,7 @@ public enum AvailableColumn {
 
     // Ticket :
     TICKET_PRICE("tp.price"),
+    TICKET_IMG_PATH("tk.img_path"),
     TICKET_TYPE("t.type"),
     TICKET_NUMBER("t.number"),
     TICKET_STATUS("t.status"),
@@ -57,6 +59,7 @@ public enum AvailableColumn {
     PAYEMENT_PROVIDER("p.payment_provider"),
     PAYMENT_TYPE("p.payment_type"),
     PAYMENT_API("p.payment_api_url"),
+    PAYMENT_LOGO_IMG_PATH("p.payment_logo_img_path"),
     PAYMENT_STATUS("p.payment_status");
 
     private final String value;

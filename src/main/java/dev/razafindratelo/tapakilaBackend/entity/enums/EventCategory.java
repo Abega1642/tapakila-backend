@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum EventCategory {
     // Entertainment
-    STAND_UP_COMEDY,
     MAGIC_AND_ILLUSIONS,
     ARTISTIC_PERFORMANCES,
     STREET_PERFORMANCES,
-    COMEDY_FESTIVAL,
     CIRCUS_SHOW,
     VARIETY_SHOW,
-    IMPROV_COMEDY,
     PUPPETRY,
     STORYTELLING,
 
@@ -195,7 +192,7 @@ public enum EventCategory {
     // Health & Wellness
     YOGA_CLASS,
     MEDITATION_SESSION,
-    FITNESS_CHALLENGE,
+    HEALTH_FITNESS_CHALLENGE,
     WELLNESS_RETREAT,
     HEALTH_FAIR,
 
@@ -216,7 +213,7 @@ public enum EventCategory {
     // Nightlife
     NIGHTCLUB_EVENT,
     LOUNGE_PARTY,
-    KARAOKE_NIGHT,
+    NIGHTLIFE_KARAOKE_NIGHT,
     THEMED_NIGHT,
     AFTER_PARTY,
 

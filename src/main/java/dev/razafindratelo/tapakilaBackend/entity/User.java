@@ -14,9 +14,12 @@ public class User {
     private String email;
     private String lastName;
     private String firstName;
+    private String imgProfilePath;
     private String password;
     private UserRole userRole;
     private boolean status;
+    private List<EventCategory> favoriteEventCategories;
+
 
     @Override
     public String toString() {
@@ -24,12 +27,11 @@ public class User {
                 "\n \t  email='" + email + '\'' +
                 ",\n \t  lastName='" + lastName + '\'' +
                 ",\n \t  firstName='" + firstName + '\'' +
+                ",\n \t  imgProfilePath='" + imgProfilePath + '\'' +
                 ",\n \t  password='" + password + '\'' +
                 ",\n \t  userRole=" + userRole +
                 ",\n \t  status=" + status +
                 ",\n \t  favoriteEventCategories=" + favoriteEventCategories +
                 "\n }";
     }
-
-    private List<EventCategory> favoriteEventCategories;
 }
