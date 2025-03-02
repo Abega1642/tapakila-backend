@@ -4,6 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum AvailableColumn {
+    //  REQUEST AS COLUMN
+    REQUEST_AS_COLUMN("REQUEST"),
     // Event columns:
     EVENT_ID("e.id"),
     EVENT_TITLE("e.title"),
