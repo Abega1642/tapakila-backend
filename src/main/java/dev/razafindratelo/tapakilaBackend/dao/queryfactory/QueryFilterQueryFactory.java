@@ -7,7 +7,7 @@ import java.util.StringJoiner;
 public class QueryFilterQueryFactory implements SubQueryFactory<QueryFilter> {
 
     @Override
-    public StringBuilder makeQuery(List<QueryFilter> queryFilters) {
+    public StringBuilder makeSubSelectQuery(List<QueryFilter> queryFilters) {
         if (queryFilters.isEmpty()) {
             return new StringBuilder();
         }

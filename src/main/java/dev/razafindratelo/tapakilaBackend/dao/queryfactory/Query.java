@@ -97,11 +97,11 @@ public class Query {
         OrderQueryFactory oqFactory = new OrderQueryFactory();
         InnerJoinQueryFactory ijFactory = new InnerJoinQueryFactory();
 
-        StringBuilder cols = colFactory.makeQuery(columns);
-        StringBuilder innerJoinsQuery = ijFactory.makeQuery(innerJoins);
-        StringBuilder qrFilters = qfqFactory.makeQuery(queryFilters);
-        StringBuilder fQuery = fqFactory.makeQuery(CriteriaSeparator.extractFilters(criteria));
-        StringBuilder oQuery = oqFactory.makeQuery(CriteriaSeparator.extractOrders(criteria));
+        StringBuilder cols = colFactory.makeSubSelectQuery(columns);
+        StringBuilder innerJoinsQuery = ijFactory.makeSubSelectQuery(innerJoins);
+        StringBuilder qrFilters = qfqFactory.makeSubSelectQuery(queryFilters);
+        StringBuilder fQuery = fqFactory.makeSubSelectQuery(CriteriaSeparator.extractFilters(criteria));
+        StringBuilder oQuery = oqFactory.makeSubSelectQuery(CriteriaSeparator.extractOrders(criteria));
 
 
         this.query = new StringBuilder("SELECT ")
@@ -116,6 +116,10 @@ public class Query {
                                     .append(GroupByFactory.makeQuery(groupBy))
                                     .append(oQuery);
         return this.query;
+    }
+
+    public StringBuilder getInsertQuery() {
+        return null;
     }
 
     public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {

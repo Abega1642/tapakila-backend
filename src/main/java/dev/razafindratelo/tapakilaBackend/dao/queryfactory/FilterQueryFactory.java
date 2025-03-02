@@ -8,7 +8,7 @@ import java.util.StringJoiner;
 
 public class FilterQueryFactory implements SubQueryFactory<Filter> {
     @Override
-    public StringBuilder makeQuery(List<Filter> filters) {
+    public StringBuilder makeSubSelectQuery(List<Filter> filters) {
         StringJoiner joiner = new StringJoiner(" ", " ", "");
 
         if (filters.isEmpty()) {
