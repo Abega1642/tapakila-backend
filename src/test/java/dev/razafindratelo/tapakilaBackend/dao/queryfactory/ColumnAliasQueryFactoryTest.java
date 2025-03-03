@@ -81,4 +81,18 @@ class ColumnAliasQueryFactoryTest {
         assertEquals(expectedColumns, actualColumns);
         assertEquals(expectedParamFields, actualParamFields);
     }
+
+    @Test
+    void makeSubUpdateQuery_for_some_of_event_columns() {
+        List<Column> columns = List.of(
+                Column.from(AvailableColumn.EVENT_ORGANIZER),
+                Column.from(AvailableColumn.EVENT_TITLE),
+                Column.from(AvailableColumn.EVENT_DESCRIPTION)
+        );
+
+        String expectedUpdateSubQuery = " SET organizer = (?::varchar), title = (?::varchar), description = (?::text)";
+        String actualUpdatedSubQuery = ColumnAliasQueryFactory.makeSubUpdateQuery(columns).toString();
+
+        assertEquals(expectedUpdateSubQuery, actualUpdatedSubQuery);
+    }
 }

@@ -45,4 +45,16 @@ public class ColumnAliasQueryFactory implements SubQueryFactory<Column> {
         return new StringBuilder(joiner.toString());
     }
 
+    public static StringBuilder makeSubUpdateQuery(List<Column> columns) {
+        if (columns.isEmpty()) {
+            return new StringBuilder();
+        }
+        StringJoiner joiner = new StringJoiner(", ", " SET ", "");
+        for (var col : columns) {
+            String columnName = col.getColumn().getValue().split("\\.")[1];
+            joiner.add(columnName + " = (?::"+col.getColumn().getValueType().getRepresentation()+")");
+        }
+        return new StringBuilder(joiner.toString());
+    }
+
 }
