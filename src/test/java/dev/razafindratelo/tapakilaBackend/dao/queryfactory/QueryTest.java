@@ -177,16 +177,40 @@ class QueryTest {
     void test_makeInsertQuery_into_event_type_table() {
         List<Column> columns = List.of(
                 Column.from(AvailableColumn.EVENT_TYPE_ID),
-                Column.from(AvailableColumn.EVENT_TYPE__),
-                Column.from(AvailableColumn.EVENT_TYPE_DESCRIPTION)
+                Column.from(AvailableColumn.EVENT_CATEGORY),
+                Column.from(AvailableColumn.EVENT_DESCRIPTION)
         );
 
-        String expected = "INSERT INTO events_type (id, event_type, description) VALUES ((?::varchar), (?::event_type), (?::text))";
+        String expected = "INSERT INTO events_type (id, event_category, description) VALUES ((?::varchar), (?::event_category), (?::text))";
 
         Query subject = new Query.Builder().tableName(TableName.EVENTS_TYPE).column(columns).build();
 
         String actual = subject.getInsertQuery().toString();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void test_makeUpdateQuery_into_event_table() {
+        List<Column> columns = List.of(
+                Column.from(AvailableColumn.EVENT_TYPE_ID),
+                Column.from(AvailableColumn.EVENT_CATEGORY),
+                Column.from(AvailableColumn.EVENT_DESCRIPTION)
+        );
+
+        List<Filter> updateReferences = List.of(
+                new Filter(AvailableColumn.EVENT_DESCRIPTION, OperatorType.CONTAINS, "something"),
+                new Filter(AvailableColumn.EVENT_CATEGORY, OperatorType.EQUAL, "some_category_value")
+        );
+
+        Query subject = new Query.Builder().tableName(TableName.EVENT).column(columns).build();
+
+        String expected = "UPDATE event SET id = (?::varchar), category = (?::event_category), description = (?::text) "
+                + "WHERE 1=1 AND description ILIKE '%' || ? || '%' AND category = (?::event_category)";
+
+        String actual = subject.getUpdateQuery(updateReferences).toString();
+
+        assertEquals(expected, actual);
+
     }
 }
