@@ -4,20 +4,20 @@ import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
+import dev.razafindratelo.tapakilaBackend.entity.EventsCategory;
 import dev.razafindratelo.tapakilaBackend.entity.EventsType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
+import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
+import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
-import dev.razafindratelo.tapakilaBackend.mapper.EventsTypeMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @AllArgsConstructor
@@ -46,14 +46,10 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_EMAIL, "user_email"),
                 new Column (AvailableColumn.USER_LAST_NAME, "user_last_name"),
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
+                new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
                 new Column (AvailableColumn.USER_STATUS, "user_status")
         );
-    }
-
-    @Override
-    public Event save(Event entity) {
-        throw new NotImplementedException("Saving event not implemented yet");
     }
 
     private List<InnerJoinQuery> getInnerJoinQueries() {
@@ -131,6 +127,7 @@ public class EventDao implements DAO<Event> {
                 AvailableColumn.USER_EMAIL,
                 AvailableColumn.USER_LAST_NAME,
                 AvailableColumn.USER_FIRST_NAME,
+                AvailableColumn.USER_PROFILE_IMAGE_PATH,
                 AvailableColumn.USER_ROLE,
                 AvailableColumn.USER_STATUS
         ));
@@ -171,10 +168,60 @@ public class EventDao implements DAO<Event> {
     }
 
     @Override
+    public Event save(Event event) {
+        Connection connection = dataSource.getConnection();
+        List<Column> insertColumns = List.of(
+                Column.from(AvailableColumn.EVENT_ID),
+                Column.from(AvailableColumn.EVENT_ORGANIZER),
+                Column.from(AvailableColumn.EVENT_TITLE),
+                Column.from(AvailableColumn.EVENT_DESCRIPTION),
+                Column.from(AvailableColumn.EVENT_DATE_TIME),
+                Column.from(AvailableColumn.EVENT_TIME_ZONE),
+                Column.from(AvailableColumn.EVENT_LOCATION),
+                Column.from(AvailableColumn.EVENT_LOCATION_URL),
+                Column.from(AvailableColumn.EVENT_IMAGE_PATH),
+                Column.from(AvailableColumn.EVENT_CATEGORY),
+                Column.from(AvailableColumn.EVENT_STATUS),
+                Column.from(AvailableColumn.EVENT_NUMBER_OF_TICKET),
+                Column.from(AvailableColumn.EVENT_MAX_TICKET_PER_USER)
+        );
+        Query queryMaker = new Query
+                .Builder()
+                .tableName(TableName.EVENT)
+                .column(insertColumns)
+                .build();
+        try (PreparedStatement saveStmt = connection.prepareStatement(queryMaker.getInsertQuery().toString())) {
+            saveStmt.setString(1, event.getId());
+            saveStmt.setString(2, event.getOrganizer());
+            saveStmt.setString(3, event.getTitle());
+            saveStmt.setString(4, event.getDescription());
+            saveStmt.setTimestamp(5, Timestamp.valueOf(event.getDateTime()));
+            saveStmt.setString(6, event.getTimeZone().toString());
+            saveStmt.setString(7, event.getLocation());
+            saveStmt.setString(8, event.getLocationUrl());
+            saveStmt.setString(9, event.getImagePath());
+            saveStmt.setString(10, event.getCategory().getEventCategory().toString());
+            saveStmt.setString(11, event.getStatus().toString());
+            saveStmt.setLong(12, event.getNumberOfTickets());
+            saveStmt.setInt(13, event.getMaxTicketPerUser());
+
+            int affectedRows = saveStmt.executeUpdate();
+            if (affectedRows > 0) {
+                return event;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        throw new RuntimeException("Failed to save event with id " + event.getId());
+    }
+
+
+    @Override
     public Optional<Event> findById(String id) {
         Connection connection = dataSource.getConnection();
         List<Criteria> criteria = List.of (
-                new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id, ValueType.STRING)
+                new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
         );
 
         QueryResult sqlQuery = makeQuery(criteria, List.of());
@@ -209,9 +256,12 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
+        AvailableColumn idAsRequestNotString = AvailableColumn.EVENT_ID.changeValueType(ValueType.REQUEST);
+
         List<Criteria> extraCriteria = List.of(
-                new Filter(AvailableColumn.EVENT_ID, OperatorType.IN, "(SELECT id_event FROM EventCounts)", ValueType.REQUEST)
+                new Filter(idAsRequestNotString, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
         );
+
         QueryResult sqlQuery = makeQuery(criteria, extraCriteria);
         String finaLQuery = sqlQuery.sql()
                 + """

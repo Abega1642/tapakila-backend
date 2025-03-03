@@ -5,62 +5,71 @@ import lombok.Getter;
 @Getter
 public enum AvailableColumn {
     //  REQUEST AS COLUMN
-    REQUEST_AS_COLUMN("REQUEST"),
+    REQUEST_AS_COLUMN("REQUEST", ValueType.REQUEST),
     // Event columns:
-    EVENT_ID("e.id"),
-    EVENT_TITLE("e.title"),
-    EVENT_DESCRIPTION("e.description"),
-    EVENT_DATE_TIME("e.date_time"),
-    EVENT_TIME_ZONE("e.time_zone"),
-    EVENT_LOCATION("e.location"),
-    EVENT_IMAGE_PATH("e.image_path"),
-    EVENT_LOCATION_URL("e.location_url"),
-    EVENT_NUMBER_OF_TICKET("e.number_of_ticket"),
-    EVENT_MAX_TICKET_PER_USER("e.max_ticket_per_user"),
-    EVENT_CATEGORY("e.category"),
-    EVENT_STATUS("e.status"),
-    EVENT_ORGANIZER("e.organizer"),
+    EVENT_ID("e.id", ValueType.STRING),
+    EVENT_TITLE("e.title", ValueType.STRING),
+    EVENT_DESCRIPTION("e.description", ValueType.TEXT),
+    EVENT_DATE_TIME("e.date_time", ValueType.TIMESTAMP),
+    EVENT_TIME_ZONE("e.time_zone", ValueType.TIME_ZONE),
+    EVENT_LOCATION("e.location", ValueType.TEXT),
+    EVENT_IMAGE_PATH("e.image_path", ValueType.TEXT),
+    EVENT_LOCATION_URL("e.location_url", ValueType.TEXT),
+    EVENT_NUMBER_OF_TICKET("e.number_of_ticket", ValueType.LONG),
+    EVENT_MAX_TICKET_PER_USER("e.max_ticket_per_user", ValueType.INTEGER),
+    EVENT_CATEGORY("e.category", ValueType.EVENT_CATEGORY),
+    EVENT_STATUS("e.status", ValueType.EVENT_STATUS),
+    EVENT_ORGANIZER("e.organizer", ValueType.STRING),
 
     // User columns:
-    USER_EMAIL("u.email"),
-    USER_LAST_NAME("u.last_name"),
-    USER_FIRST_NAME("u.first_name"),
-    USER_ROLE("u.user_role"),
-    USER_STATUS("u.status"),
+    USER_EMAIL("u.email", ValueType.STRING),
+    USER_LAST_NAME("u.last_name", ValueType.STRING),
+    USER_FIRST_NAME("u.first_name", ValueType.STRING),
+    USER_PROFILE_IMAGE_PATH("u.profile_img_path", ValueType.TEXT),
+    USER_ROLE("u.user_role", ValueType.USER_ROLE),
+    USER_STATUS("u.status", ValueType.BOOLEAN),
 
     //  Event type columns :
-    EVENT_TYPE_ID("ety.id"),
-    EVENT_TYPE__("ety.event_type"),
-    EVENT_TYPE_DESCRIPTION("ety.description"),
+    EVENT_TYPE_ID("ety.id", ValueType.STRING),
+    EVENT_TYPE__("ety.event_type", ValueType.EVENT_TYPE),
+    EVENT_TYPE_DESCRIPTION("ety.description", ValueType.TEXT),
 
     //  Event category columns :
-    EVENT_CATEGORY_ID("ec.id"),
-    EVENT_CATEGORY_DESCRIPTION("ec.description"),
-    EVENT_CATEGORY__("ec.event_category"),
+    EVENT_CATEGORY_ID("ec.id", ValueType.STRING),
+    EVENT_CATEGORY_DESCRIPTION("ec.description", ValueType.TEXT),
+    EVENT_CATEGORY__("ec.event_category", ValueType.EVENT_CATEGORY),
 
     //  Creates Columns :
-    CREATES_CREATED_AT("c.created_at"),
-    CREATES_UPDATED_AT("c.updated_at"),
+    CREATES_CREATED_AT("c.created_at", ValueType.TIMESTAMP),
+    CREATES_UPDATED_AT("c.updated_at", ValueType.TIMESTAMP),
 
     // Ticket :
-    TICKET_PRICE("tp.price"),
-    TICKET_TYPE("t.type"),
-    TICKET_NUMBER("t.number"),
-    TICKET_STATUS("t.status"),
-    TICKET_PAYMENT_REFERENCE("t.payment_ref"),
-    TICKET_OWNER_NAME("t.ticket_owner_name"),
-    TICKET_EVENT("t.event"),
-    TICKET_DESCRIPTION("tk.description"),
+    TICKET_PRICE("tp.price", ValueType.FLOAT),
+    TICKET_IMG_PATH("tk.img_path", ValueType.TEXT),
+    TICKET_TYPE("t.type", ValueType.TICKET_TYPE),
+    TICKET_NUMBER("t.number", ValueType.LONG),
+    TICKET_STATUS("t.status", ValueType.BOOLEAN),
+    TICKET_PAYMENT_REFERENCE("t.payment_ref", ValueType.TEXT),
+    TICKET_OWNER_NAME("t.ticket_owner_name", ValueType.TEXT),
+    TICKET_EVENT("t.id_event", ValueType.STRING),
+    TICKET_DESCRIPTION("tk.description", ValueType.TEXT),
 
     // Payement_mode :
-    PAYMENT_DESCRIPTION("p.payment_description"),
-    PAYEMENT_PROVIDER("p.payment_provider"),
-    PAYMENT_TYPE("p.payment_type"),
-    PAYMENT_API("p.payment_api_url"),
-    PAYMENT_STATUS("p.payment_status");
+    PAYMENT_DESCRIPTION("p.payment_description", ValueType.TEXT),
+    PAYEMENT_PROVIDER("p.payment_provider", ValueType.PAYMENT_MODE_PROVIDER),
+    PAYMENT_TYPE("p.payment_type", ValueType.PAYMENT_MODE_TYPE),
+    PAYMENT_API("p.payment_api_url", ValueType.TEXT),
+    PAYMENT_LOGO_IMG_PATH("p.payment_logo_img_path", ValueType.TEXT),
+    PAYMENT_STATUS("p.payment_status", ValueType.BOOLEAN),;
 
     private final String value;
-    AvailableColumn(String value) {
+    private ValueType valueType;
+    AvailableColumn(String value, ValueType valueType) {
         this.value = value;
+        this.valueType = valueType;
+    }
+    public AvailableColumn changeValueType(ValueType val) {
+        this.valueType = val;
+        return this;
     }
 }

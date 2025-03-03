@@ -7,7 +7,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.ValueType;
 public class QueryFilter extends Filter {
 
     public QueryFilter(AvailableColumn column, OperatorType operatorType, Object value) {
-        super(column, operatorType, value, ValueType.REQUEST);
+        super(column.changeValueType(ValueType.REQUEST), operatorType, value);
     }
 
 }

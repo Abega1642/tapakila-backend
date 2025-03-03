@@ -121,6 +121,6 @@ INSERT INTO creates (user_email, id_event) VALUES
 (
     'admin@example.com',
     (SELECT id FROM "event" WHERE title = 'Theater Play')
-)
+);
 
 

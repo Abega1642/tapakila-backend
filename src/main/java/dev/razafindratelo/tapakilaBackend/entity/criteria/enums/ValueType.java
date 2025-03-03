@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ValueType {
     //  ENUMS :
+    EVENT_TYPE("event_type"),
     EVENT_CATEGORY("event_category"),
     EVENT_STATUS("event_status"),
     TICKET_TYPE("ticket_type"),

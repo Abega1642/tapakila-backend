@@ -5,7 +5,7 @@ import java.util.StringJoiner;
 
 public class InnerJoinQueryFactory implements SubQueryFactory<InnerJoinQuery> {
     @Override
-    public StringBuilder makeQuery(List<InnerJoinQuery> innerJoinQueries) {
+    public StringBuilder makeSubSelectQuery(List<InnerJoinQuery> innerJoinQueries) {
         StringJoiner joiner = new StringJoiner(" ", "", " ");
 
         if (innerJoinQueries.isEmpty()) {

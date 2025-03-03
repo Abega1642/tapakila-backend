@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Data
 public class Query {
@@ -97,11 +98,11 @@ public class Query {
         OrderQueryFactory oqFactory = new OrderQueryFactory();
         InnerJoinQueryFactory ijFactory = new InnerJoinQueryFactory();
 
-        StringBuilder cols = colFactory.makeQuery(columns);
-        StringBuilder innerJoinsQuery = ijFactory.makeQuery(innerJoins);
-        StringBuilder qrFilters = qfqFactory.makeQuery(queryFilters);
-        StringBuilder fQuery = fqFactory.makeQuery(CriteriaSeparator.extractFilters(criteria));
-        StringBuilder oQuery = oqFactory.makeQuery(CriteriaSeparator.extractOrders(criteria));
+        StringBuilder cols = colFactory.makeSubSelectQuery(columns);
+        StringBuilder innerJoinsQuery = ijFactory.makeSubSelectQuery(innerJoins);
+        StringBuilder qrFilters = qfqFactory.makeSubSelectQuery(queryFilters);
+        StringBuilder fQuery = fqFactory.makeSubSelectQuery(CriteriaSeparator.extractFilters(criteria));
+        StringBuilder oQuery = oqFactory.makeSubSelectQuery(CriteriaSeparator.extractOrders(criteria));
 
 
         this.query = new StringBuilder("SELECT ")
@@ -118,12 +119,21 @@ public class Query {
         return this.query;
     }
 
+    public StringBuilder getInsertQuery() {
+
+        return new StringBuilder("INSERT INTO ")
+                .append(tableName.getValue().split(" ")[0])
+                .append(ColumnAliasQueryFactory.makeSubInsertQuery(columns))
+                .append(" VALUES")
+                .append(ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns));
+    }
+
     public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {
         List<Filter> filters = CriteriaSeparator.extractFilters(criteria);
         int parameterIndex = startParamIndex;
 
         for (Filter f : filters) {
-            if (!f.getValueSQLType().equals(ValueType.REQUEST)) {
+            if (!f.getColumnName().getValueType().equals(ValueType.REQUEST)) {
                 parameterIndex++;
 
                 if (f.getOperatorType().equals(OperatorType.BETWEEN)) {
