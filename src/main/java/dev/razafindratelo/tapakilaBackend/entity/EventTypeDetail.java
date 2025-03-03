@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
-public class EventsType {
+public class EventTypeDetail {
     @JsonProperty("id")
     private String id;
     @JsonProperty("event_type")
@@ -18,7 +18,7 @@ public class EventsType {
     @JsonProperty("description")
     private String description;
     @JsonProperty("corresponding_categories")
-    private List<EventsCategory> correspondingCategories;
+    private List<EventCategoryDetail> correspondingCategories;
 
     @Override
     public String toString() {

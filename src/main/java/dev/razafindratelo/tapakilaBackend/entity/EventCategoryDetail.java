@@ -8,7 +8,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Data
 @NoArgsConstructor
-public class EventsCategory {
+public class EventCategoryDetail {
     @JsonProperty("id")
     private String id;
     @JsonProperty("event_category")
