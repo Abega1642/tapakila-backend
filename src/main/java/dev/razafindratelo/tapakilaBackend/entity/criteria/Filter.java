@@ -15,12 +15,10 @@ import lombok.EqualsAndHashCode;
 public class Filter extends Criteria {
     private OperatorType operatorType;
     private Object value;
-    private ValueType valueSQLType;
 
-    public Filter(AvailableColumn column, OperatorType operatorType, Object value, ValueType valueSQLType) {
+    public Filter(AvailableColumn column, OperatorType operatorType, Object value) {
         super(column);
         this.value = value;
-        this.valueSQLType = valueSQLType;
         this.operatorType = operatorType;
     }
 }
