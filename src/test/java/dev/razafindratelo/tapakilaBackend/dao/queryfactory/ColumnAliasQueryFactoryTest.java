@@ -36,7 +36,8 @@ class ColumnAliasQueryFactoryTest {
 
         String expectedColumns = " (id, organizer, title, description, date_time, time_zone, location, "+
                 "location_url, image_path, category, status, number_of_ticket, max_ticket_per_user)";
-        String expectedParamFields = " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String expectedParamFields = " ((?::varchar), (?::varchar), (?::varchar), (?::text), (?::timestamp), (?::time_zone), "+
+                "(?::text), (?::text), (?::text), (?::event_category), (?::event_status), (?::int8), (?::int))";
 
         String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
         String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
@@ -54,7 +55,7 @@ class ColumnAliasQueryFactoryTest {
         );
 
         String expectedColumns = " (id, event_type, description)";
-        String expectedParamFields = " (?, ?, ?)";
+        String expectedParamFields = " ((?::varchar), (?::event_type), (?::text))";
 
         String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
         String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
@@ -72,7 +73,7 @@ class ColumnAliasQueryFactoryTest {
         );
 
         String expectedColumns = " (id, event_category, description)";
-        String expectedParamFields = " (?, ?, ?)";
+        String expectedParamFields = " ((?::varchar), (?::event_category), (?::text))";
 
         String actualColumns = ColumnAliasQueryFactory.makeSubInsertQuery(columns).toString();
         String actualParamFields = ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns).toString();
