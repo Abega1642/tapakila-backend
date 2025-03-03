@@ -40,7 +40,7 @@ public class ColumnAliasQueryFactory implements SubQueryFactory<Column> {
         }
         StringJoiner joiner = new StringJoiner(", ", " (", ")");
         for (var col : columns) {
-            joiner.add("?");
+            joiner.add("(?::"+col.getColumn().getValueType().getRepresentation()+")");
         }
         return new StringBuilder(joiner.toString());
     }

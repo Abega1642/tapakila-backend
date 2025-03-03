@@ -133,7 +133,7 @@ public class Query {
         int parameterIndex = startParamIndex;
 
         for (Filter f : filters) {
-            if (!f.getValueSQLType().equals(ValueType.REQUEST)) {
+            if (!f.getColumnName().getValueType().equals(ValueType.REQUEST)) {
                 parameterIndex++;
 
                 if (f.getOperatorType().equals(OperatorType.BETWEEN)) {

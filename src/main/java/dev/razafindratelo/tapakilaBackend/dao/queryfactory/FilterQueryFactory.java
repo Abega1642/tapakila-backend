@@ -26,12 +26,12 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
                     joiner.add("AND")
                             .add(filter.getColumnName().getValue())
                             .add(filter.getOperatorType().getRepresentation())
-                            .add("(?::" + filter.getValueSQLType().getRepresentation() + ")")
+                            .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")")
                             .add("AND")
-                            .add("(?::" + filter.getValueSQLType().getRepresentation() + ")");
+                            .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")");
                     break;
                 default:
-                    if (filter.getValueSQLType().equals(ValueType.REQUEST)) {
+                    if (filter.getColumnName().getValueType().equals(ValueType.REQUEST)) {
                         joiner.add("AND")
                                 .add(filter.getColumnName().getValue())
                                 .add(filter.getOperatorType().getRepresentation())
@@ -40,7 +40,7 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
                         joiner.add("AND")
                                 .add(filter.getColumnName().getValue())
                                 .add(filter.getOperatorType().getRepresentation())
-                                .add("(?::" + filter.getValueSQLType().getRepresentation() + ")");
+                                .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")");
                     }
             }
         }
