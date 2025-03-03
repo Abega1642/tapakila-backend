@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.dao.queryfactory;
 
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.ValueType;
@@ -126,6 +127,17 @@ public class Query {
                 .append(ColumnAliasQueryFactory.makeSubInsertQuery(columns))
                 .append(" VALUES")
                 .append(ColumnAliasQueryFactory.makeSubInsertValuesFieldQuery(columns));
+    }
+
+    public StringBuilder getUpdateQuery(List<Filter> updatedColumnsReferences) {
+
+        StringBuilder updateRefs = FilterQueryFactory.makeSubUpdateSelectQuery(updatedColumnsReferences);
+
+        return new StringBuilder("UPDATE ")
+                .append(tableName.getValue().split(" ")[0])
+                .append(ColumnAliasQueryFactory.makeSubUpdateQuery(columns))
+                .append(" WHERE 1=1")
+                .append(updateRefs);
     }
 
     public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {

@@ -21,6 +21,10 @@ import java.util.*;
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
 
+    /**
+     * {@code getColumns} method is a methods that handle the list of most / frequently used columns in this {@link EventDao}
+     * @return: the list of the most / frequently used columns
+     */
     private List<Column> getColumns() {
         return List.of (
                 new Column (AvailableColumn.EVENT_ID, "event_id"),
@@ -57,6 +61,13 @@ public class EventDao implements DAO<Event> {
         );
     }
 
+    /**
+     * {@code makeQuery} is a method that provides the {@link StringBuilder} object named {@code sqlQuery} and a
+     * {@link Query} object which is going to be frequently used in this current class {@link EventDao}
+     * @param criteria: The criteria related to the parent method to make the SQL request.
+     * @param extraCriteria : some extra criteria
+     * @return: a {@link QueryResult} object that contains the SQL query {@code sqlQuery} and a {@link Query} object
+     */
     private QueryResult makeQuery(List<Criteria> criteria, List<Criteria> extraCriteria) {
         List<Column> columns = new ArrayList<>(getColumns());
         String requestAsColumn =
@@ -211,7 +222,6 @@ public class EventDao implements DAO<Event> {
         throw new RuntimeException("Failed to save event with id " + event.getId());
     }
 
-
     @Override
     public Optional<Event> findById(String id) {
         Connection connection = dataSource.getConnection();
@@ -251,6 +261,19 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
+        return findAllByCriteriaWithGivenConnection(criteria, page, size, dataSource.getConnection());
+    }
+
+    /**
+     * This method {@code findAllByCriteriaWithGivenConnection} provides the advantage by allowing the use of{@code findAllByCriteria}
+     * as many times as we want in different Entity DAO by using only the current {@code Connection} of the method
+     * @param criteria : This is the filter criteria or some other criteria we want to apply to our data
+     * @param page : This is the page where we want our data to be read
+     * @param size : This is the size returned resources in that specific {@code page}
+     * @param connection : This is the connection of the parent method that use this method
+     * @return : The list of events corresponding to the given {@code criteria}
+     */
+    public List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
 
         List<Criteria> extraCriteria = List.of(
                 new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
@@ -264,7 +287,6 @@ public class EventDao implements DAO<Event> {
                   """;
 
         List<Event> events = new ArrayList<>();
-        Connection connection = dataSource.getConnection();
 
         try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(finaLQuery)) {
 
@@ -286,11 +308,46 @@ public class EventDao implements DAO<Event> {
         }
     }
 
-
     @Override
-    public Event update(String id, Event entity) {
+    public List<Event> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
+        Connection connection = dataSource.getConnection();
+
+
+
+        List<Criteria> criteria = new ArrayList<>(updateColumnReferences);
+        Query queryMaker = new Query.Builder()
+                .tableName(TableName.EVENT)
+                .column(columnsToBeUpdated)
+                .criteria(criteria)
+                .build();
+
+        StringBuilder updateQuery = queryMaker.getUpdateQuery(updateColumnReferences);
+
+        try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery.toString())) {
+            int paramIndex = 1;
+
+            for(Column col : columnsToBeUpdated) {
+                updateStmt.setObject(paramIndex, col.getAlias());
+                paramIndex++;
+            }
+
+            paramIndex--;
+
+            queryMaker.completeQueryAndReturnLastParamIndex(updateStmt, paramIndex);
+
+            int updatedRows = updateStmt.executeUpdate();
+
+            if (updatedRows != 0) {
+                return findAllByCriteriaWithGivenConnection(criteria, 1, updatedRows, connection);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         throw new NotImplementedException("Updating event not implemented yet");
     }
+
 
     @Override
     public Optional<Event> delete(String id) {

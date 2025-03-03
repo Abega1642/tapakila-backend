@@ -3,8 +3,8 @@ package dev.razafindratelo.tapakilaBackend.dao;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
-import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
+import dev.razafindratelo.tapakilaBackend.entity.PaymentMode;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
@@ -212,7 +212,7 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
     }
 
     @Override
-    public EventTypeDetail update(String id, EventTypeDetail entity) {
+    public List<EventTypeDetail> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
         throw new NotImplementedException("EventTypeDetail update not implemented yet");
     }
 
