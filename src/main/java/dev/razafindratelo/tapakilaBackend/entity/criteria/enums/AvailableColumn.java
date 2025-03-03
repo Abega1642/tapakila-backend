@@ -35,6 +35,7 @@ public enum AvailableColumn {
 
     //  Event type columns :
     EVENT_TYPE_ID("ety.id", ValueType.STRING),
+    EVENT_TYPE_ID_REQ("ety.id", ValueType.REQUEST),
     EVENT_TYPE__("ety.event_type", ValueType.EVENT_TYPE),
     EVENT_TYPE_DESCRIPTION("ety.description", ValueType.TEXT),
 
