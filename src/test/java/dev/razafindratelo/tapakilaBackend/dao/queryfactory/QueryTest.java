@@ -181,7 +181,7 @@ class QueryTest {
                 Column.from(AvailableColumn.EVENT_DESCRIPTION)
         );
 
-        String expected = "INSERT INTO events_type (id, event_category, description) VALUES ((?::varchar), (?::event_category), (?::text))";
+        String expected = "INSERT INTO events_type (id, category, description) VALUES ((?::varchar), (?::event_category), (?::text))";
 
         Query subject = new Query.Builder().tableName(TableName.EVENTS_TYPE).column(columns).build();
 

@@ -20,9 +20,11 @@ class EventTypeDetailDaoTest {
         subject = new EventTypeDetailDao(new DataSource());
     }
 
+    /**
+     * IMPORTANT : make sure to change this id, because this id is generated randomly when launching the v1_migration.sql
+     */
     @Test
     void findById() {
-        // Important: make sure to change this id, because this id is generated randomly when launching the v1_migration.sql
         String expectedId = "$EvT-002c6844-0cbd-469a-be33-b2a95de02ba8";
         EventType expectedType = EventType.COMEDY;
         String expectedDescription = "Events focused on comedy and humor.";
