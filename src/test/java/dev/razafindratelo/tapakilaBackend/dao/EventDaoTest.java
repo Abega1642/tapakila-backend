@@ -19,12 +19,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class EventDaoTest {
     private EventDao subject;
+
+    /**
+     *  IMPORTANT : make sure to change the expectedIds to the ids in your database, because those ids are generated
+     *  randomly while executing v1_migration.sql
+     *  Those ids below are what the {@code gen_random_uuid()} SQL function generated for me while executing the SQL script.
+     */
 
     @BeforeEach
     void setUp() {
