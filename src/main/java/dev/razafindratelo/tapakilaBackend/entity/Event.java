@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 
 @Data
@@ -24,8 +22,8 @@ public class Event {
     private String location;
     private String locationUrl;
     private String imagePath;
-    private Set<EventsType> eventsType;
-    private EventsCategory category;
+    private Set<EventTypeDetail> eventTypeDetail;
+    private EventCategoryDetail category;
     private EventStatus status;
     private long numberOfTickets;
     private int maxTicketPerUser;
@@ -44,8 +42,8 @@ public class Event {
             String locationUrl,
             String imagePath,
             @JsonProperty("event_types")
-            Set<EventsType> eventsType,
-            EventsCategory category,
+            Set<EventTypeDetail> eventTypeDetail,
+            EventCategoryDetail category,
             EventStatus status,
             long numberOfTickets,
             int maxTicketPerUser,
@@ -62,7 +60,7 @@ public class Event {
         this.location = location;
         this.locationUrl = locationUrl;
         this.imagePath = imagePath;
-        this.eventsType = eventsType;
+        this.eventTypeDetail = eventTypeDetail;
         this.category = category;
         this.status = status;
         this.numberOfTickets = numberOfTickets;
@@ -82,8 +80,8 @@ public class Event {
         private String location = "No where";
         private String locationUrl = "https://_no_url_found.com";
         private String imagePath = "No image founded";
-        private Set<EventsType> eventsType  = null;
-        private EventsCategory category = null;
+        private Set<EventTypeDetail> eventTypeDetail = null;
+        private EventCategoryDetail category = null;
         private EventStatus status = EventStatus.DRAFT;
         private long numberOfTickets = 0;
         private int maxTicketPerUser = 5;
@@ -138,12 +136,12 @@ public class Event {
             return this;
         }
 
-        public Builder eventsType(Set<EventsType> eventsType) {
-            this.eventsType = eventsType;
+        public Builder eventsType(Set<EventTypeDetail> eventTypeDetail) {
+            this.eventTypeDetail = eventTypeDetail;
             return this;
         }
 
-        public Builder category(EventsCategory category) {
+        public Builder category(EventCategoryDetail category) {
             this.category = category;
             return this;
         }
@@ -188,7 +186,7 @@ public class Event {
                     this.location,
                     this.locationUrl,
                     this.imagePath,
-                    this.eventsType,
+                    this.eventTypeDetail,
                     this.category,
                     this.status,
                     this.numberOfTickets,
@@ -212,7 +210,7 @@ public class Event {
                 ",\n \t  location='" + location + '\'' +
                 ",\n \t  locationUrl='" + locationUrl + '\'' +
                 ",\n \t  imagePath='" + imagePath + '\'' +
-                ",\n \t  eventsType= \n \t" + eventsType +
+                ",\n \t  eventsType= \n \t" + eventTypeDetail +
                 ",\n \t  category=" + category +
                 ",\n \t  status=" + status +
                 ",\n \t  numberOfTickets=" + numberOfTickets +

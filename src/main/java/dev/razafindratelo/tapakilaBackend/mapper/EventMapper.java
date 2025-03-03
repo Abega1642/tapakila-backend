@@ -3,15 +3,12 @@ package dev.razafindratelo.tapakilaBackend.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
-import dev.razafindratelo.tapakilaBackend.entity.EventsCategory;
-import dev.razafindratelo.tapakilaBackend.entity.EventsType;
+import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class EventMapper implements Mapper<Event> {
@@ -20,13 +17,13 @@ public class EventMapper implements Mapper<Event> {
     public Event mapFrom(ResultSet rs) throws SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
         String eventTypesJson = rs.getString("event_types");
-        Set<EventsType> eventTypes = new HashSet<>();
+        Set<EventTypeDetail> eventTypes = new HashSet<>();
 
         try {
             if (eventTypesJson != null && !eventTypesJson.isEmpty()) {
                 eventTypes = objectMapper.readValue(
                         eventTypesJson,
-                        objectMapper.getTypeFactory().constructCollectionType(Set.class, EventsType.class)
+                        objectMapper.getTypeFactory().constructCollectionType(Set.class, EventTypeDetail.class)
                 );
             }
 

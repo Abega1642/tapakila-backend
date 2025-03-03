@@ -1,7 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
 import dev.razafindratelo.tapakilaBackend.entity.Event;
-import dev.razafindratelo.tapakilaBackend.entity.EventsType;
+import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
@@ -59,8 +59,8 @@ class EventDaoTest {
         );
         Event actual = subject.findById(expectedId).orElseThrow();
         log.info(actual.toString());
-        Set<EventType> actualTypes = actual.getEventsType()
-                        .stream().map(EventsType::getEventType).collect(Collectors.toSet());
+        Set<EventType> actualTypes = actual.getEventTypeDetail()
+                        .stream().map(EventTypeDetail::getEventType).collect(Collectors.toSet());
 
         assertEquals(expectedId, actual.getId());
         assertEquals(organizer, actual.getOrganizer());

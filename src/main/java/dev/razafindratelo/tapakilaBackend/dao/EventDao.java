@@ -4,20 +4,15 @@ import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
-import dev.razafindratelo.tapakilaBackend.entity.EventsCategory;
-import dev.razafindratelo.tapakilaBackend.entity.EventsType;
+import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
-import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
-import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
-import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @AllArgsConstructor
@@ -236,13 +231,13 @@ public class EventDao implements DAO<Event> {
             ResultSet rs = findStmt.executeQuery();
 
             Event event = new Event.Builder().build();
-            Set<EventsType> eventTypes = new HashSet<>();
+            Set<EventTypeDetail> eventTypes = new HashSet<>();
 
             if (rs.next()) {
                 return Optional.of(new EventMapper().mapFrom(rs));
             }
 
-            event.setEventsType(eventTypes);
+            event.setEventTypeDetail(eventTypes);
             return Optional.of(event);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
