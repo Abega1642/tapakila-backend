@@ -3,6 +3,7 @@ package dev.razafindratelo.tapakilaBackend.dao;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Order;
@@ -35,6 +36,13 @@ class EventDaoTest {
     void setUp() {
         var ds = new DataSource();
         subject = new EventDao(ds);
+    }
+
+    @BeforeEach
+    void afterAll() {
+        List<Column> cols = List.of (new Column(AvailableColumn.EVENT_DESCRIPTION, "Join us for the biggest music festival of the year! Featuring top artists from around the world."));
+        List<Filter> refs = List.of(new Filter(AvailableColumn.EVENT_ID, OperatorType.EQUAL,"$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd"));
+        subject.update(cols, refs);
     }
 
     @Test
@@ -195,5 +203,15 @@ class EventDaoTest {
 
         assertThrows(RuntimeException.class, () -> subject.findAllByCriteria(criteria, 1, 4));
 
+    }
+
+    @Test
+    void test_update_method() {
+        List<Column> cols = List.of (new Column(AvailableColumn.EVENT_DESCRIPTION, "This is a random test to update event description"));
+        List<Filter> refs = List.of(new Filter(AvailableColumn.EVENT_ID, OperatorType.EQUAL,"$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd"));
+        List<Event> actual = subject.update(cols, refs);
+
+        assertEquals(1, actual.size());
+        assertEquals("This is a random test to update event description", actual.getFirst().getDescription());
     }
 }
