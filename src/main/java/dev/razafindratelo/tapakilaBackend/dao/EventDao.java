@@ -256,10 +256,9 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
-        AvailableColumn idAsRequestNotString = AvailableColumn.EVENT_ID.changeValueType(ValueType.REQUEST);
 
         List<Criteria> extraCriteria = List.of(
-                new Filter(idAsRequestNotString, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
+                new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
         );
 
         QueryResult sqlQuery = makeQuery(criteria, extraCriteria);

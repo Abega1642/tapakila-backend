@@ -8,9 +8,13 @@ public enum AvailableColumn {
     REQUEST_AS_COLUMN("REQUEST", ValueType.REQUEST),
     // Event columns:
     EVENT_ID("e.id", ValueType.STRING),
+    EVENT_ID_REQ("e.id", ValueType.REQUEST),
+
     EVENT_TITLE("e.title", ValueType.STRING),
+    EVENT_TITLE_REQ("e.title", ValueType.STRING),
     EVENT_DESCRIPTION("e.description", ValueType.TEXT),
     EVENT_DATE_TIME("e.date_time", ValueType.TIMESTAMP),
+    EVENT_DATE_TIME_REQ("e.date_time", ValueType.REQUEST),
     EVENT_TIME_ZONE("e.time_zone", ValueType.TIME_ZONE),
     EVENT_LOCATION("e.location", ValueType.TEXT),
     EVENT_IMAGE_PATH("e.image_path", ValueType.TEXT),
@@ -41,7 +45,9 @@ public enum AvailableColumn {
 
     //  Creates Columns :
     CREATES_CREATED_AT("c.created_at", ValueType.TIMESTAMP),
+    CREATES_CREATED_AT_REQ("c.created_at", ValueType.REQUEST),
     CREATES_UPDATED_AT("c.updated_at", ValueType.TIMESTAMP),
+    CREATES_UPDATED_AT_REQ("c.updated_at", ValueType.REQUEST),
 
     // Ticket :
     TICKET_PRICE("tp.price", ValueType.FLOAT),
@@ -63,13 +69,9 @@ public enum AvailableColumn {
     PAYMENT_STATUS("p.payment_status", ValueType.BOOLEAN),;
 
     private final String value;
-    private ValueType valueType;
+    private final ValueType valueType;
     AvailableColumn(String value, ValueType valueType) {
         this.value = value;
         this.valueType = valueType;
-    }
-    public AvailableColumn changeValueType(ValueType val) {
-        this.valueType = val;
-        return this;
     }
 }
