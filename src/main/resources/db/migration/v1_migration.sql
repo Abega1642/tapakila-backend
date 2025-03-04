@@ -469,7 +469,7 @@ CREATE TABLE ticket_price (
     id              VARCHAR(41) PRIMARY KEY,
     price           FLOAT DEFAULT 0.0,
     created_at      TIMESTAMP DEFAULT current_timestamp,
-    max_number      INT8 DEFAULT 0.0,
+    max_number      INT8 DEFAULT 0,
     id_ticket_type  VARCHAR(41) NOT NULL,
     id_event        VARCHAR(41) NOT NULL,
 
@@ -509,13 +509,78 @@ CREATE TABLE ticket (
     qr_code_path        TEXT NOT NULL,
     payement_ref        TEXT NOT NULL,
     ticket_owner_name   TEXT NOT NULL,
-    id_user             VARCHAR(41) NOT NULL,
+    user_email          VARCHAR(255) NOT NULL,
     id_event            VARCHAR(41) NOT NULL,
-    id_ticket_type      VARCHAR(41) NOT NULL,
-    id_payment_mode    VARCHAR(41) NOT NULL,
+    id_ticket_price     VARCHAR(41) NOT NULL,
+    id_payment_mode     VARCHAR(41) NOT NULL,
 
-    UNIQUE (ticket_number, id_event, id_ticket_type)
+    UNIQUE (ticket_number, id_event, id_ticket_price),
+    FOREIGN KEY (user_email) REFERENCES "user"(email),
+    FOREIGN KEY (id_event) REFERENCES "event"(id),
+    FOREIGN KEY (id_ticket_price) REFERENCES "ticket_price"(id),
+    FOREIGN KEY (id_payment_mode) REFERENCES "payment_mode"(id)
 );
+
+-- This SQL function will allow us to calculate the value of left ticket for a given event
+--  If you notice, the event table doesn't have the attribute >> leftTicket << nor we don't have any information
+-- about how many tickets left for a given event resource OR MORE IMPORTANT how many VIP, Bronze, Early Bird tickets left.
+-- So, here we calculate the left ticket for a given ticket type.
+-- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
+CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
+RETURNS FLOAT AS $$
+    DECLARE
+        left_ticket		    INT8;
+        ticket_price_id     VARCHAR(41);
+        total_ticket	    INT8 := 0;
+        sold_ticket 	    INT8 := 0;
+BEGIN
+    SELECT id INTO ticket_price_id
+    FROM ticket_price
+    WHERE id_event = event_id
+      AND id_ticket_type = (SELECT tkt.id FROM tickets_type tkt WHERE tkt.ticket_type = subject_ticket_type);
+
+    SELECT max_number INTO total_ticket
+    FROM ticket_price tp
+    WHERE tp.id = ticket_price_id;
+
+    SELECT COALESCE(COUNT(*), 0) INTO sold_ticket
+    FROM ticket
+    WHERE id_ticket_price = ticket_price_id;
+
+    left_ticket := total_ticket - sold_ticket;
+
+    RETURN left_ticket;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- As we discuss during our first meeting, we should also have the statistic of all ticket bought by an user
+--and suggest him as priority the kind of event he used to buy in the past (like suggestions)
+-- Explanation: In order to do that, we're going to give as result the top 5 of category the user has bought the most ticket with.
+CREATE OR REPLACE FUNCTION get_the_top_5_category_of_user(target_user_email VARCHAR)
+RETURNS JSONB[] AS $$
+DECLARE
+    result JSONB[];
+BEGIN
+    SELECT ARRAY(
+        SELECT jsonb_build_object(
+            'id', ec.id,
+            'category', ec.event_category,
+            'description', ec.description
+        )
+        FROM ticket t
+        INNER JOIN event e ON t.id_event = e.id
+        INNER JOIN events_category ec ON e.category = ec.event_category
+        WHERE t.user_email = target_user_email
+        GROUP BY ec.id, ec.event_category, ec.description
+        ORDER BY COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM ticket WHERE user_email = target_user_email), 0) DESC
+        LIMIT 5
+    ) INTO result;
+
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
 
