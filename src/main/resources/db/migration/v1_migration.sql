@@ -527,8 +527,9 @@ CREATE TABLE ticket (
 -- So, here we calculate the left ticket for a given ticket type.
 -- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
 CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
-RETURNS FLOAT AS $$
+RETURNS JSONB[] AS $$
     DECLARE
+        result              JSONB[];
         left_ticket		    INT8;
         ticket_price_id     VARCHAR(41);
         total_ticket	    INT8 := 0;
@@ -549,7 +550,22 @@ BEGIN
 
     left_ticket := total_ticket - sold_ticket;
 
-    RETURN left_ticket;
+    SELECT ARRAY(
+                   SELECT jsonb_build_object(
+                                  'id', ec.id,
+                                  'category', ec.event_category,
+                                  'description', ec.description
+                          )
+                   FROM ticket t
+                            INNER JOIN event e ON t.id_event = e.id
+                            INNER JOIN events_category ec ON e.category = ec.event_category
+                   WHERE t.user_email = target_user_email
+                   GROUP BY ec.id, ec.event_category, ec.description
+                   ORDER BY COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM ticket WHERE user_email = target_user_email), 0) DESC
+                   LIMIT 5
+           ) INTO result;
+
+    RETURN result;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -558,29 +574,32 @@ $$ LANGUAGE plpgsql;
 --and suggest him as priority the kind of event he used to buy in the past (like suggestions)
 -- Explanation: In order to do that, we're going to give as result the top 5 of category the user has bought the most ticket with.
 CREATE OR REPLACE FUNCTION get_the_top_5_category_of_user(target_user_email VARCHAR)
-RETURNS JSONB[] AS $$
+RETURNS jsonb[] AS
+$$
 DECLARE
-    result JSONB[];
+    result jsonb[];
 BEGIN
-    SELECT ARRAY(
-        SELECT jsonb_build_object(
-            'id', ec.id,
-            'category', ec.event_category,
-            'description', ec.description
-        )
-        FROM ticket t
-        INNER JOIN event e ON t.id_event = e.id
-        INNER JOIN events_category ec ON e.category = ec.event_category
-        WHERE t.user_email = target_user_email
-        GROUP BY ec.id, ec.event_category, ec.description
-        ORDER BY COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM ticket WHERE user_email = target_user_email), 0) DESC
-        LIMIT 5
-    ) INTO result;
+    SELECT COALESCE(
+        JSONB_AGG(
+            DISTINCT JSONB_BUILD_OBJECT(
+                'category_id', ec.id,
+                'event_category', ec.event_category,
+                'description', ec.description
+            )
+        ) FILTER (WHERE ec.id IS NOT NULL),
+        '[]'::jsonb
+    )
+    INTO result
+    FROM events_category ec
+    INNER JOIN event e ON ec.event_category = e.category
+    INNER JOIN ticket t ON e.id = t.id_event
+    WHERE t.user_email = target_user_email
+    GROUP BY ec.id
+    LIMIT 5;
 
     RETURN result;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 

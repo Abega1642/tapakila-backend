@@ -40,6 +40,7 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.EVENT_CATEGORY, "event_category"),
                 new Column (AvailableColumn.EVENT_NUMBER_OF_TICKET, "event_number_of_ticket"),
                 new Column (AvailableColumn.EVENT_MAX_TICKET_PER_USER, "event_max_ticket_per_user"),
+                new Column (AvailableColumn.EVENT_LEFT_TICKETS, "event_left_tickets"),
                 new Column (AvailableColumn.CREATES_CREATED_AT, "event_created_at"),
                 new Column (AvailableColumn.CREATES_UPDATED_AT, "event_updated_at"),
                 new Column (AvailableColumn.USER_EMAIL, "user_email"),
@@ -47,7 +48,8 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
-                new Column (AvailableColumn.USER_STATUS, "user_status")
+                new Column (AvailableColumn.USER_STATUS, "user_status"),
+                new Column (AvailableColumn.USER_TOP_5_CATEGORIES, "user_top_5_categories")
         );
     }
 

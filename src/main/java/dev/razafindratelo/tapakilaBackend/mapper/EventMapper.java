@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
+import dev.razafindratelo.tapakilaBackend.entity.LeftTicket;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class EventMapper implements Mapper<Event> {
@@ -17,13 +20,21 @@ public class EventMapper implements Mapper<Event> {
     public Event mapFrom(ResultSet rs) throws SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
         String eventTypesJson = rs.getString("event_types");
+        String leftTicketJson = rs.getString("left_tickets");
         Set<EventTypeDetail> eventTypes = new HashSet<>();
+        List<LeftTicket> leftTickets = new ArrayList<>();
 
         try {
             if (eventTypesJson != null && !eventTypesJson.isEmpty()) {
                 eventTypes = objectMapper.readValue(
                         eventTypesJson,
                         objectMapper.getTypeFactory().constructCollectionType(Set.class, EventTypeDetail.class)
+                );
+            }
+            if (leftTicketJson != null && !leftTicketJson.isEmpty()) {
+                leftTickets = objectMapper.readValue(
+                        leftTicketJson,
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, LeftTicket.class)
                 );
             }
 
@@ -45,6 +56,7 @@ public class EventMapper implements Mapper<Event> {
                 .imagePath(rs.getString("event_image_path"))
                 .status(EventStatus.valueOf(rs.getString("event_status")))
                 .numberOfTickets(rs.getLong("event_number_of_ticket"))
+                .leftTickets(leftTickets)
                 .maxTicketPerUser(rs.getInt("event_max_ticket_per_user"))
                 .createdAt(rs.getTimestamp("event_created_at").toLocalDateTime())
                 .updatedAt(rs.getTimestamp("event_updated_at").toLocalDateTime())

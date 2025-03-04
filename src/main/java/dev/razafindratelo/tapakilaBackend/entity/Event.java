@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import lombok.Data;
@@ -22,10 +23,15 @@ public class Event {
     private String location;
     private String locationUrl;
     private String imagePath;
+
+    @JsonProperty("event_types")
     private Set<EventTypeDetail> eventTypeDetail;
     private EventCategoryDetail category;
     private EventStatus status;
     private long numberOfTickets;
+
+    @JsonProperty("left_tickets")
+    private List<LeftTicket> leftTickets;
     private int maxTicketPerUser;
     private User createdBy;
     private LocalDateTime createdAt;
@@ -41,11 +47,11 @@ public class Event {
             String location,
             String locationUrl,
             String imagePath,
-            @JsonProperty("event_types")
             Set<EventTypeDetail> eventTypeDetail,
             EventCategoryDetail category,
             EventStatus status,
             long numberOfTickets,
+            List<LeftTicket> leftTickets,
             int maxTicketPerUser,
             User createdBy,
             LocalDateTime createdAt,
@@ -64,6 +70,7 @@ public class Event {
         this.category = category;
         this.status = status;
         this.numberOfTickets = numberOfTickets;
+        this.leftTickets = leftTickets;
         this.maxTicketPerUser = maxTicketPerUser;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
@@ -84,6 +91,7 @@ public class Event {
         private EventCategoryDetail category = null;
         private EventStatus status = EventStatus.DRAFT;
         private long numberOfTickets = 0;
+        private List<LeftTicket> leftTickets;
         private int maxTicketPerUser = 5;
         private User createdBy = null;
         private LocalDateTime createdAt = LocalDateTime.now();
@@ -155,6 +163,11 @@ public class Event {
             return this;
         }
 
+        public Builder leftTickets(List<LeftTicket> leftTickets) {
+            this.leftTickets = leftTickets;
+            return this;
+        }
+
         public Builder maxTicketPerUser(int maxTicketPerUser) {
             this.maxTicketPerUser = maxTicketPerUser;
             return this;
@@ -190,6 +203,7 @@ public class Event {
                     this.category,
                     this.status,
                     this.numberOfTickets,
+                    this.leftTickets,
                     this.maxTicketPerUser,
                     this.createdBy,
                     this.createdAt,
@@ -214,6 +228,7 @@ public class Event {
                 ",\n \t  category=" + category +
                 ",\n \t  status=" + status +
                 ",\n \t  numberOfTickets=" + numberOfTickets +
+                ",\n \t  leftTickets=" + numberOfTickets +
                 ",\n \t  maxTicketPerUser=" + maxTicketPerUser +
                 ",\n \t  createdBy=\n \t" + createdBy +
                 ",\n \t  createdAt=" + createdAt +

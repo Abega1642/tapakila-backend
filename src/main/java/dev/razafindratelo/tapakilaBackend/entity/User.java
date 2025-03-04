@@ -1,9 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
-import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import lombok.*;
-
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,7 +16,7 @@ public class User {
     private String password;
     private UserRole userRole;
     private boolean status;
-    private List<EventCategory> favoriteEventCategories;
+    private List<EventCategoryDetail> favoriteEventCategories;
 
 
     @Override

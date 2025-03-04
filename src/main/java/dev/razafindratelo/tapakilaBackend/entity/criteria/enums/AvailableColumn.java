@@ -20,6 +20,7 @@ public enum AvailableColumn {
     EVENT_IMAGE_PATH("e.image_path", ValueType.TEXT),
     EVENT_LOCATION_URL("e.location_url", ValueType.TEXT),
     EVENT_NUMBER_OF_TICKET("e.number_of_ticket", ValueType.LONG),
+    EVENT_LEFT_TICKETS("get_event_left_ticket_of_given_ticket_type(event_id)", ValueType.ARRAY),
     EVENT_MAX_TICKET_PER_USER("e.max_ticket_per_user", ValueType.INTEGER),
     EVENT_CATEGORY("e.category", ValueType.EVENT_CATEGORY),
     EVENT_STATUS("e.status", ValueType.EVENT_STATUS),
@@ -32,6 +33,8 @@ public enum AvailableColumn {
     USER_PROFILE_IMAGE_PATH("u.profile_img_path", ValueType.TEXT),
     USER_ROLE("u.user_role", ValueType.USER_ROLE),
     USER_STATUS("u.status", ValueType.BOOLEAN),
+    USER_TOP_5_CATEGORIES("get_the_top_5_category_of_user(user_email)", ValueType.STRING),
+
 
     //  Event type columns :
     EVENT_TYPE_ID("ety.id", ValueType.STRING),

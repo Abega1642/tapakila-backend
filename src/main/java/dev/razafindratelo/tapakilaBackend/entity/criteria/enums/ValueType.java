@@ -15,6 +15,7 @@ public enum ValueType {
     TIME_ZONE("time_zone"),
 
     //  SQL types :
+    ARRAY("array"),
     STRING("varchar"),
     INTEGER("int"),
     LONG("int8"),
