@@ -393,6 +393,13 @@ CREATE TYPE time_zone AS ENUM (
     'UTC_14_KIRIBATI_TIME'
 );
 
+CREATE TYPE currency AS ENUM (
+    'MGA',
+    'DOLLAR',
+    'EURO',
+    'LIVRE STERLING'
+);
+
 
 CREATE TABLE "event"(
     id                      VARCHAR(41) PRIMARY KEY,
@@ -468,6 +475,7 @@ CREATE TABLE tickets_type (
 CREATE TABLE ticket_price (
     id              VARCHAR(41) PRIMARY KEY,
     price           FLOAT DEFAULT 0.0,
+    currency         currency DEFAULT 'MGA',
     created_at      TIMESTAMP DEFAULT current_timestamp,
     max_number      INT8 DEFAULT 0,
     id_ticket_type  VARCHAR(41) NOT NULL,
@@ -510,13 +518,11 @@ CREATE TABLE ticket (
     payement_ref        TEXT NOT NULL,
     ticket_owner_name   TEXT NOT NULL,
     user_email          VARCHAR(255) NOT NULL,
-    id_event            VARCHAR(41) NOT NULL,
     id_ticket_price     VARCHAR(41) NOT NULL,
     id_payment_mode     VARCHAR(41) NOT NULL,
 
-    UNIQUE (ticket_number, id_event, id_ticket_price),
+    UNIQUE (ticket_number, id_ticket_price),
     FOREIGN KEY (user_email) REFERENCES "user"(email),
-    FOREIGN KEY (id_event) REFERENCES "event"(id),
     FOREIGN KEY (id_ticket_price) REFERENCES "ticket_price"(id),
     FOREIGN KEY (id_payment_mode) REFERENCES "payment_mode"(id)
 );
@@ -527,9 +533,9 @@ CREATE TABLE ticket (
 -- So, here we calculate the left ticket for a given ticket type.
 -- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
 CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
-RETURNS JSONB[] AS $$
+RETURNS INT8 AS $$
     DECLARE
-        result              JSONB[];
+        result              int8;
         left_ticket		    INT8;
         ticket_price_id     VARCHAR(41);
         total_ticket	    INT8 := 0;
@@ -544,62 +550,18 @@ BEGIN
     FROM ticket_price tp
     WHERE tp.id = ticket_price_id;
 
-    SELECT COALESCE(COUNT(*), 0) INTO sold_ticket
-    FROM ticket
+    SELECT COUNT(*) INTO sold_ticket
+    FROM ticket t
     WHERE id_ticket_price = ticket_price_id;
 
-    left_ticket := total_ticket - sold_ticket;
-
-    SELECT ARRAY(
-                   SELECT jsonb_build_object(
-                                  'id', ec.id,
-                                  'category', ec.event_category,
-                                  'description', ec.description
-                          )
-                   FROM ticket t
-                            INNER JOIN event e ON t.id_event = e.id
-                            INNER JOIN events_category ec ON e.category = ec.event_category
-                   WHERE t.user_email = target_user_email
-                   GROUP BY ec.id, ec.event_category, ec.description
-                   ORDER BY COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM ticket WHERE user_email = target_user_email), 0) DESC
-                   LIMIT 5
-           ) INTO result;
+    result := total_ticket - sold_ticket;
 
     RETURN result;
 END;
 $$ LANGUAGE plpgsql;
 
-
--- As we discuss during our first meeting, we should also have the statistic of all ticket bought by an user
---and suggest him as priority the kind of event he used to buy in the past (like suggestions)
--- Explanation: In order to do that, we're going to give as result the top 5 of category the user has bought the most ticket with.
-CREATE OR REPLACE FUNCTION get_the_top_5_category_of_user(target_user_email VARCHAR)
-RETURNS jsonb[] AS
-$$
-DECLARE
-    result jsonb[];
-BEGIN
-    SELECT COALESCE(
-        JSONB_AGG(
-            DISTINCT JSONB_BUILD_OBJECT(
-                'category_id', ec.id,
-                'event_category', ec.event_category,
-                'description', ec.description
-            )
-        ) FILTER (WHERE ec.id IS NOT NULL),
-        '[]'::jsonb
-    )
-    INTO result
-    FROM events_category ec
-    INNER JOIN event e ON ec.event_category = e.category
-    INNER JOIN ticket t ON e.id = t.id_event
-    WHERE t.user_email = target_user_email
-    GROUP BY ec.id
-    LIMIT 5;
-
-    RETURN result;
-END;
-$$ LANGUAGE plpgsql;
+--  NOTE : The function responsible for getting the top_five_of_the_categories_of_the_user has been replaced by
+-- an entire select query which you can find in the DAOs
 
 
 
