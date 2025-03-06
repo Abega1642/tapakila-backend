@@ -123,4 +123,95 @@ INSERT INTO creates (user_email, id_event) VALUES
     (SELECT id FROM "event" WHERE title = 'Theater Play')
 );
 
+INSERT INTO ticket_price (id, id_ticket_type, id_event, price, currency) VALUES
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'VIP'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    50000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'STANDARD'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    30000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'EARLY_BIRD'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    25000, 'MGA'
+),
+
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'VIP'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    5000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'STANDARD'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    3000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'EARLY_BIRD'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    2500, 'MGA'
+);
+
+
+
+
+-- tickets
+INSERT INTO ticket (id, qr_code_path, payement_ref, ticket_owner_name, user_email, id_ticket_price, id_payment_mode) VALUES
+(
+ '$Tkt-' || gen_random_uuid(),
+ 'qr_codes/ticket1.png',
+ 'PAY123456',
+ 'Just some random owner',
+ 'admin@example.com',
+ (SELECT id from ticket_price WHERE id_event = '$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd' AND price = 50000),
+ '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd' AND price = 25000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123456',
+    'Just some random owner',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 5000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 2500),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 3000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+);
+
 

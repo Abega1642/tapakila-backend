@@ -4,20 +4,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
+import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
+@Component
 public class EventMapper implements Mapper<Event> {
+	private ObjectMapper objectMapper;
 
     @Override
     public Event mapFrom(ResultSet rs) throws SQLException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String eventTypesJson = rs.getString("event_types");
+        String leftTicketJson = rs.getString("event_left_tickets");
+		System.out.println("---- LEFT_TCKETS : " + leftTicketJson);
         Set<EventTypeDetail> eventTypes = new HashSet<>();
+        List<TicketPriceInfo> leftTickets = new ArrayList<>();
 
         try {
             if (eventTypesJson != null && !eventTypesJson.isEmpty()) {
@@ -26,11 +36,17 @@ public class EventMapper implements Mapper<Event> {
                         objectMapper.getTypeFactory().constructCollectionType(Set.class, EventTypeDetail.class)
                 );
             }
+            if (leftTicketJson != null && !leftTicketJson.isEmpty()) {
+                leftTickets = objectMapper.readValue(
+                        leftTicketJson,
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, TicketPriceInfo.class)
+                );
+            }
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
-
+        System.out.println("THIS IS LEFT TICKETS " + leftTickets);
         return new Event.Builder()
                 .id(rs.getString("event_id"))
                 .organizer(rs.getString("event_organizer"))
@@ -45,6 +61,7 @@ public class EventMapper implements Mapper<Event> {
                 .imagePath(rs.getString("event_image_path"))
                 .status(EventStatus.valueOf(rs.getString("event_status")))
                 .numberOfTickets(rs.getLong("event_number_of_ticket"))
+                .leftTickets(leftTickets)
                 .maxTicketPerUser(rs.getInt("event_max_ticket_per_user"))
                 .createdAt(rs.getTimestamp("event_created_at").toLocalDateTime())
                 .updatedAt(rs.getTimestamp("event_updated_at").toLocalDateTime())

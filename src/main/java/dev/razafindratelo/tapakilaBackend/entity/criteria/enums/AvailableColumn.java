@@ -33,6 +33,7 @@ public enum AvailableColumn {
     USER_ROLE("u.user_role", ValueType.USER_ROLE),
     USER_STATUS("u.status", ValueType.BOOLEAN),
 
+
     //  Event type columns :
     EVENT_TYPE_ID("ety.id", ValueType.STRING),
     EVENT_TYPE_ID_REQ("ety.id", ValueType.REQUEST),

@@ -393,6 +393,13 @@ CREATE TYPE time_zone AS ENUM (
     'UTC_14_KIRIBATI_TIME'
 );
 
+CREATE TYPE currency AS ENUM (
+    'MGA',
+    'DOLLAR',
+    'EURO',
+    'LIVRE STERLING'
+);
+
 
 CREATE TABLE "event"(
     id                      VARCHAR(41) PRIMARY KEY,
@@ -468,8 +475,9 @@ CREATE TABLE tickets_type (
 CREATE TABLE ticket_price (
     id              VARCHAR(41) PRIMARY KEY,
     price           FLOAT DEFAULT 0.0,
+    currency         currency DEFAULT 'MGA',
     created_at      TIMESTAMP DEFAULT current_timestamp,
-    max_number      INT8 DEFAULT 0.0,
+    max_number      INT8 DEFAULT 0,
     id_ticket_type  VARCHAR(41) NOT NULL,
     id_event        VARCHAR(41) NOT NULL,
 
@@ -509,13 +517,51 @@ CREATE TABLE ticket (
     qr_code_path        TEXT NOT NULL,
     payement_ref        TEXT NOT NULL,
     ticket_owner_name   TEXT NOT NULL,
-    id_user             VARCHAR(41) NOT NULL,
-    id_event            VARCHAR(41) NOT NULL,
-    id_ticket_type      VARCHAR(41) NOT NULL,
-    id_payment_mode    VARCHAR(41) NOT NULL,
+    user_email          VARCHAR(255) NOT NULL,
+    id_ticket_price     VARCHAR(41) NOT NULL,
+    id_payment_mode     VARCHAR(41) NOT NULL,
 
-    UNIQUE (ticket_number, id_event, id_ticket_type)
+    UNIQUE (ticket_number, id_ticket_price),
+    FOREIGN KEY (user_email) REFERENCES "user"(email),
+    FOREIGN KEY (id_ticket_price) REFERENCES "ticket_price"(id),
+    FOREIGN KEY (id_payment_mode) REFERENCES "payment_mode"(id)
 );
+
+-- This SQL function will allow us to calculate the value of left ticket for a given event
+--  If you notice, the event table doesn't have the attribute >> leftTicket << nor we don't have any information
+-- about how many tickets left for a given event resource OR MORE IMPORTANT how many VIP, Bronze, Early Bird tickets left.
+-- So, here we calculate the left ticket for a given ticket type.
+-- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
+CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
+RETURNS INT8 AS $$
+    DECLARE
+        result              int8;
+        left_ticket		    INT8;
+        ticket_price_id     VARCHAR(41);
+        total_ticket	    INT8 := 0;
+        sold_ticket 	    INT8 := 0;
+BEGIN
+    SELECT id INTO ticket_price_id
+    FROM ticket_price
+    WHERE id_event = event_id
+      AND id_ticket_type = (SELECT tkt.id FROM tickets_type tkt WHERE tkt.ticket_type = subject_ticket_type);
+
+    SELECT max_number INTO total_ticket
+    FROM ticket_price tp
+    WHERE tp.id = ticket_price_id;
+
+    SELECT COUNT(*) INTO sold_ticket
+    FROM ticket t
+    WHERE id_ticket_price = ticket_price_id;
+
+    result := total_ticket - sold_ticket;
+
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+--  NOTE : The function responsible for getting the top_five_of_the_categories_of_the_user has been replaced by
+-- an entire select query which you can find in the DAOs
 
 
 
