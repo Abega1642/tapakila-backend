@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
-import dev.razafindratelo.tapakilaBackend.entity.LeftTicket;
+import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.sql.ResultSet;
@@ -13,16 +13,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
+@Component
 public class EventMapper implements Mapper<Event> {
+	private ObjectMapper objectMapper;
 
     @Override
     public Event mapFrom(ResultSet rs) throws SQLException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String eventTypesJson = rs.getString("event_types");
-        String leftTicketJson = rs.getString("left_tickets");
+        String leftTicketJson = rs.getString("event_left_tickets");
+		System.out.println("---- LEFT_TCKETS : " + leftTicketJson);
         Set<EventTypeDetail> eventTypes = new HashSet<>();
-        List<LeftTicket> leftTickets = new ArrayList<>();
+        List<TicketPriceInfo> leftTickets = new ArrayList<>();
 
         try {
             if (eventTypesJson != null && !eventTypesJson.isEmpty()) {
@@ -34,14 +39,14 @@ public class EventMapper implements Mapper<Event> {
             if (leftTicketJson != null && !leftTicketJson.isEmpty()) {
                 leftTickets = objectMapper.readValue(
                         leftTicketJson,
-                        objectMapper.getTypeFactory().constructCollectionType(List.class, LeftTicket.class)
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, TicketPriceInfo.class)
                 );
             }
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
-
+        System.out.println("THIS IS LEFT TICKETS " + leftTickets);
         return new Event.Builder()
                 .id(rs.getString("event_id"))
                 .organizer(rs.getString("event_organizer"))
