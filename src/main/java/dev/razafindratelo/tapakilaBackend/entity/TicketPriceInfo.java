@@ -1,7 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.razafindratelo.tapakilaBackend.entity.enums.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,9 +20,9 @@ public class TicketPriceInfo {
     @JsonProperty("price") private double price;
     @JsonProperty("currency") private Currency currency;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+	private LocalDateTime createdAt;
     @JsonProperty("max_number") private long maxNumber;
     @JsonProperty("corresponding_ticket_type") private Ticket ticketType;
     @JsonProperty("left_tickets") private long leftTickets;

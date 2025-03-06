@@ -30,8 +30,8 @@ public class Event {
     private EventStatus status;
     private long numberOfTickets;
 
-    @JsonProperty("left_tickets")
-    private List<LeftTicket> leftTickets;
+    @JsonProperty("event_left_tickets")
+    private List<TicketPriceInfo> leftTickets;
     private int maxTicketPerUser;
     private User createdBy;
     private LocalDateTime createdAt;
@@ -51,7 +51,7 @@ public class Event {
             EventCategoryDetail category,
             EventStatus status,
             long numberOfTickets,
-            List<LeftTicket> leftTickets,
+            List<TicketPriceInfo> leftTickets,
             int maxTicketPerUser,
             User createdBy,
             LocalDateTime createdAt,
@@ -91,7 +91,7 @@ public class Event {
         private EventCategoryDetail category = null;
         private EventStatus status = EventStatus.DRAFT;
         private long numberOfTickets = 0;
-        private List<LeftTicket> leftTickets;
+        private List<TicketPriceInfo> leftTickets;
         private int maxTicketPerUser = 5;
         private User createdBy = null;
         private LocalDateTime createdAt = LocalDateTime.now();
@@ -163,7 +163,7 @@ public class Event {
             return this;
         }
 
-        public Builder leftTickets(List<LeftTicket> leftTickets) {
+        public Builder leftTickets(List<TicketPriceInfo> leftTickets) {
             this.leftTickets = leftTickets;
             return this;
         }
@@ -228,7 +228,7 @@ public class Event {
                 ",\n \t  category=" + category +
                 ",\n \t  status=" + status +
                 ",\n \t  numberOfTickets=" + numberOfTickets +
-                ",\n \t  leftTickets=" + numberOfTickets +
+                ",\n \t  leftTickets=" + leftTickets +
                 ",\n \t  maxTicketPerUser=" + maxTicketPerUser +
                 ",\n \t  createdBy=\n \t" + createdBy +
                 ",\n \t  createdAt=" + createdAt +
