@@ -20,6 +20,7 @@ import java.util.*;
 @Getter
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
+	private final EventMapper eventMapper;	
 
     /**
      * {@code getColumns} method is a methods that handle the list of most / frequently used columns in this {@link EventDao}
@@ -40,7 +41,6 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.EVENT_CATEGORY, "event_category"),
                 new Column (AvailableColumn.EVENT_NUMBER_OF_TICKET, "event_number_of_ticket"),
                 new Column (AvailableColumn.EVENT_MAX_TICKET_PER_USER, "event_max_ticket_per_user"),
-                new Column (AvailableColumn.EVENT_LEFT_TICKETS, "event_left_tickets"),
                 new Column (AvailableColumn.CREATES_CREATED_AT, "event_created_at"),
                 new Column (AvailableColumn.CREATES_UPDATED_AT, "event_updated_at"),
                 new Column (AvailableColumn.USER_EMAIL, "user_email"),
@@ -48,8 +48,7 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
-                new Column (AvailableColumn.USER_STATUS, "user_status"),
-                new Column (AvailableColumn.USER_TOP_5_CATEGORIES, "user_top_5_categories")
+                new Column (AvailableColumn.USER_STATUS, "user_status")
         );
     }
 
@@ -57,9 +56,11 @@ public class EventDao implements DAO<Event> {
         return List.of (
                 new InnerJoinQuery("INNER JOIN creates c ON c.id_event = e.id"),
                 new InnerJoinQuery("INNER JOIN \"user\" u ON u.email = c.user_email"),
-                new InnerJoinQuery("INNER JOIN has_type h ON e.id = h.id_event"),
-                new InnerJoinQuery("INNER JOIN events_type ety ON ety.id = h.id_events_type"),
-                new InnerJoinQuery("INNER JOIN events_category ec ON ec.event_category = e.category")
+                new InnerJoinQuery("LEFT JOIN Top5Categories t5c ON u.email = t5c.user_email"),
+                new InnerJoinQuery("LEFT JOIN EventTypes ety ON e.id = ety.event_id"),
+                new InnerJoinQuery("LEFT JOIN events_category ec ON ec.event_category = e.category AND ec.id_event_type = ety.event_type_id"),
+                new InnerJoinQuery("LEFT JOIN ticket_price tp ON tp.id_event = e.id"),
+                new InnerJoinQuery("LEFT JOIN TicketType tkt ON tkt.ticket_type_id = tp.id_ticket_type")
         );
     }
 
@@ -77,9 +78,19 @@ public class EventDao implements DAO<Event> {
                 COALESCE(
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
-                                 'id', ety.id,
+                                 'id', t5c.event_category_id,
+                                 'event_category', t5c.event_category,
+                                 'description', t5c.event_category_description
+                            )
+                      ) FILTER (WHERE t5c.event_category_id IS NOT NULL),
+                                            '[]'
+                ) AS user_top_5_categories,
+                COALESCE(
+                      JSON_AGG(
+                            DISTINCT JSONB_BUILD_OBJECT(
+                                 'id', ety.event_type_id,
                                      'event_type', ety.event_type,
-                                     'description', ety.description,
+                                     'description', ety.event_type_description,
                                      'corresponding_categories',
                                      (SELECT JSONB_AGG(
                                           DISTINCT JSONB_BUILD_OBJECT(
@@ -89,11 +100,31 @@ public class EventDao implements DAO<Event> {
                                           )
                                      )
                                      FROM events_category ec2
-                                     WHERE ec2.id_event_type = ety.id)
+                                     WHERE ec2.id_event_type = ety.event_type_id)
                             )
-                      ) FILTER (WHERE ety.id IS NOT NULL),
+                      ) FILTER (WHERE ety.event_type_id IS NOT NULL),
                       '[]'
-                ) AS event_types
+                ) AS event_types,
+                COALESCE(
+                      JSON_AGG(
+                           DISTINCT JSONB_BUILD_OBJECT(
+                               'id', tp.id,
+                               'price', tp.price,
+                               'currency', tp.currency,
+                               'created_at', tp.created_at,
+                               'max_number', tp.max_number,
+                               'associated_event_id', tp.id_event,
+                               'corresponding_ticket_type',
+                               JSONB_BUILD_OBJECT(
+                                      'id', tkt.ticket_type_id,
+                                      'ticket_type', tkt.ticket_type,
+                                      'img_path', tkt.ticket_type_img_path,
+                                       'description', tkt.ticket_type_description
+                               ),
+                              'left_tickets', get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type)
+                           )
+                      ) FILTER (WHERE tp.id IS NOT NULL), '[]'
+                ) AS event_left_tickets
                 """;
         String eventCategoryIDRequest =
                 """
@@ -137,7 +168,8 @@ public class EventDao implements DAO<Event> {
                 AvailableColumn.USER_FIRST_NAME,
                 AvailableColumn.USER_PROFILE_IMAGE_PATH,
                 AvailableColumn.USER_ROLE,
-                AvailableColumn.USER_STATUS
+                AvailableColumn.USER_STATUS,
+                AvailableColumn.EVENT_DATE_TIME
         ));
 
         Query mainQuery = new Query.Builder()
@@ -169,6 +201,30 @@ public class EventDao implements DAO<Event> {
                     LEFT JOIN has_type h ON e.id = h.id_event
                     LEFT JOIN events_type ety ON ety.id = h.id_events_type
                     LEFT JOIN events_category ec ON ec.id_event_type = ety.id
+                ),
+                Top5Categories AS (
+                     SELECT
+                         u.email AS user_email,
+                         ec.id AS event_category_id,
+                         ec.event_category,
+                         ec.description AS event_category_description,
+                         COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM ticket t WHERE t.user_email = u.email), 0) AS percentage
+                     FROM ticket t
+                     RIGHT JOIN "user" u ON t.user_email = u.email
+                     LEFT JOIN ticket_price tp ON tp.id = t.id_ticket_price
+                     LEFT JOIN event e ON e.id = tp.id_event
+                     LEFT JOIN events_category ec ON e.category = ec.event_category
+                     GROUP BY ec.id, u.email
+                     ORDER BY percentage  DESC
+                     LIMIT 5
+                ),
+                TicketType AS (
+                    SELECT
+                        tt.id AS ticket_type_id,
+                        tt.ticket_type AS ticket_type,
+                        tt.img_path AS ticket_type_img_path,
+                        tt.description AS ticket_type_description
+                    FROM tickets_type tt
                 )
                 """ +
                 mainQuery.getSelectQuery();
@@ -240,13 +296,14 @@ public class EventDao implements DAO<Event> {
             findStmt.setLong(2, 0);
             findStmt.setString(3, id);
 
+            System.out.println(findStmt);
             ResultSet rs = findStmt.executeQuery();
 
             Event event = new Event.Builder().build();
             Set<EventTypeDetail> eventTypes = new HashSet<>();
 
             if (rs.next()) {
-                return Optional.of(new EventMapper().mapFrom(rs));
+                return Optional.of(eventMapper.mapFrom(rs));
             }
 
             event.setEventTypeDetail(eventTypes);
@@ -296,12 +353,12 @@ public class EventDao implements DAO<Event> {
 
             findAllByCriteriaStmt.setLong(1, size);
             findAllByCriteriaStmt.setLong(2, size * (page - 1));
-
+            System.out.println(findAllByCriteriaStmt);
 
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
 
             while (rs.next()) {
-                Event ev = new EventMapper().mapFrom(rs);
+                Event ev = eventMapper.mapFrom(rs);
                 events.add(ev);
             }
             return events;
