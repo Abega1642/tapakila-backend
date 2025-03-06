@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.dao;
-
+import dev.razafindratelo.tapakilaBackend.config.ObjectMapperConfig;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
+import dev.razafindratelo.tapakilaBackend.entity.EventCategoryDetail;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
@@ -13,6 +14,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OrderType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
+import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,7 @@ class EventDaoTest {
     @BeforeEach
     void setUp() {
         var ds = new DataSource();
-        subject = new EventDao(ds);
+        subject = new EventDao(ds, new EventMapper(new ObjectMapperConfig().objectMapper()));
     }
 
     @BeforeEach
@@ -68,7 +70,18 @@ class EventDaoTest {
                 "__password__",
                 UserRole.ADMIN,
                 true,
-                List.of()
+                List.of(
+                    new EventCategoryDetail(
+                            "$EvC-250ea1b3-6402-4113-9db8-ba4a77c900b9",
+                            EventCategory.NIGHTCLUB_PARTY,
+                            "Parties held in nightclubs with music and dancing."
+                    ),
+                    new EventCategoryDetail(
+                            "$EvC-6a4df93a-cb21-446d-92f8-fa394eb215a1",
+                            EventCategory.MUSIC_FESTIVAL,
+                            "A large-scale event featuring multiple music acts and performances."
+                    )
+                )
         );
         Event actual = subject.findById(expectedId).orElseThrow();
         log.info(actual.toString());
