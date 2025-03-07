@@ -5,7 +5,6 @@ import dev.razafindratelo.tapakilaBackend.service.eventService.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -14,7 +13,10 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping("/api/events")
-    public ResponseEntity<List<Event>> findAllEvents(@RequestParam("page") long page, @RequestParam("size") long size) {
+    public ResponseEntity<List<Event>> findAllEvents(
+            @RequestParam(value = "page", required = false) Long page,
+            @RequestParam(value = "size", required = false) Long size
+    ) {
         return ResponseEntity.ok(eventService.findAll(page, size));
     }
 
