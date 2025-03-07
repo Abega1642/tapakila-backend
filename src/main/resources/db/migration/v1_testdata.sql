@@ -1,4 +1,4 @@
-INSERT INTO "user" (email, profile_img_path, last_name, first_name, password, user_role, status) VALUES
+INSERT INTO "user" (email, profile_img_path, last_name, first_name, password, user_role, is_active) VALUES
 ('admin@example.com', '/user/admin/profile.jpg', 'Doe', 'John', 'hashed_password_123', 'ADMIN', true);
 
 INSERT INTO "event" (
