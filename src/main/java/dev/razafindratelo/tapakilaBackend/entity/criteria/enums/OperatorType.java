@@ -11,6 +11,7 @@ public enum OperatorType {
     LESS_THAN_OR_EQUAL("<="),
     NOT_EQUAL("<>"),
 
+    IN("IN"),
     CONTAINS("ILIKE"),
     BETWEEN("BETWEEN");
 

@@ -4,8 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum TableName {
-    EVENT("\"event\" e"),
+    EVENT("event e"),
     USER("\"user\" u"),
+    EVENTS_TYPE("events_type ety"),
+    EVENTS_CATEGORY("events_category ec"),
     TICKET_PRICE("ticket_price tp"),
     TICKET_TYPE("ticket_type tk"),
     PAYMENT_MODE("payment_mode p"),

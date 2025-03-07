@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+###     .env file [this .env file is related to DataSource, where Dotenv get all infos related to the database] ###
+.env

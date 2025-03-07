@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ValueType {
     //  ENUMS :
+    EVENT_TYPE("event_type"),
     EVENT_CATEGORY("event_category"),
     EVENT_STATUS("event_status"),
     TICKET_TYPE("ticket_type"),
@@ -14,6 +15,7 @@ public enum ValueType {
     TIME_ZONE("time_zone"),
 
     //  SQL types :
+    ARRAY("array"),
     STRING("varchar"),
     INTEGER("int"),
     LONG("int8"),

@@ -1,7 +1,8 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentType;
-import dev.razafindratelo.tapakilaBackend.entity.enums.PaymnetProvider;
+import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentProvider;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +16,11 @@ import java.time.LocalDateTime;
 public class PaymentMode {
     private String id;
     private String description;
+
     private PaymentType paymentType;
     private String paymentAPIUrl;
-    private PaymnetProvider paymnetProvider;
+    @JsonProperty("payment_provider")
+    private PaymentProvider paymentProvider;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean status;

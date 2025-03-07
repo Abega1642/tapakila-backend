@@ -1,7 +1,9 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
 import dev.razafindratelo.tapakilaBackend.entity.PaymentMode;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +38,7 @@ public class PaymentModeDao implements DAO<PaymentMode>{
     }
 
     @Override
-    public PaymentMode update(String id, PaymentMode entity) {
+    public List<PaymentMode> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
         throw new NotImplementedException("Updating payment mode not implemented yet");
     }
 

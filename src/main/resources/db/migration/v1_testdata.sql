@@ -1,64 +1,217 @@
-INSERT INTO events_type (id, event_type, description) VALUES
-    ('$EvT-' || gen_random_uuid(), 'BUSINESS_PROFESSIONAL', 'Events related to business, networking, and professional development.'),
-    ('$EvT-' || gen_random_uuid(), 'ENTERTAINMENT_ARTS', 'Events focused on music, theater, and various artistic performances.'),
-    ('$EvT-' || gen_random_uuid(), 'SPORTS_OUTDOOR', 'Sports competitions, outdoor activities, and adventure events.'),
-    ('$EvT-' || gen_random_uuid(), 'TECH_INNOVATION', 'Events related to technology, innovation, and startups.'),
-    ('$EvT-' || gen_random_uuid(), 'COMMUNITY_SOCIAL', 'Community gatherings, social awareness, and charity events.'),
-    ('$EvT-' || gen_random_uuid(), 'EDUCATION_TRAINING', 'Educational events, conferences, and training sessions.'),
-    ('$EvT-' || gen_random_uuid(), 'FOOD_DRINKS', 'Food festivals, cooking workshops, and tasting events.'),
-    ('$EvT-' || gen_random_uuid(), 'HEATH_WELLNESS', 'Health, wellness, and fitness-oriented events.');
+INSERT INTO "user" (email, profile_img_path, last_name, first_name, password, user_role, status) VALUES
+('admin@example.com', '/user/admin/profile.jpg', 'Doe', 'John', 'hashed_password_123', 'ADMIN', true);
+
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path, 
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+    '$Eve-' || gen_random_uuid(),
+    'Music Fest Organizers',
+    'Annual Summer Music Festival',
+    'Join us for the biggest music festival of the year! Featuring top artists from around the world.',
+    '2024-07-15 18:00:00',
+    'UTC_1_CENTRAL_EUROPEAN_TIME',
+    'Central Park, New York City',
+    'https://maps.example.com/central-park',
+    '/images/events/music_festival.jpg',
+    'MUSIC_FESTIVAL',
+    'PUBLISHED',
+    10000,
+    4
+),
+-- This insert is related to resources/static/event-poster/Party/NightClub-parties/Nightclub1.jpg
+(
+    '$Evt-' || gen_random_uuid(),
+    'Farthotel',
+    'Night Party',
+    'Join us for an unforgettable night party at Hotel Carlton! Featuring special performances and a star-studded guest list.',
+    '2025-02-28 20:00:00',
+    'UTC_1_CENTRAL_EUROPEAN_TIME',
+    'Hotel Carlton',
+    'https://maps.example.com/hotel-carlton',
+    '/images/events/night_party.jpg',
+    'NIGHTCLUB_PARTY',
+    'PUBLISHED',
+    500,
+    2
+),
+-- This insert is related to resources/static/event-poster/Theaters/Operas/Opera1.png
+(
+    '$Evt-' || gen_random_uuid(),
+    'Studio Showcase',
+    'Annual Studio Showcase',
+    'A night filled with mesmerizing performances, exquisite music, and a live orchestra. Join us for an unforgettable evening!',
+    '2025-04-15 19:00:00',
+    'UTC_1_CENTRAL_EUROPEAN_TIME',
+    'La Scène D''ivandry',
+    'https://maps.example.com/la-scene-divandry',
+    '/images/events/studio_showcase.jpg',
+    'OPERA',
+    'PUBLISHED',
+    300,
+    2
+),
+-- This insert is related to resources/static/event-poster/Theaters/Theater-plays/Theater1.png
+(
+    '$Evt-' || gen_random_uuid(),
+    'Theater Play Organizers',
+    'Theater Play',
+    'A time for you to discover the magic of theater! Join us for an unforgettable evening of drama and performance.',
+    '2025-03-24 19:00:00',
+    'UTC_3_EAST_AFRICA_TIME',
+    'Tranompokonolona Analakely',
+    'https://maps.example.com/tranompokonolona-analakely',
+    '/images/events/theater_play.jpg',
+    'THEATER_PLAY',
+    'PUBLISHED',
+    200,
+    4
+);
 
 
--- Insert data into events_category
-INSERT INTO events_category (id, event_category, description, id_event_type) VALUES
-    -- Business & Professional
-    ('$EvC-' || gen_random_uuid(), 'CONFERENCE', 'A formal meeting for discussion on a specific topic.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'WORKSHOP', 'A hands-on training session or educational event.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'MEETUP', 'An informal gathering of people with common interests.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'NETWORKING', 'An event where professionals connect and build relationships.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'SEMINAR', 'A lecture or presentation on a specific topic.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'SUMMIT', 'A high-level meeting or conference.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'EXPO', 'An exhibition showcasing products, services, or ideas.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'TRADE_SHOW', 'A large-scale business exhibition.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
-    ('$EvC-' || gen_random_uuid(), 'PANEL_DISCUSSION', 'A discussion among experts on a specific topic.', (SELECT id FROM events_type WHERE event_type = 'BUSINESS_PROFESSIONAL')),
 
-    -- Entertainment & Arts
-    ('$EvC-' || gen_random_uuid(), 'CONCERT', 'Live music performances by artists or bands.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'FESTIVAL', 'A large-scale cultural or entertainment event.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'THEATER', 'A live performance of a play or drama.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'COMEDY_SHOW', 'A live comedic performance.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'CINEMA_SCREENING', 'A public film screening event.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'DANCE_SHOW', 'A performance showcasing dance talent.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'ART_EXHIBITION', 'A display of visual artworks.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
-    ('$EvC-' || gen_random_uuid(), 'LITERARY_EVENT', 'A gathering focused on books and literature.', (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT_ARTS')),
 
-    -- Sports & Outdoor
-    ('$EvC-' || gen_random_uuid(), 'SPORTS', 'A competitive sports event or match.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'TOURNAMENT', 'A structured sports competition.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'MARATHON', 'A long-distance running competition.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'CYCLING_EVENT', 'A cycling race or competition.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'E_SPORTS', 'Competitive video gaming tournaments.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'ADVENTURE_RACE', 'An extreme outdoor endurance challenge.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
-    ('$EvC-' || gen_random_uuid(), 'OUTDOOR_CAMPING', 'An event focused on nature and camping activities.', (SELECT id FROM events_type WHERE event_type = 'SPORTS_OUTDOOR')),
+INSERT INTO has_type (id_event, id_events_type) VALUES
+(
+    (SELECT id FROM "event" WHERE title = 'Annual Summer Music Festival'),
+    (SELECT id FROM events_type WHERE event_type = 'MUSIC')
+),
+(
+    (SELECT id FROM "event" WHERE title = 'Annual Summer Music Festival'),
+    (SELECT id FROM events_type WHERE event_type = 'ENTERTAINMENT')
+),
+-- This insert is related to resources/static/event-poster/Party/NightClub-parties/Nightclub1.jpg
 
-    -- Tech & Innovation
-    ('$EvC-' || gen_random_uuid(), 'HACKATHON', 'A coding event where programmers collaborate intensively.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-    ('$EvC-' || gen_random_uuid(), 'CODING_BOOTCAMP', 'An intensive programming training session.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-    ('$EvC-' || gen_random_uuid(), 'STARTUP_PITCH', 'A competition where startups present their ideas.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-    ('$EvC-' || gen_random_uuid(), 'WEBINAR', 'An online seminar or workshop.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-    ('$EvC-' || gen_random_uuid(), 'TECH_FAIR', 'An event showcasing new technologies.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
-    ('$EvC-' || gen_random_uuid(), 'PRODUCT_LAUNCH', 'An event introducing a new product.', (SELECT id FROM events_type WHERE event_type = 'TECH_INNOVATION')),
+(
+    (SELECT id FROM "event" WHERE title = 'Night Party'),
+    (SELECT id FROM events_type WHERE event_type = 'PARTIES')
+),
+-- This insert is related to resources/static/event-poster/Theaters/Operas/Opera1.png
+(
+    (SELECT id FROM "event" WHERE title = 'Annual Studio Showcase'),
+    (SELECT id FROM events_type WHERE event_type = 'THEATER_AND_SHOWS')
+),
 
-    -- Community & Social
-    ('$EvC-' || gen_random_uuid(), 'CHARITY_EVENT', 'An event organized to raise funds for a cause.', (SELECT id FROM events_type WHERE event_type = 'COMMUNITY_SOCIAL')),
-    ('$EvC-' || gen_random_uuid(), 'FUNDRAISER', 'An event to collect money for a cause.', (SELECT id FROM events_type WHERE event_type = 'COMMUNITY_SOCIAL')),
-    ('$EvC-' || gen_random_uuid(), 'RELIGIOUS_GATHERING', 'A gathering for religious purposes.', (SELECT id FROM events_type WHERE event_type = 'COMMUNITY_SOCIAL')),
-    ('$EvC-' || gen_random_uuid(), 'POLITICAL_RALLY', 'A political event supporting a cause or candidate.', (SELECT id FROM events_type WHERE event_type = 'COMMUNITY_SOCIAL')),
-    ('$EvC-' || gen_random_uuid(), 'PRIDE_EVENT', 'An event celebrating LGBTQ+ pride.', (SELECT id FROM events_type WHERE event_type = 'COMMUNITY_SOCIAL')),
+-- This insert is related to resources/static/event-poster/Theaters/Theater-plays/Theater1.png
 
-    -- Education & Training
-    ('$EvC-' || gen_random_uuid(), 'COLLEGE_FAIR', 'An event for students exploring educational opportunities.', (SELECT id FROM events_type WHERE event_type = 'EDUCATION_TRAINING')),
-    ('$EvC-' || gen_random_uuid(), 'GRADUATION_CEREMONY', 'An event celebrating academic achievements.', (SELECT id FROM events_type WHERE event_type = 'EDUCATION_TRAINING')),
-    ('$EvC-' || gen_random_uuid(), 'TUTORING_SESSION', 'A session focused on academic assistance.', (SELECT id FROM events_type WHERE event_type = 'EDUCATION_TRAINING')),
-    ('$EvC-' || gen_random_uuid(), 'PUBLIC_LECTURE', 'An educational talk open to the public.', (SELECT id FROM events_type WHERE event_type = 'EDUCATION_TRAINING'));
+(
+    (SELECT id FROM "event" WHERE title = 'Theater Play'),
+    (SELECT id FROM events_type WHERE event_type = 'THEATER_AND_SHOWS')
+);
+
+
+
+
+
+INSERT INTO creates (user_email, id_event) VALUES
+(
+    'admin@example.com',
+    (SELECT id FROM "event" WHERE title = 'Annual Summer Music Festival')
+),
+-- This insert is related to resources/static/event-poster/Party/NightClub-parties/Nightclub1.jpg
+(
+    'admin@example.com',
+    (SELECT id FROM "event" WHERE title = 'Night Party')
+),
+-- This insert is related to resources/static/event-poster/Theaters/Operas/Opera1.png
+(
+    'admin@example.com',
+    (SELECT id FROM "event" WHERE title = 'Annual Studio Showcase')
+),
+(
+    'admin@example.com',
+    (SELECT id FROM "event" WHERE title = 'Theater Play')
+);
+
+INSERT INTO ticket_price (id, id_ticket_type, id_event, price, currency) VALUES
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'VIP'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    50000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'STANDARD'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    30000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'EARLY_BIRD'),
+    (SELECT id FROM event WHERE title = 'Annual Summer Music Festival'),
+    25000, 'MGA'
+),
+
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'VIP'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    5000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'STANDARD'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    3000, 'MGA'
+),
+(
+    '$TkP-' || gen_random_uuid(),
+    (SELECT id FROM tickets_type WHERE ticket_type = 'EARLY_BIRD'),
+    (SELECT id FROM event WHERE title = 'Night Party'),
+    2500, 'MGA'
+);
+
+
+
+
+-- tickets
+INSERT INTO ticket (id, qr_code_path, payement_ref, ticket_owner_name, user_email, id_ticket_price, id_payment_mode) VALUES
+(
+ '$Tkt-' || gen_random_uuid(),
+ 'qr_codes/ticket1.png',
+ 'PAY123456',
+ 'Just some random owner',
+ 'admin@example.com',
+ (SELECT id from ticket_price WHERE id_event = '$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd' AND price = 50000),
+ '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd' AND price = 25000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123456',
+    'Just some random owner',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 5000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 2500),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
+(
+    '$Tkt-' || gen_random_uuid(),
+    'qr_codes/ticket1.png',
+    'PAY123454',
+    'Just some random owner2',
+    'admin@example.com',
+    (SELECT id from ticket_price WHERE id_event = '$Evt-689db3b3-a5b1-4a29-ad90-f462b591b2d2' AND price = 3000),
+    '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+);
+
 

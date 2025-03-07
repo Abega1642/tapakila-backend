@@ -1,65 +1,265 @@
 package dev.razafindratelo.tapakilaBackend.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum EventCategory {
-    // Business & Professional categories
-    CONFERENCE,
-    WORKSHOP,
-    MEETUP,
-    NETWORKING,
-    SEMINAR,
-    SUMMIT,
-    EXPO,
-    TRADE_SHOW,
-    PANEL_DISCUSSION,
+    // Entertainment
+    MAGIC_AND_ILLUSIONS,
+    ARTISTIC_PERFORMANCES,
+    STREET_PERFORMANCES,
+    CIRCUS_SHOW,
+    VARIETY_SHOW,
+    PUPPETRY,
+    STORYTELLING,
 
-    // Entertainment & arts categories
-    CONCERT,
-    FESTIVAL,
-    THEATER,
-    COMEDY_SHOW,
-    CINEMA_SCREENING,
-    DANCE_SHOW,
-    ART_EXHIBITION,
-    LITERARY_EVENT,
+    // Music
+    LIVE_CONCERT,
+    MUSIC_FESTIVAL,
+    DJ_SET,
+    ORCHESTRA,
+    OPERA_FESTIVAL,
+    ACOUSTIC_CONCERT,
+    JAZZ_FESTIVAL,
+    ROCK_CONCERT,
+    CLASSICAL_MUSIC,
+    KARAOKE_NIGHT,
 
-    //  Sports & Outdoors categories :
-    SPORTS,
+    // Sports
+    MATCH,
     TOURNAMENT,
-    MARATHON,
-    CYCLING_EVENT,
-    E_SPORTS,
-    ADVENTURE_RACE,
-    OUTDOOR_CAMPING,
+    MARATHON_AND_RACE,
+    BATTLE,
+    WATER_SPORTS,
+    WINTER_SPORTS,
+    CYCLING_RACE,
+    TRIATHLON,
+    EXTREME_SPORTS,
+    EQUESTRIAN_EVENT,
+    FITNESS_CHALLENGE,
 
-    // Tech and innovation categories :
+    // Theater & Shows
+    THEATER_PLAY,
+    MUSICAL_COMEDY,
+    OPERA,
+    BALLET_AND_DANCE,
+    IMPROV_THEATER,
+    PUPPET_SHOW,
+    CABARET,
+    MIME_SHOW,
+    ONE_MAN_SHOW,
+    CHILDREN_THEATER,
+
+    // Education
+    WORKSHOP,
+    MASTERCLASS,
+    SEMINAR,
+    ONLINE_COURSE,
+    LECTURE,
     HACKATHON,
     CODING_BOOTCAMP,
-    STARTUP_PITCH,
-    WEBINAR,
-    TECH_FAIR,
-    PRODUCT_LAUNCH,
+    LANGUAGE_EXCHANGE,
 
-    //  Community and social categories :
-    CHARITY_EVENT,
-    FUNDRAISER,
-    RELIGIOUS_GATHERING,
-    POLITICAL_RALLY,
-    PRIDE_EVENT,
+    // Cinema
+    PREMIERE_SCREENING,
+    MOVIE_SCREENING,
+    OPEN_AIR_CINEMA,
+    FILM_FESTIVAL,
+    DOCUMENTARY_SCREENING,
+    CLASSIC_MOVIE_SCREENING,
+    ANIME_SCREENING,
+    SHORT_FILM_FESTIVAL,
+    SILENT_MOVIE_NIGHT,
 
-    // Educations and training categories :
-    COLLEGE_FAIR,
-    GRADUATION_CEREMONY,
-    TUTORING_SESSION,
-    PUBLIC_LECTURE,
+    // Exhibitions & Culture
+    ART_EXHIBITION,
+    FAIR,
+    SCIENCE_EXHIBITION,
+    HISTORY_EXHIBITION,
+    CULTURAL_TOUR,
+    PHOTOGRAPHY_EXHIBITION,
+    SCULPTURE_EXHIBITION,
+    HISTORICAL_REENACTMENT,
+    CULTURAL_WORKSHOP,
 
-    //  Foods and drinks categories :
+    // Festivals & Fairs
+    CULTURAL_FESTIVAL,
+    EXPO,
+    CARNIVAL,
+    GEEK_CONVENTION,
     FOOD_FESTIVAL,
-    WINE_TASTING,
-    COOKING_WORKSHOP,
+    WINE_FESTIVAL,
+    BOOK_FAIR,
+    COMIC_CON,
+    HARVEST_FESTIVAL,
+    FLOWER_FESTIVAL,
 
-    //  Health and wellness categories :
-    YOGA_RETREAT,
-    FITNESS_BOOTCAMP,
-    MENTAL_HEALTH_TALK,
-    WELLNESS_CONFERENCE;
+    // Parties
+    NIGHTCLUB_PARTY,
+    POOL_PARTY,
+    COSTUME_PARTY,
+    BEACH_PARTY,
+    THEMED_PARTY,
+    GLOW_PARTY,
+    SILENT_DISCO,
+    ROOFTOP_PARTY,
+    NEW_YEAR_EVE_PARTY,
+
+    // Gaming
+    ESPORT_TOURNAMENT,
+    GAMING_CONFERENCE,
+    LAN_PARTY,
+    VIDEO_GAME_RELEASE,
+    BOARD_GAME_NIGHT,
+    COSPLAY_EVENT,
+    GAMING_MARATHON,
+    VIRTUAL_REALITY_EXPO,
+
+    // Business
+    PROFESSIONAL_FAIR,
+    BUSINESS_CONFERENCE,
+    STARTUP_PITCH_EVENT,
+    CORPORATE_SOCIAL,
+    NETWORKING_EVENT,
+    INVESTOR_PITCH,
+    TRADE_SHOW,
+    CORPORATE_TRAINING,
+
+    // Religious
+    RELIGIOUS_CEREMONY,
+    SPIRITUAL_SONGS_AND_MUSIC,
+    PILGRIMAGE,
+    FAITH_HEALING,
+    SPIRITUAL_RETREAT,
+    PRAYER_MEETING,
+    RELIGIOUS_CONFERENCE,
+    HOLY_DAY_CELEBRATION,
+
+    // Food and Drink
+    WINE_TASTING,
+    BEER_FESTIVAL,
+    COFFEE_EXPO,
+    COCKTAIL_WORKSHOP,
+    CHOCOLATE_FESTIVAL,
+    STREET_FOOD_FESTIVAL,
+
+    // Charity
+    CHARITY_GALA,
+    CHARITY_RUN,
+    VOLUNTEER_EVENT,
+    FUNDRAISING_GALA,
+    CHARITY_AUCTION,
+    COMMUNITY_SERVICE,
+
+    // Travel
+    TRAVEL_EXPO,
+    ADVENTURE_TOUR,
+    EXOTIC_TRAVEL,
+    CRUISE_EVENT,
+    ADVENTURE_CAMP,
+    CULTURAL_IMMERSION,
+
+    // Fashion
+    FASHION_SHOW,
+    FASHION_EXPO,
+    FASHION_WORKSHOP,
+    FASHION_AWARD,
+    POP_UP_STORE,
+    DESIGNER_SHOWCASE,
+
+    // Technology
+    TECH_CONFERENCE,
+    GADGET_EXPO,
+    INNOVATION_SUMMIT,
+    AI_CONFERENCE,
+    ROBOTICS_EXPO,
+    CYBERSECURITY_SUMMIT,
+
+    // Environmental
+    CLEANUP_EVENT,
+    GREEN_CONFERENCE,
+    ECO_FESTIVAL,
+    TREE_PLANTING,
+    SUSTAINABILITY_WORKSHOP,
+    ECO_FRIENDLY_MARKET,
+
+    // Family & Kids
+    KIDS_THEATER,
+    FAMILY_CARNIVAL,
+    CHILDREN_WORKSHOP,
+    AMUSEMENT_PARK_EVENT,
+    STORYTELLING_SESSION,
+
+    // Health & Wellness
+    YOGA_CLASS,
+    MEDITATION_SESSION,
+    HEALTH_FITNESS_CHALLENGE,
+    WELLNESS_RETREAT,
+    HEALTH_FAIR,
+
+    // Literature & Books
+    BOOK_SIGNING,
+    AUTHOR_TALK,
+    POETRY_READING,
+    WRITING_WORKSHOP,
+    BOOK_CLUB_MEETING,
+
+    // Comedy
+    STAND_UP_COMEDY,
+    IMPROV_COMEDY,
+    COMEDY_CLUB_NIGHT,
+    SATIRE_SHOW,
+    COMEDY_FESTIVAL,
+
+    // Nightlife
+    NIGHTCLUB_EVENT,
+    LOUNGE_PARTY,
+    NIGHTLIFE_KARAOKE_NIGHT,
+    THEMED_NIGHT,
+    AFTER_PARTY,
+
+    // Outdoor & Adventure
+    HIKING_TOUR,
+    CAMPING_EVENT,
+    ROCK_CLIMBING,
+    KAYAKING_TOUR,
+    ADVENTURE_RACE,
+
+    // Community & Social
+    NEIGHBORHOOD_FAIR,
+    COMMUNITY_POTLUCK,
+    VOLUNTEER_MEETUP,
+    SOCIAL_CLUB_EVENT,
+    CULTURAL_EXCHANGE,
+
+    // History & Heritage
+    HISTORICAL_TOUR,
+    REENACTMENT_EVENT,
+    HERITAGE_FESTIVAL,
+    ARCHAEOLOGY_TALK,
+    MUSEUM_NIGHT,
+
+    // Science & Tech
+    SCIENCE_FAIR,
+    TECH_DEMO,
+    STEM_WORKSHOP,
+    ASTRONOMY_NIGHT,
+    INNOVATION_EXPO,
+
+    // Animals & Nature
+    WILDLIFE_TOUR,
+    PET_ADOPTION_EVENT,
+    BIRD_WATCHING,
+    NATURE_PHOTOGRAPHY,
+    ANIMAL_SANCTUARY_VISIT;
+
+
+    @JsonCreator
+    public static EventCategory fromString(String value) {
+        for (EventCategory category : EventCategory.values()) {
+            if (category.name().equalsIgnoreCase(value)) {
+                return category;
+            }
+        }
+        return null;
+    }
 }

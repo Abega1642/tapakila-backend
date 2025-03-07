@@ -1,7 +1,9 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
 import dev.razafindratelo.tapakilaBackend.entity.Tickets;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +38,7 @@ public class TicketsDao implements DAO<Tickets> {
     }
 
     @Override
-    public Tickets update(String id, Tickets entity) {
+    public List<Tickets> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
         throw new NotImplementedException("Updating ticket not implemented yet");
     }
 

@@ -1,7 +1,9 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
 import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,8 +37,9 @@ public class UserDao implements DAO<User> {
         throw new NotImplementedException("Finding all users by criteria not implemented yet");
     }
 
+
     @Override
-    public User update(String id, User entity) {
+    public List<User> update(List<Column> columnToBeUpdated, List<Filter> updateColumnReferences) {
         throw new NotImplementedException("Updating user not implemented yet");
     }
 

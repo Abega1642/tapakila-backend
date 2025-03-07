@@ -7,7 +7,7 @@ import java.util.StringJoiner;
 public class OrderQueryFactory implements SubQueryFactory<Order> {
 
     @Override
-    public StringBuilder makeQuery(List<Order> orders) {
+    public StringBuilder makeSubSelectQuery(List<Order> orders) {
         StringJoiner joiner = new StringJoiner(", ", " ORDER BY ", "");
 
         if (orders.isEmpty()) {
