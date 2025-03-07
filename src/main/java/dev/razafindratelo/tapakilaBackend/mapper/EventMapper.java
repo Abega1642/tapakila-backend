@@ -25,7 +25,6 @@ public class EventMapper implements Mapper<Event> {
     public Event mapFrom(ResultSet rs) throws SQLException {
         String eventTypesJson = rs.getString("event_types");
         String leftTicketJson = rs.getString("event_left_tickets");
-		System.out.println("---- LEFT_TCKETS : " + leftTicketJson);
         Set<EventTypeDetail> eventTypes = new HashSet<>();
         List<TicketPriceInfo> leftTickets = new ArrayList<>();
 
@@ -46,7 +45,6 @@ public class EventMapper implements Mapper<Event> {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
-        System.out.println("THIS IS LEFT TICKETS " + leftTickets);
         return new Event.Builder()
                 .id(rs.getString("event_id"))
                 .organizer(rs.getString("event_organizer"))

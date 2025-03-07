@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-@ToString
 public class Ticket {
     @JsonProperty("id")
     private String id;
@@ -18,4 +17,14 @@ public class Ticket {
     private String imgPath;
     @JsonProperty("ticket_type")
     private TicketType ticketType;
+
+    @Override
+    public String toString() {
+        return "Ticket {" +
+                "\n \t id='" + id + '\'' +
+                ",\n \t description='" + description + '\'' +
+                ",\n \t imgPath='" + imgPath + '\'' +
+                ",\n \t ticketType=" + ticketType +
+                "\n \t }";
+    }
 }
