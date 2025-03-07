@@ -15,7 +15,7 @@ import java.util.List;
 public class EventTypeController {
     private final EventTypeDetailService eventTypeDetailService;
 
-    @GetMapping("/api/event-types")
+    @GetMapping("event-types")
     public ResponseEntity<List<EventTypeDetail>> findAllEventTypes (
             @RequestParam(value = "page", required = false) Long page,
             @RequestParam(value = "size", required = false) Long size
@@ -23,7 +23,7 @@ public class EventTypeController {
         return ResponseEntity.ok(eventTypeDetailService.findAll(page, size));
     }
 
-    @GetMapping("/api/event-type/{eventTypeId}")
+    @GetMapping("event-type/{eventTypeId}")
     public ResponseEntity<EventTypeDetail> findEventTypeById (@PathVariable("eventTypeId") String eventTypeId) {
         return ResponseEntity.ok(eventTypeDetailService.findById(eventTypeId));
     }

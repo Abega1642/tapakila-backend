@@ -3,6 +3,7 @@ package dev.razafindratelo.tapakilaBackend.dao;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
+import dev.razafindratelo.tapakilaBackend.dao.queryfactory.UpdateHandler;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
@@ -48,7 +49,8 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
-                new Column (AvailableColumn.USER_STATUS, "user_status")
+                new Column (AvailableColumn.USER_STATUS, "user_status"),
+                new Column (AvailableColumn.USER_CREATED_AT, "user_creation_date")
         );
     }
 
@@ -169,7 +171,8 @@ public class EventDao implements DAO<Event> {
                 AvailableColumn.USER_PROFILE_IMAGE_PATH,
                 AvailableColumn.USER_ROLE,
                 AvailableColumn.USER_STATUS,
-                AvailableColumn.EVENT_DATE_TIME
+                AvailableColumn.EVENT_DATE_TIME,
+                AvailableColumn.USER_CREATED_AT
         ));
 
         Query mainQuery = new Query.Builder()
@@ -331,7 +334,7 @@ public class EventDao implements DAO<Event> {
      * @param connection : This is the connection of the parent method that use this method
      * @return : The list of events corresponding to the given {@code criteria}
      */
-    public List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
+    private List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
 
         List<Criteria> extraCriteria = List.of(
                 new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
@@ -369,8 +372,6 @@ public class EventDao implements DAO<Event> {
     public List<Event> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
         Connection connection = dataSource.getConnection();
 
-
-
         List<Criteria> criteria = new ArrayList<>(updateColumnReferences);
         Query queryMaker = new Query.Builder()
                 .tableName(TableName.EVENT)
@@ -381,18 +382,8 @@ public class EventDao implements DAO<Event> {
         StringBuilder updateQuery = queryMaker.getUpdateQuery(updateColumnReferences);
 
         try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery.toString())) {
-            int paramIndex = 1;
 
-            for(Column col : columnsToBeUpdated) {
-                updateStmt.setObject(paramIndex, col.getAlias());
-                paramIndex++;
-            }
-
-            paramIndex--;
-
-            queryMaker.completeQueryAndReturnLastParamIndex(updateStmt, paramIndex);
-
-            int updatedRows = updateStmt.executeUpdate();
+            int updatedRows = UpdateHandler.executeUpdate(columnsToBeUpdated, queryMaker, updateStmt);
 
             if (updatedRows != 0) {
                 return findAllByCriteriaWithGivenConnection(criteria, 1, updatedRows, connection);
@@ -402,9 +393,8 @@ public class EventDao implements DAO<Event> {
             throw new RuntimeException(e.getMessage());
         }
 
-        throw new NotImplementedException("Updating event not implemented yet");
+        throw new RuntimeException("Error while updating event(s)");
     }
-
 
     @Override
     public Optional<Event> delete(String id) {

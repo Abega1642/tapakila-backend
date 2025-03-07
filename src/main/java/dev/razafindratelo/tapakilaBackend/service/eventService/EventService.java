@@ -8,5 +8,6 @@ import java.util.List;
 public interface EventService {
     Event findById(String id);
     List<Event> findAll(Long page, Long size);
+    List<Event> findAllByAdminId(String email, Long page, Long size);
 
 }

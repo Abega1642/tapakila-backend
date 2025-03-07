@@ -457,8 +457,9 @@ CREATE TABLE "user" (
     last_name       	VARCHAR(255) NOT NULL,
     first_name      	VARCHAR(255) NOT NULL,
     password        	TEXT NOT NULL,
+    created_at          TIMESTAMP DEFAULT current_timestamp,
     user_role       	user_role NOT NULL,
-    status          	BOOLEAN DEFAULT false,
+    is_active          	BOOLEAN DEFAULT false,
 
     UNIQUE (last_name, first_name, user_role)
 );
@@ -527,6 +528,29 @@ CREATE TABLE ticket (
     FOREIGN KEY (id_payment_mode) REFERENCES "payment_mode"(id)
 );
 
+CREATE TABLE account_activation (
+    id              VARCHAR(41) PRIMARY KEY,
+    created_at      TIMESTAMP DEFAULT current_timestamp,
+    expired_at      TIMESTAMP GENERATED ALWAYS AS ( created_at + INTERVAL '10 minutes') STORED,
+	activated_at	TIMESTAMP,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (user_email) REFERENCES "user"(email)
+);
+
+CREATE OR REPLACE FUNCTION is_activation_active (activation_id VARCHAR)
+RETURNS BOOLEAN AS $$
+    DECLARE
+        expiration  TIMESTAMP;
+
+    BEGIN
+        SELECT expired_at INTO expiration
+        FROM account_activation WHERE id = activation_id;
+
+        RETURN current_timestamp < expiration;
+    END;
+$$ LANGUAGE plpgsql;
+
 -- This SQL function will allow us to calculate the value of left ticket for a given event
 --  If you notice, the event table doesn't have the attribute >> leftTicket << nor we don't have any information
 -- about how many tickets left for a given event resource OR MORE IMPORTANT how many VIP, Bronze, Early Bird tickets left.
@@ -536,7 +560,6 @@ CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id 
 RETURNS INT8 AS $$
     DECLARE
         result              int8;
-        left_ticket		    INT8;
         ticket_price_id     VARCHAR(41);
         total_ticket	    INT8 := 0;
         sold_ticket 	    INT8 := 0;
