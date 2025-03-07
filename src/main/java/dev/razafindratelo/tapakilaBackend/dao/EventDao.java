@@ -296,7 +296,6 @@ public class EventDao implements DAO<Event> {
             findStmt.setLong(2, 0);
             findStmt.setString(3, id);
 
-            System.out.println(findStmt);
             ResultSet rs = findStmt.executeQuery();
 
             Event event = new Event.Builder().build();
@@ -353,7 +352,6 @@ public class EventDao implements DAO<Event> {
 
             findAllByCriteriaStmt.setLong(1, size);
             findAllByCriteriaStmt.setLong(2, size * (page - 1));
-            System.out.println(findAllByCriteriaStmt);
 
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
 

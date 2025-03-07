@@ -1,5 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum TimeZone {
     //  UTC -12 to UTC -1
     UTC_MINUS_12_BAKER_ISLAND,
@@ -49,4 +51,14 @@ public enum TimeZone {
     UTC_12_FIJI_TIME,
     UTC_13_TONGA_TIME,
     UTC_14_KIRIBATI_TIME;
+
+    @JsonCreator
+    public static TimeZone fromString(String value) {
+        for (TimeZone timeZone : TimeZone.values()) {
+            if (timeZone.name().equalsIgnoreCase(value)) {
+                return timeZone;
+            }
+        }
+        return null;
+    }
 }
