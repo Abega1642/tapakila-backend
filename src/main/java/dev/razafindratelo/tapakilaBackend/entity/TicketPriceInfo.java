@@ -7,14 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-@ToString
 public class TicketPriceInfo {
     @JsonProperty("id")  private String id;
     @JsonProperty("price") private double price;
@@ -27,4 +25,18 @@ public class TicketPriceInfo {
     @JsonProperty("corresponding_ticket_type") private Ticket ticketType;
     @JsonProperty("left_tickets") private long leftTickets;
     @JsonProperty("associated_event_id") private String associatedEventId;
+
+    @Override
+    public String toString() {
+        return "TicketPriceInfo {" +
+                "\n \t id='" + id + '\'' +
+                ",\n \t price=" + price +
+                ",\n \t currency=" + currency +
+                ",\n \t createdAt=" + createdAt +
+                ",\n \t maxNumber=" + maxNumber +
+                ",\n \t ticketType=" + ticketType +
+                ",\n \t leftTickets=" + leftTickets +
+                ",\n \t associatedEventId='" + associatedEventId + '\'' +
+                "\n \t }";
+    }
 }
