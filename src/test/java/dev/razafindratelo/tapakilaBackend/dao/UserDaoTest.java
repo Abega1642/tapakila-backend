@@ -52,7 +52,7 @@ class UserDaoTest {
         User expected = new User(
                 "a.razafindratelo@gmail.com",
                 "Razafindratelo",
-                "Abegaa",
+                "Abegà",
                 "/resources/a_razafindratelo/no_image.png",
                 "__sorry_but_you_cannot_have_a_look_at_the_user_password__",
                 UserRole.USER,

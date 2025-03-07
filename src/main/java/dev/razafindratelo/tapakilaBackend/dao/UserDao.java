@@ -153,9 +153,8 @@ public class UserDao implements DAO<User> {
         String finaLQuery = sqlQuery.sql();
 
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
-            findStmt.setLong(1, 1);
-            findStmt.setLong(2, 0);
-            findStmt.setString(3, email);
+            System.out.println(findStmt);
+            findStmt.setString(1, email);
             
             ResultSet rs = findStmt.executeQuery();
             

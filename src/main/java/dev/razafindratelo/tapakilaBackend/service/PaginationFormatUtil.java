@@ -1,8 +1,11 @@
 package dev.razafindratelo.tapakilaBackend.service;
 
-public class PaginationFormat {
-    public static void normalize(Long page, Long size) {
-        page = (page == null) ? 1L : page;
-        size = (size == null) ? 10L : size;
+public class PaginationFormatUtil {
+    public static long normalizePage(Long page) {
+        return (page == null) ? 1L : page;
+    }
+
+    public static long normalizeSize(Long size) {
+        return (size == null) ? 10L : size;
     }
 }
