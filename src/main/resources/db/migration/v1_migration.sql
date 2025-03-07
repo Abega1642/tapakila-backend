@@ -457,6 +457,7 @@ CREATE TABLE "user" (
     last_name       	VARCHAR(255) NOT NULL,
     first_name      	VARCHAR(255) NOT NULL,
     password        	TEXT NOT NULL,
+    created_at          TIMESTAMP DEFAULT current_timestamp,
     user_role       	user_role NOT NULL,
     is_active          	BOOLEAN DEFAULT false,
 
