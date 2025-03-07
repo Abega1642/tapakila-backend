@@ -11,23 +11,21 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EventServiceImpl implements EventService {
-    private EventDao eventDao;
+    private final EventDao eventDao;
 
     @Override
     public Event findById(String id) {
         if (id.trim().isEmpty()) {
             throw new BadRequestException("Event id cannot be empty");
         }
-
-        if (eventDao.findById(id).isPresent()) {
-            return eventDao.findById(id).get();
-        } else {
-            throw new ResourceNotFoundException("Event with id " + id + " not found");
-        }
+        return eventDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event with id " + id + " not found"));
     }
 
     @Override
-    public List<Event> findAll(long page, long size) {
+    public List<Event> findAll(Long page, Long size) {
+        page = (page == null) ? 1L : page;
+        size = (size == null) ? 10L : size;
+
         if(page < 0 || size < 0) {
             throw new BadRequestException("Page and size cannot be negative");
         }

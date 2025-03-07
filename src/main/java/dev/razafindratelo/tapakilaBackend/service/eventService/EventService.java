@@ -7,6 +7,6 @@ import java.util.List;
 @Service
 public interface EventService {
     Event findById(String id);
-    List<Event> findAll(long page, long size);
+    List<Event> findAll(Long page, Long size);
 
 }
