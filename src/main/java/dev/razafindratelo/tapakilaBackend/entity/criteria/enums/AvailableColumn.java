@@ -11,7 +11,7 @@ public enum AvailableColumn {
     EVENT_ID_REQ("e.id", ValueType.REQUEST),
 
     EVENT_TITLE("e.title", ValueType.STRING),
-    EVENT_TITLE_REQ("e.title", ValueType.STRING),
+    EVENT_TITLE_REQ("e.title", ValueType.REQUEST),
     EVENT_DESCRIPTION("e.description", ValueType.TEXT),
     EVENT_DATE_TIME("e.date_time", ValueType.TIMESTAMP),
     EVENT_DATE_TIME_REQ("e.date_time", ValueType.REQUEST),
@@ -27,11 +27,14 @@ public enum AvailableColumn {
 
     // User columns:
     USER_EMAIL("u.email", ValueType.STRING),
+    USER_EMAIL_REQ("u.email", ValueType.REQUEST),
     USER_LAST_NAME("u.last_name", ValueType.STRING),
     USER_FIRST_NAME("u.first_name", ValueType.STRING),
+    USER_PASSWORD("u.password", ValueType.STRING),
     USER_PROFILE_IMAGE_PATH("u.profile_img_path", ValueType.TEXT),
+    USER_CREATED_AT("u.created_at", ValueType.TIMESTAMP),
     USER_ROLE("u.user_role", ValueType.USER_ROLE),
-    USER_STATUS("u.status", ValueType.BOOLEAN),
+    USER_STATUS("u.is_active", ValueType.BOOLEAN),
 
 
     //  Event type columns :
