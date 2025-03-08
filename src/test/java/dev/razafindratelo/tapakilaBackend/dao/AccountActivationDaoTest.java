@@ -102,7 +102,7 @@ class AccountActivationDaoTest {
                 "000000001",
                 LocalDateTime.of(2025, 3, 8, 12, 7, 59, 316314000),
                 LocalDateTime.of(2025, 3, 8, 12, 17, 59, 316314000),
-                null,
+                LocalDateTime.of(2025, 3, 8, 12, 16, 59, 316314000),
                 true
         );
 
