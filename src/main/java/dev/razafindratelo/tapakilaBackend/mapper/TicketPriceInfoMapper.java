@@ -5,13 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.Ticket;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.enums.Currency;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
+@AllArgsConstructor
 public class TicketPriceInfoMapper implements Mapper<TicketPriceInfo> {
+    private final ObjectMapper objectMapper;
+
     @Override
     public TicketPriceInfo mapFrom(ResultSet rs) throws SQLException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String correspondingTicketType = rs.getString("corresponding_ticket_type");
 
         Ticket correspondingTicket = null;

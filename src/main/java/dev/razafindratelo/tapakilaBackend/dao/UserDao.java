@@ -153,7 +153,6 @@ public class UserDao implements DAO<User> {
         String finaLQuery = sqlQuery.sql();
 
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
-            System.out.println(findStmt);
             findStmt.setString(1, email);
             
             ResultSet rs = findStmt.executeQuery();
@@ -216,6 +215,7 @@ public class UserDao implements DAO<User> {
         Connection connection = dataSource.getConnection();
 
         List<Criteria> criteria = new ArrayList<>(updateColumnReferences);
+
         Query queryMaker = new Query.Builder()
                 .tableName(TableName.USER)
                 .column(columnToBeUpdated)
