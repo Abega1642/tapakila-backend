@@ -1,7 +1,10 @@
 package dev.razafindratelo.tapakilaBackend.service.userService;
 
 import dev.razafindratelo.tapakilaBackend.dao.UserDao;
+import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
+import dev.razafindratelo.tapakilaBackend.entity.AccountActivation;
 import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
@@ -89,5 +92,29 @@ public class UserServiceImpl implements UserService{
     @Override
     public User update(User user) {
         return null;
+    }
+
+    @Override
+    public User updateUserPassword(UserUpdatePassword userUpdatePassword, String activationCodeId) {
+        AccountActivation acc = accountActivationService.findById(activationCodeId);
+        if (!acc.isActive()) {
+            throw new BadRequestException("Activation code expired");
+        }
+        User user = findByEmail(userUpdatePassword.userEmail());
+
+        String encodedPassword = passwordEncoder.encode(userUpdatePassword.newPassword());
+
+        List<Column> password = List.of(
+                new Column(AvailableColumn.USER_PASSWORD, encodedPassword)
+        );
+        List<Filter> criteria = List.of(
+                new Filter(AvailableColumn.USER_EMAIL, OperatorType.EQUAL, user.getEmail())
+        );
+
+        User updatedUser = userDao.update(password, criteria).getFirst();
+
+        if (updatedUser == null) throw new RuntimeException("Could not update user password");
+
+        return updatedUser;
     }
 }
