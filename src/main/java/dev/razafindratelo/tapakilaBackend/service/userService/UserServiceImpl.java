@@ -10,6 +10,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
+import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
     private final UserDao userDao;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AccountActivationService accountActivationService;
 
     @Override
     public List<User> findAll(Long page, Long size) {
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService{
         String finalPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(finalPassword);
 
+        accountActivationService.create(user.getEmail());
         return userDao.save(user);
     }
 
