@@ -36,6 +36,15 @@ public enum AvailableColumn {
     USER_ROLE("u.user_role", ValueType.USER_ROLE),
     USER_STATUS("u.is_active", ValueType.BOOLEAN),
 
+    //  ACTIVATION CODE :
+    ACCOUNT_ACTIVATION_ID("acc.id", ValueType.STRING),
+    ACCOUNT_ACTIVATION_CODE("acc.code", ValueType.STRING),
+    ACCOUNT_ACTIVATION_CREATED_AT("acc.created_at", ValueType.TIMESTAMP),
+    ACCOUNT_ACTIVATION_EXPIRED_AT("acc.expired_at", ValueType.TIMESTAMP),
+    ACCOUNT_ACTIVATION_ACTIVATED_AT("acc.activated_at", ValueType.TIMESTAMP),
+    ACCOUNT_ACTIVATION_USER_EMAIL("acc.user_email", ValueType.STRING),
+    ACCOUNT_ACTIVATION_IS_ACTIVE("is_activation_active(acc.id)", ValueType.REQUEST),
+
 
     //  Event type columns :
     EVENT_TYPE_ID("ety.id", ValueType.STRING),

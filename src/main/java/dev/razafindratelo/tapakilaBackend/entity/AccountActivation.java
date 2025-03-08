@@ -15,8 +15,9 @@ public class AccountActivation {
     private User user;
     private String activationCode;
     private LocalDateTime createdAt;
+    private LocalDateTime expiredAt;
     private LocalDateTime activatedAt;
-    private LocalDateTime updatedAt;
+    private boolean isActive;
 
     @Override
     public String toString() {
@@ -25,8 +26,10 @@ public class AccountActivation {
                 ",\n \t user=" + user +
                 ",\n \t activationCode='" + activationCode + '\'' +
                 ",\n \t createdAt=" + createdAt +
+                ",\n \t updatedAt=" + expiredAt +
                 ",\n \t activatedAt=" + activatedAt +
-                ",\n \t updatedAt=" + updatedAt +
+                ",\n \t isActive=" + isActive +
+
                 "\n \t }";
     }
 }
