@@ -45,6 +45,7 @@ SELECT
     u.first_name AS user_first_name,
     u.user_role AS user_role,
     u.is_active AS user_status,
+    u.created_at AS user_created_at,
     (SELECT ecy.id from "event" ev INNER JOIN events_category ecy ON ev.category = ecy.event_category WHERE ev.id = e.id) as event_category_id,
     (SELECT ecy.event_category FROM "event" ev INNER JOIN events_category ecy ON ev.category = ecy.event_category WHERE ev.id = e.id) AS event_category,
     COALESCE(
@@ -180,6 +181,7 @@ SELECT
     u.first_name AS user_first_name,
     u.user_role AS user_role,
     U.is_active AS user_status,
+    u.created_at AS user_created_at,
     COALESCE(
             JSON_AGG(
                 DISTINCT JSONB_BUILD_OBJECT(
@@ -193,6 +195,55 @@ FROM "user" u
 LEFT JOIN Top5Categories t5c ON u.email = t5c.user_email
 GROUP BY u.email
 LIMIT ? OFFSET ?;
+
+
+--  ==================  USER_ACCOUNT_ACTIVATION ===========================
+WITH CorrespondingUser AS (
+    SELECT
+        u.email as user_email,
+        u.profile_img_path as user_profile_img_path,
+        u.last_name as user_last_name,
+        u.first_name AS user_first_name,
+        u.user_role AS user_role,
+        U.is_active AS user_status,
+        u.created_at AS user_created_at,
+        '[]' AS user_top_5_categories
+    FROM "user" u
+)
+SELECT
+    acc.id AS acount_activation_id,
+    acc.created_at AS account_activation_creation,
+    acc.expired_at AS account_activation_expiration,
+    acc.activated_at AS account_activation_activation,
+    acc.code AS account_activation_code,
+    is_activation_active(acc.id) AS account_activation_is_active,
+    COALESCE(
+            JSONB_OBJECT_AGG(
+                    'email', cu.user_email
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'profile_img_path', cu.user_profile_img_path
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'last_name', cu.user_last_name
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'first_name', cu.user_first_name
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'user_role', cu.user_role
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'user_status', cu.user_status
+            ) ||
+            JSONB_OBJECT_AGG(
+                    'user_created_at', cu.user_created_at
+            ),
+            '{}'::jsonb
+    ) AS account_activation_corresponding_user
+FROM account_activation acc
+LEFT JOIN CorrespondingUser cu ON acc.user_email = cu.user_email
+GROUP BY acc.id;
 
 
 --	===================	    MIX (EVENT_USER)	=============================

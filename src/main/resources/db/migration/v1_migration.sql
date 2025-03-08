@@ -533,6 +533,7 @@ CREATE TABLE account_activation (
     created_at      TIMESTAMP DEFAULT current_timestamp,
     expired_at      TIMESTAMP GENERATED ALWAYS AS ( created_at + INTERVAL '10 minutes') STORED,
 	activated_at	TIMESTAMP,
+    code            VARCHAR(9) NOT NULL,
     user_email      VARCHAR(255) NOT NULL,
 
     FOREIGN KEY (user_email) REFERENCES "user"(email)
