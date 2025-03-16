@@ -557,18 +557,29 @@ $$ LANGUAGE plpgsql;
 -- about how many tickets left for a given event resource OR MORE IMPORTANT how many VIP, Bronze, Early Bird tickets left.
 -- So, here we calculate the left ticket for a given ticket type.
 -- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
-CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
-RETURNS INT8 AS $$
-    DECLARE
-        result              int8;
-        ticket_price_id     VARCHAR(41);
-        total_ticket	    INT8 := 0;
-        sold_ticket 	    INT8 := 0;
+CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type_at_a_given_date
+(event_id VARCHAR, subject_ticket_type ticket_type, intervalDateStart date, intervalDateEnd date)
+    RETURNS INT8 AS $$
+DECLARE
+    result              int8;
+    ticket_price_id     VARCHAR(41);
+    total_ticket	    INT8 := 0;
+    sold_ticket 	    INT8 := 0;
+    ticketCreatedAt     TIMESTAMP;
 BEGIN
+
     SELECT id INTO ticket_price_id
     FROM ticket_price
     WHERE id_event = event_id
       AND id_ticket_type = (SELECT tkt.id FROM tickets_type tkt WHERE tkt.ticket_type = subject_ticket_type);
+
+    SELECT created_at INTO ticketCreatedAt
+    FROM ticket_price tp
+    WHERE tp.id = ticket_price_id;
+
+    IF intervalDateStart IS NULL THEN
+        intervalDateStart := ticketCreatedAt;
+    END IF;
 
     SELECT max_number INTO total_ticket
     FROM ticket_price tp
@@ -576,7 +587,8 @@ BEGIN
 
     SELECT COUNT(*) INTO sold_ticket
     FROM ticket t
-    WHERE id_ticket_price = ticket_price_id;
+    WHERE id_ticket_price = ticket_price_id
+      AND purchased_at BETWEEN intervalDateStart::timestamp AND intervalDateEnd::timestamp;
 
     result := total_ticket - sold_ticket;
 
