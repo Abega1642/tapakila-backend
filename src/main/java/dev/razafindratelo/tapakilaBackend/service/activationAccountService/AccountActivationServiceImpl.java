@@ -12,6 +12,7 @@ import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.IDGenerator;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
+import dev.razafindratelo.tapakilaBackend.service.mailService.MailService;
 import dev.razafindratelo.tapakilaBackend.service.userService.EmailChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.List;
 public class AccountActivationServiceImpl implements AccountActivationService {
     private final AccountActivationDao accountActivationDao;
     private final UserDao userDao;
+    private final MailService mailService;
     private static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
 
     @Override
@@ -43,6 +45,7 @@ public class AccountActivationServiceImpl implements AccountActivationService {
                 correspondingUser
         );
 
+        mailService.sendAccountActivationEmail(accountActivation);
         return accountActivationDao.save(accountActivation);
     }
 

@@ -19,7 +19,7 @@ public class PaymentMode {
 
     private PaymentType paymentType;
     private String paymentAPIUrl;
-    @JsonProperty("payment_provider")
+    @JsonProperty("paymentProvider")
     private PaymentProvider paymentProvider;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 @AllArgsConstructor
@@ -21,7 +23,8 @@ import java.util.*;
 @Getter
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
-	private final EventMapper eventMapper;	
+	private final EventMapper eventMapper;
+    private static final LocalDate DEFAULT_DATE = LocalDate.now();
 
     /**
      * {@code getColumns} method is a methods that handle the list of most / frequently used columns in this {@link EventDao}
@@ -81,7 +84,7 @@ public class EventDao implements DAO<Event> {
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
                                  'id', t5c.event_category_id,
-                                 'event_category', t5c.event_category,
+                                 'eventCategory', t5c.event_category,
                                  'description', t5c.event_category_description
                             )
                       ) FILTER (WHERE t5c.event_category_id IS NOT NULL),
@@ -91,18 +94,19 @@ public class EventDao implements DAO<Event> {
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
                                  'id', ety.event_type_id,
-                                     'event_type', ety.event_type,
-                                     'description', ety.event_type_description,
-                                     'corresponding_categories',
-                                     (SELECT JSONB_AGG(
+                                 'eventType', ety.event_type,
+                                 'description', ety.event_type_description,
+                                 'correspondingCategories',
+                                 (
+                                    SELECT JSONB_AGG(
                                           DISTINCT JSONB_BUILD_OBJECT(
                                                'id', ec2.id,
-                                               'event_category', ec2.event_category,
+                                               'eventCategory', ec2.event_category,
                                                'description', ec2.description
                                           )
-                                     )
-                                     FROM events_category ec2
-                                     WHERE ec2.id_event_type = ety.event_type_id)
+                                 )
+                                 FROM events_category ec2
+                                 WHERE ec2.id_event_type = ety.event_type_id)
                             )
                       ) FILTER (WHERE ety.event_type_id IS NOT NULL),
                       '[]'
@@ -113,17 +117,17 @@ public class EventDao implements DAO<Event> {
                                'id', tp.id,
                                'price', tp.price,
                                'currency', tp.currency,
-                               'created_at', tp.created_at,
-                               'max_number', tp.max_number,
-                               'associated_event_id', tp.id_event,
-                               'corresponding_ticket_type',
+                               'createdAt', tp.created_at,
+                               'maxNumber', tp.max_number,
+                               'associatedEventId', tp.id_event,
+                               'correspondingTicketType',
                                JSONB_BUILD_OBJECT(
                                       'id', tkt.ticket_type_id,
-                                      'ticket_type', tkt.ticket_type,
-                                      'img_path', tkt.ticket_type_img_path,
-                                       'description', tkt.ticket_type_description
+                                      'ticketType', tkt.ticket_type,
+                                      'imgPath', tkt.ticket_type_img_path,
+                                      'description', tkt.ticket_type_description
                                ),
-                              'left_tickets', get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type)
+                              'leftTickets', get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type, ?, ?)
                            )
                       ) FILTER (WHERE tp.id IS NOT NULL), '[]'
                 ) AS event_left_tickets
@@ -234,6 +238,31 @@ public class EventDao implements DAO<Event> {
         return new QueryResult(sqlQuery, mainQuery);
     }
 
+    public List<Event> findAllBetweenDates(LocalDate from, LocalDate to) {
+        Connection connection = dataSource.getConnection();
+        QueryResult sqlQuery = makeQuery(List.of(), List.of());
+
+        String finalQuery = sqlQuery.sql().substring(0, 134) + sqlQuery.sql().substring(155);
+
+        try (PreparedStatement findAllStmt = connection.prepareStatement(finalQuery)) {
+
+            findAllStmt.setDate(1, Date.valueOf(from));
+            findAllStmt.setDate(2, Date.valueOf(to));
+
+            ResultSet rs = findAllStmt.executeQuery();
+            List<Event> events = new ArrayList<>();
+
+            while (rs.next()) {
+                events.add(eventMapper.mapFrom(rs));
+            }
+            return events;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     public Event save(Event event) {
         Connection connection = dataSource.getConnection();
@@ -297,11 +326,12 @@ public class EventDao implements DAO<Event> {
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
             findStmt.setLong(1, 1);
             findStmt.setLong(2, 0);
-            findStmt.setString(3, id);
+            findStmt.setDate(3, Date.valueOf(DEFAULT_DATE));
+            findStmt.setString(4, id);
 
             ResultSet rs = findStmt.executeQuery();
 
-            Event event = new Event.Builder().build();
+            Event event = Event.builder().build();
             Set<EventTypeDetail> eventTypes = new HashSet<>();
 
             if (rs.next()) {
@@ -320,21 +350,62 @@ public class EventDao implements DAO<Event> {
         return findAllByCriteria(List.of(), page, size);
     }
 
+    public List<Event> findAllWithAGivenTicketDateInterval(LocalDate from, LocalDate to, long page, long size) {
+        return findAllByCriteriaWithTicketDateInterval(List.of(), from, to, page, size);
+    }
+
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
         return findAllByCriteriaWithGivenConnection(criteria, page, size, dataSource.getConnection());
     }
 
+    public List<Event> findAllByCriteriaWithTicketDateInterval
+            (List<Criteria> criteria, LocalDate ticketDateFrom, LocalDate ticketDateTo, long page, long size) {
+
+        return findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection(
+                dataSource.getConnection(),
+                criteria,
+                ticketDateFrom,
+                ticketDateTo,
+                page,
+                size
+        );
+    }
+
     /**
      * This method {@code findAllByCriteriaWithGivenConnection} provides the advantage by allowing the use of{@code findAllByCriteria}
      * as many times as we want in different Entity DAO by using only the current {@code Connection} of the method
-     * @param criteria : This is the filter criteria or some other criteria we want to apply to our data
-     * @param page : This is the page where we want our data to be read
-     * @param size : This is the size returned resources in that specific {@code page}
-     * @param connection : This is the connection of the parent method that use this method
-     * @return : The list of events corresponding to the given {@code criteria}
+     * @param criteria : filter criteria or some other criteria we want to apply to our data
+     * @param page : page where we want our data to be read
+     * @param size : returned resources size in that specific {@code page}
+     * @param connection : connection of the parent method that use this method
+     * @return : list of events corresponding to the given {@code criteria}
      */
     private List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
+        return findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection(
+                connection,
+                criteria,
+                null,
+                DEFAULT_DATE,
+                page,
+                size
+        );
+    }
+
+    /**
+     * This method {@code findAllByCriteriaWithAGivenTicketDateWithGivenConnection} provides the advantage by allowing
+     * the use of{@code findAllByCriteriaWithTicketDate}
+     * as many times as we want in different Entity DAO by using only the current {@code Connection} of the method
+     * @param criteria : filter criteria or some other criteria we want to apply to our data
+     * @param ticketDateFrom : indicates the start date of the tickets states
+     * @param ticketDateTo : indicates the end date of the tickets states
+     * @param page : page where we want our data to be read
+     * @param size : returned resources size in that specific {@code page}
+     * @param connection : connection of the parent method that use this method
+     * @return : list of events corresponding to the given {@code criteria}
+     */
+    private List<Event> findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection
+            (Connection connection, List<Criteria> criteria, LocalDate ticketDateFrom, LocalDate ticketDateTo, long page,long size) {
 
         List<Criteria> extraCriteria = List.of(
                 new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
@@ -351,10 +422,18 @@ public class EventDao implements DAO<Event> {
 
         try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(finaLQuery)) {
 
-            sqlQuery.query().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, 2);
+            sqlQuery.query().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, 4);
 
             findAllByCriteriaStmt.setLong(1, size);
             findAllByCriteriaStmt.setLong(2, size * (page - 1));
+
+            if (ticketDateFrom == null) {
+                findAllByCriteriaStmt.setDate(3, null);
+            } else {
+                findAllByCriteriaStmt.setDate(3, Date.valueOf(ticketDateFrom));
+            }
+
+            findAllByCriteriaStmt.setDate(4, Date.valueOf(ticketDateTo));
 
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
 

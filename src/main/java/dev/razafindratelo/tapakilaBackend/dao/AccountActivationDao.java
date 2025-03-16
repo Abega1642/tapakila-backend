@@ -61,22 +61,22 @@ public class AccountActivationDao implements DAO<AccountActivation> {
                               'email', cu.user_email
                        ) ||
                        JSONB_OBJECT_AGG(
-                              'profile_img_path', cu.user_profile_img_path
+                              'profileImgPath', cu.user_profile_img_path
                        ) ||
                        JSONB_OBJECT_AGG(
-                               'last_name', cu.user_last_name
+                               'lastName', cu.user_last_name
                        ) ||
                        JSONB_OBJECT_AGG(
-                               'first_name', cu.user_first_name
+                               'firstName', cu.user_first_name
                        ) ||
                        JSONB_OBJECT_AGG(
-                                'user_role', cu.user_role
+                                'userRole', cu.user_role
                        ) ||
                        JSONB_OBJECT_AGG(
-                                'user_status', cu.user_status
+                                'userStatus', cu.user_status
                        ) ||
                        JSONB_OBJECT_AGG(
-                                'user_created_at', cu.user_created_at
+                                'userCreatedAt', cu.user_created_at
                        ),
                        '{}'::jsonb
                 ) AS account_activation_corresponding_user

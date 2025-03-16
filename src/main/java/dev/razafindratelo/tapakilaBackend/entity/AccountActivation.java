@@ -12,7 +12,7 @@ import java.util.Random;
 @Data
 public class AccountActivation {
     private String id;
-    @JsonProperty("corresponding_user")
+    @JsonProperty("correspondingUser")
     private User user;
     private String activationCode;
     private LocalDateTime createdAt;

@@ -1,8 +1,10 @@
 package dev.razafindratelo.tapakilaBackend.controller;
 
+import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -28,6 +30,17 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.save(user));
+        return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/user/update-password/{activationCodeId}")
+    public ResponseEntity<User> updateUserPassword(
+            @RequestBody UserUpdatePassword userUpdatePassword,
+            @PathVariable("activationCodeId") String activationCodeId
+    ) {
+        return new ResponseEntity<>(
+                userService.updateUserPassword(userUpdatePassword, activationCodeId),
+                HttpStatus.CREATED
+        );
     }
 }

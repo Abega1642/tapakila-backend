@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.service.userService;
 
+import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,4 +12,5 @@ public interface UserService {
     List<User> findAllUserByUsername(String username, Long page, Long size);
     User save(User user);
     User update(User user);
+    User updateUserPassword(UserUpdatePassword userUpdatePassword, String activationCodeId);
 }

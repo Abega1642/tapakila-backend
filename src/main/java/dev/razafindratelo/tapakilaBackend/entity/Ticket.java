@@ -11,12 +11,17 @@ import lombok.*;
 public class Ticket {
     @JsonProperty("id")
     private String id;
+
     @JsonProperty("description")
     private String description;
-    @JsonProperty("img_path")
+
+    @JsonProperty("imgPath")
     private String imgPath;
-    @JsonProperty("ticket_type")
+
+    @JsonProperty("ticketType")
     private TicketType ticketType;
+
+
 
     @Override
     public String toString() {
