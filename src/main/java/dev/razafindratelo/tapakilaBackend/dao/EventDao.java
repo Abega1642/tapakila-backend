@@ -238,6 +238,31 @@ public class EventDao implements DAO<Event> {
         return new QueryResult(sqlQuery, mainQuery);
     }
 
+    public List<Event> findAllBetweenDates(LocalDate from, LocalDate to) {
+        Connection connection = dataSource.getConnection();
+        QueryResult sqlQuery = makeQuery(List.of(), List.of());
+
+        String finalQuery = sqlQuery.sql().substring(0, 134) + sqlQuery.sql().substring(155);
+
+        try (PreparedStatement findAllStmt = connection.prepareStatement(finalQuery)) {
+
+            findAllStmt.setDate(1, Date.valueOf(from));
+            findAllStmt.setDate(2, Date.valueOf(to));
+
+            ResultSet rs = findAllStmt.executeQuery();
+            List<Event> events = new ArrayList<>();
+
+            while (rs.next()) {
+                events.add(eventMapper.mapFrom(rs));
+            }
+            return events;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     public Event save(Event event) {
         Connection connection = dataSource.getConnection();
