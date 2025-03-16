@@ -75,7 +75,8 @@ public class MailMessageHandler {
                                     <h1 style="font-size: 28px; font-weight: bold;">Join Tapakila adventure</h1>
                                     <p style="color: #fff; font-weight: bold; font-size: 18px;">Activate Your Account Now!</p>
                                 </div>
-                                <p style="font-size: 16px; margin-top: 20px;">hello """ +
+                                <p style="font-size: 16px; margin-top: 20px;">hello 
+                        """ +
                                 accountActivation.getUser().getUsername() +
                         """
                                 </p>
@@ -85,6 +86,7 @@ public class MailMessageHandler {
                                 accountActivation.getActivationCode() +
                 """
                                 </p>
+                                <p style="margin-top: 20px;">This account activation will expire after exactly 10 minutes. Please make sure to enter the code before the its expires</p>
                                 <p style="margin-top: 20px;">If you did not sign up for Tapakila, please ignore this email.</p>
                                 <div class="footer">
                                     <p>&copy; 2025 Tapakila 3BEW. All rights reserved.</p>

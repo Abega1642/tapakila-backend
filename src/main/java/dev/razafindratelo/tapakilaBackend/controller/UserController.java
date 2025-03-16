@@ -3,6 +3,7 @@ package dev.razafindratelo.tapakilaBackend.controller;
 import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) throws MessagingException {
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 

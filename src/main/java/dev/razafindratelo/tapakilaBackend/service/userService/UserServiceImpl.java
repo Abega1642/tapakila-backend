@@ -14,6 +14,7 @@ import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -72,12 +73,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User save(User user) {
+    public User save(User user) throws MessagingException {
         if (user == null) throw new BadRequestException("User cannot be null");
 
         if (user.getEmail().isEmpty()) throw new BadRequestException("User email cannot be empty");
 
-        if (EmailChecker.isValidEmail(user.getEmail())) throw new BadRequestException("Email is not valid");
+        if (!EmailChecker.isValidEmail(user.getEmail())) throw new BadRequestException("Email is not valid");
 
         if (user.getFirstName().isEmpty() || user.getLastName().isEmpty())
             throw new BadRequestException("User first name or user last name cannot be empty or null");
@@ -86,9 +87,10 @@ public class UserServiceImpl implements UserService{
 
         String finalPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(finalPassword);
-
+		
+		User savedUser = userDao.save(user);
         accountActivationService.create(user.getEmail());
-        return userDao.save(user);
+        return savedUser;
     }
 
     @Override
