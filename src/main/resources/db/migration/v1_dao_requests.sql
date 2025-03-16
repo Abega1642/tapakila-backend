@@ -141,14 +141,14 @@ SELECT
 		      'type', tkt.ticket_type
 		   ) || 
 		   JSONB_OBJECT_AGG(
-		      'img_path', tkt.ticket_type_img_path
+		      'imgPath', tkt.ticket_type_img_path
 		   ) || 
 		   JSONB_OBJECT_AGG(
 		      'description', tkt.ticket_type_description
 		   ),
 		 '{}'::jsonb
 	) as corresponding_ticket_type,
-	get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type) AS left_tickets
+	get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type, '2000-1-1', '2025-1-5') AS left_tickets
 FROM ticket_price tp
 LEFT JOIN TicketType tkt ON tkt.ticket_type_id = tp.id_ticket_type
 GROUP BY tp.id, tkt.ticket_type, tp.id_event;
@@ -441,7 +441,7 @@ COALESCE(
                       'img_path', tkt.ticket_type_img_path,
                        'description', tkt.ticket_type_description
                ),
-              'left_tickets', get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type)
+              'left_tickets', get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type,'2020-1-1', '2025-3-3')
            )
       ) FILTER (WHERE tp.id IS NOT NULL), '[]'
 ) AS event_left_tickets
@@ -534,16 +534,17 @@ SELECT
     ts.associated_event_id AS event_id,
     JSONB_AGG(
         JSONB_BUILD_OBJECT(
-            	'ticket_info', JSONB_BUILD_OBJECT(
-                'ticket_price_id', ts.ticket_price_id,
-                'ticket_price', ts.ticket_price,
+            	'ticketInfo', JSONB_BUILD_OBJECT(
+                'ticketPriceId', ts.ticket_price_id,
+                'ticketPrice', ts.ticket_price,
                 'currency', ts.ticket_price_currency,
-                'created_at', ts.ticket_price_created_at,
-                'max_number', ts.ticket_price_max_number,
-                'corresponding_ticket_type', JSONB_BUILD_OBJECT(
+                'createdAt', ts.ticket_price_created_at,
+                'maxNumber', ts.ticket_price_max_number,
+                'leftTickets', get_event_left_ticket_of_given_ticket_type_at_a_given_date(ts.associated_event_id, tkt.ticket_type, '2000-1-1', '2025-1-5'),
+                'correspondingTicketType', JSONB_BUILD_OBJECT(
                     'id', tkt.ticket_type_id,
                     'type', tkt.ticket_type,
-                    'img_path', tkt.ticket_type_img_path,
+                    'imgPath', tkt.ticket_type_img_path,
                     'description', tkt.ticket_type_description
                 )
             ),
