@@ -15,6 +15,7 @@ import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService{
     private final UserDao userDao;
     private final BCryptPasswordEncoder passwordEncoder;

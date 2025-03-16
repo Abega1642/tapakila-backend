@@ -11,12 +11,22 @@ import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EventServiceImpl implements EventService {
     private final EventDao eventDao;
+    private final long DEFAULT_PAGE = 1;
+    private final long DEFAULT_SIZE = 10;
+    private final LocalDate DEFAULT_DATE = LocalDate.now();
+    private final int DEFAULT_YEAR = DEFAULT_DATE.getYear();
+    private final Month DEFAULT_MONTH = DEFAULT_DATE.getMonth();
 
     @Override
     public Event findById(String id) {
@@ -29,10 +39,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findAll(Long page, Long size) {
-        long finalPage = PaginationFormatUtil.normalizePage(page);
-        long finalSize = PaginationFormatUtil.normalizeSize(size);
+        final long finalPage = (page == null) ? DEFAULT_PAGE : page;
+        final long finalSize = (size == null) ? DEFAULT_SIZE : size;
 
-        if (page < 0 || size < 0) {
+        if (finalPage < 0 || finalSize < 0) {
             throw new BadRequestException("Page and size cannot be negative");
         }
         return eventDao.findAll(finalPage, finalSize);
