@@ -81,7 +81,7 @@ public class EventDao implements DAO<Event> {
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
                                  'id', t5c.event_category_id,
-                                 'event_category', t5c.event_category,
+                                 'eventCategory', t5c.event_category,
                                  'description', t5c.event_category_description
                             )
                       ) FILTER (WHERE t5c.event_category_id IS NOT NULL),
@@ -91,18 +91,19 @@ public class EventDao implements DAO<Event> {
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
                                  'id', ety.event_type_id,
-                                     'event_type', ety.event_type,
-                                     'description', ety.event_type_description,
-                                     'corresponding_categories',
-                                     (SELECT JSONB_AGG(
+                                 'eventType', ety.event_type,
+                                 'description', ety.event_type_description,
+                                 'correspondingCategories',
+                                 (
+                                    SELECT JSONB_AGG(
                                           DISTINCT JSONB_BUILD_OBJECT(
                                                'id', ec2.id,
-                                               'event_category', ec2.event_category,
+                                               'eventCategory', ec2.event_category,
                                                'description', ec2.description
                                           )
-                                     )
-                                     FROM events_category ec2
-                                     WHERE ec2.id_event_type = ety.event_type_id)
+                                 )
+                                 FROM events_category ec2
+                                 WHERE ec2.id_event_type = ety.event_type_id)
                             )
                       ) FILTER (WHERE ety.event_type_id IS NOT NULL),
                       '[]'
@@ -113,17 +114,17 @@ public class EventDao implements DAO<Event> {
                                'id', tp.id,
                                'price', tp.price,
                                'currency', tp.currency,
-                               'created_at', tp.created_at,
-                               'max_number', tp.max_number,
-                               'associated_event_id', tp.id_event,
-                               'corresponding_ticket_type',
+                               'createdAt', tp.created_at,
+                               'maxNumber', tp.max_number,
+                               'associatedEventId', tp.id_event,
+                               'correspondingTicketType',
                                JSONB_BUILD_OBJECT(
                                       'id', tkt.ticket_type_id,
-                                      'ticket_type', tkt.ticket_type,
-                                      'img_path', tkt.ticket_type_img_path,
-                                       'description', tkt.ticket_type_description
+                                      'ticketType', tkt.ticket_type,
+                                      'imgPath', tkt.ticket_type_img_path,
+                                      'description', tkt.ticket_type_description
                                ),
-                              'left_tickets', get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type)
+                              'leftTickets', get_event_left_ticket_of_given_ticket_type(tp.id_event, tkt.ticket_type)
                            )
                       ) FILTER (WHERE tp.id IS NOT NULL), '[]'
                 ) AS event_left_tickets
@@ -301,7 +302,7 @@ public class EventDao implements DAO<Event> {
 
             ResultSet rs = findStmt.executeQuery();
 
-            Event event = new Event.Builder().build();
+            Event event = Event.builder().build();
             Set<EventTypeDetail> eventTypes = new HashSet<>();
 
             if (rs.next()) {

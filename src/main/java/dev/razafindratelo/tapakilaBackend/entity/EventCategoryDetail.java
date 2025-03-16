@@ -11,7 +11,7 @@ import lombok.*;
 public class EventCategoryDetail {
     @JsonProperty("id")
     private String id;
-    @JsonProperty("event_category")
+    @JsonProperty("eventCategory")
     private EventCategory eventCategory;
     @JsonProperty("description")
     private String description;

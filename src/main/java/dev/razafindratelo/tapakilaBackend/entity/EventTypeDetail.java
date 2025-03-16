@@ -13,11 +13,11 @@ import java.util.List;
 public class EventTypeDetail {
     @JsonProperty("id")
     private String id;
-    @JsonProperty("event_type")
+    @JsonProperty("eventType")
     private EventType eventType;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("corresponding_categories")
+    @JsonProperty("correspondingCategories")
     private List<EventCategoryDetail> correspondingCategories;
 
     @Override

@@ -58,7 +58,7 @@ public class UserDao implements DAO<User> {
                       JSON_AGG(
                            DISTINCT JSONB_BUILD_OBJECT(
                                 'id', t5c.event_category_id,
-                                'event_category', t5c.event_category,
+                                'eventCategory', t5c.event_category,
                                 'description', t5c.event_category_description
                            )
                       ) FILTER (WHERE t5c.event_category_id IS NOT NULL), '[]'

@@ -1,7 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import lombok.*;
@@ -22,24 +21,24 @@ public class User implements UserDetails {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("last_name")
+    @JsonProperty("lastName")
     private String lastName;
 
-    @JsonProperty("first_name")
+    @JsonProperty("firstName")
     private String firstName;
 
-    @JsonProperty("profile_img_path")
+    @JsonProperty("profileImgPath")
     private String imgProfilePath;
 
     private String password;
 
-    @JsonProperty("user_role")
+    @JsonProperty("userRole")
     private UserRole userRole;
 
-    @JsonProperty("user_status")
+    @JsonProperty("userStatus")
     private boolean isActive;
     
-    @JsonProperty("user_created_at")
+    @JsonProperty("userCreatedAt")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime createdAt;
 

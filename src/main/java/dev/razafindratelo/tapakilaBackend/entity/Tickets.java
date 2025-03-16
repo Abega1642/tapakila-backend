@@ -17,13 +17,18 @@ public class Tickets {
     private String qrCodePath;
     private String paymentRef;
     private String ticketOwnerName;
-    @JsonProperty("ticket_type")
+
+    @JsonProperty("ticketType")
     private Ticket ticketType;
-    @JsonProperty("purchased_by")
+
+    @JsonProperty("purchasedBy")
     private User purchasedBy;
+
     private String associatedEvent;
-    @JsonProperty("payment_mode")
+
+    @JsonProperty("paymentMode")
     private PaymentMode paymentMode;
+
 
     @Override
     public String toString() {
