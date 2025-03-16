@@ -472,3 +472,87 @@ ORDER BY e.date_time DESC
 LIMIT (SELECT COALESCE(SUM(all_events_by_id), 0) FROM EventCounts)
 OFFSET 0;
 
+
+--	Get statistics for sold tickets at a given year and month :
+SELECT 
+    tt.ticket_type,
+    COUNT(t.id) AS total_tickets_sold,
+    ? AS month
+FROM ticket t
+JOIN ticket_price tp ON t.id_ticket_price = tp.id
+JOIN tickets_type tt ON tp.id_ticket_type = tt.id
+WHERE EXTRACT(YEAR FROM t.purchased_at) = ?
+AND EXTRACT(MONTH FROM t.purchased_at) = ?
+GROUP BY tt.ticket_type
+ORDER BY total_tickets_sold DESC;
+
+--	Get total turnover of each ticket type :
+SELECT 
+    tt.ticket_type,
+    SUM(tp.price * ticket_count) AS revenue
+FROM (
+    SELECT 
+        tp.id AS ticket_price_id,
+        COUNT(t.id) AS ticket_count
+    FROM ticket t
+    JOIN ticket_price tp ON t.id_ticket_price = tp.id
+    WHERE EXTRACT(YEAR FROM t.purchased_at) = 2025
+    AND EXTRACT(MONTH FROM t.purchased_at) = 3
+    GROUP BY tp.id
+) AS ticket_sales
+JOIN ticket_price tp ON ticket_sales.ticket_price_id = tp.id
+JOIN tickets_type tt ON tp.id_ticket_type = tt.id
+GROUP BY tt.ticket_type
+ORDER BY revenue DESC;
+
+--	Get
+WITH TicketType AS (
+    SELECT
+        tt.id AS ticket_type_id,
+        tt.ticket_type AS ticket_type,
+        tt.img_path AS ticket_type_img_path,
+        tt.description AS ticket_type_description
+    FROM tickets_type tt
+),
+TicketSales AS (
+    SELECT 
+        tp.id AS ticket_price_id,
+        tp.price AS ticket_price,
+        tp.currency AS ticket_price_currency,
+        tp.created_at AS ticket_price_created_at,
+        tp.max_number AS ticket_price_max_number,
+        tp.id_event AS associated_event_id,
+        tp.id_ticket_type,
+        COUNT(t.id) AS ticket_count
+    FROM ticket t
+    JOIN ticket_price tp ON t.id_ticket_price = tp.id
+    WHERE EXTRACT(YEAR FROM t.purchased_at) = 2025
+    AND EXTRACT(MONTH FROM t.purchased_at) = 3
+    GROUP BY tp.id, tp.price, tp.currency, tp.created_at, tp.max_number, tp.id_event, tp.id_ticket_type
+)
+SELECT 
+    ts.associated_event_id AS event_id,
+    JSONB_AGG(
+        JSONB_BUILD_OBJECT(
+            	'ticket_info', JSONB_BUILD_OBJECT(
+                'ticket_price_id', ts.ticket_price_id,
+                'ticket_price', ts.ticket_price,
+                'currency', ts.ticket_price_currency,
+                'created_at', ts.ticket_price_created_at,
+                'max_number', ts.ticket_price_max_number,
+                'corresponding_ticket_type', JSONB_BUILD_OBJECT(
+                    'id', tkt.ticket_type_id,
+                    'type', tkt.ticket_type,
+                    'img_path', tkt.ticket_type_img_path,
+                    'description', tkt.ticket_type_description
+                )
+            ),
+            'turnover', ts.ticket_price * ts.ticket_count
+        )
+    ) AS tickets,
+    SUM(ts.ticket_price * ts.ticket_count) AS total_turnover
+FROM TicketSales ts
+LEFT JOIN TicketType tkt ON tkt.ticket_type_id = ts.id_ticket_type -- Utiliser id_ticket_type pour la jointure
+GROUP BY ts.associated_event_id
+ORDER BY ts.associated_event_id;
+
