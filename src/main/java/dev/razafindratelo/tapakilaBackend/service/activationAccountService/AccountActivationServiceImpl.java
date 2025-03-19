@@ -14,6 +14,7 @@ import dev.razafindratelo.tapakilaBackend.service.IDGenerator;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.mailService.MailService;
 import dev.razafindratelo.tapakilaBackend.service.userService.EmailChecker;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class AccountActivationServiceImpl implements AccountActivationService {
     private static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
 
     @Override
-    public AccountActivation create(String userEmail) {
+    public AccountActivation create(String userEmail) throws MessagingException {
         String finalEmail = userEmail.trim();
 
         if (finalEmail.isEmpty()) throw new BadRequestException("Email cannot be empty");
@@ -117,6 +118,7 @@ public class AccountActivationServiceImpl implements AccountActivationService {
     @Override
     public AccountActivation activateAccount(String email) {
         LocalDateTime NOW = LocalDateTime.now();
+
         if (email == null || email.isEmpty()) {
             throw new BadRequestException("User email cannot be null or empty");
         }

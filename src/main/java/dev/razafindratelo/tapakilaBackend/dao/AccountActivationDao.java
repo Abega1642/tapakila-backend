@@ -10,6 +10,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OrderType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
+import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.mapper.AccountActivationMapper;
@@ -252,9 +253,16 @@ public class AccountActivationDao implements DAO<AccountActivation> {
         List<Column> activatedAt = List.of (
                 new Column(AvailableColumn.ACCOUNT_ACTIVATION_ACTIVATED_AT, activatedTime.toString())
         );
-        String activationAccountId = findByUserEmailWithConnection(email, connection).orElseThrow(
+
+        AccountActivation activationAccount = findByUserEmailWithConnection(email, connection).orElseThrow(
                 () -> new ResourceNotFoundException("No activation found for email " + email)
-        ).getId();
+        );
+
+        if (!activationAccount.isActive()) {
+            throw new BadRequestException("Activation code expired for user " + email);
+        }
+
+        String activationAccountId = activationAccount.getId();
 
         List<Filter> id = List.of (
                 new Filter (AvailableColumn.ACCOUNT_ACTIVATION_ID, OperatorType.EQUAL, activationAccountId)

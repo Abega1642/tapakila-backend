@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.service.activationAccountService;
 
 import dev.razafindratelo.tapakilaBackend.entity.AccountActivation;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface AccountActivationService {
-    AccountActivation create(String userEmail);
+    AccountActivation create(String userEmail) throws MessagingException;
     AccountActivation findByEmail(String email);
     AccountActivation findById(String id);
     List<AccountActivation> findAll(Long page, Long size);

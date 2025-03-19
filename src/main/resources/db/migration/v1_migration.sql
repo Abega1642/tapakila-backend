@@ -539,6 +539,30 @@ CREATE TABLE account_activation (
     FOREIGN KEY (user_email) REFERENCES "user"(email)
 );
 
+CREATE TABLE access_token (
+    access_token    TEXT NOT NULL,
+    createdAt       TIMESTAMP DEFAULT current_timestamp,
+    expiresAt       TIMESTAMP NOT NULL,
+    isValid         BOOLEAN DEFAULT false,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY ("user_email") REFERENCES "user"(email),
+    UNIQUE(access_token, user_email, createdAt, expiresAt)
+);
+
+CREATE TABLE refresh_token (
+    refresh_token   VARCHAR(41) PRIMARY KEY,
+    createdAt       TIMESTAMP DEFAULT current_timestamp,
+    expiresAt       TIMESTAMP NOT NULL,
+    isValid         BOOLEAN DEFAULT false,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY ("user_email") REFERENCES "user"(email),
+    UNIQUE(refresh_token, user_email, createdAt, expiresAt)
+);
+
+
+
 CREATE OR REPLACE FUNCTION is_activation_active (activation_id VARCHAR)
 RETURNS BOOLEAN AS $$
     DECLARE
