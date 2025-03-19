@@ -39,6 +39,7 @@ public class UserDao implements DAO<User> {
                 new Column (AvailableColumn.USER_LAST_NAME, "user_last_name"),
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
+				new Column (AvailableColumn.USER_PASSWORD, "user_password"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
                 new Column (AvailableColumn.USER_STATUS, "user_status"),
                 new Column (AvailableColumn.USER_CREATED_AT, "user_creation_date")
