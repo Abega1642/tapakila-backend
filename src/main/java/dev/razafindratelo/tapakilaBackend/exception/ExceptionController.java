@@ -22,10 +22,10 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessage> handleNotAllowedException(ActionNotAllowedException notAllowed) {
         ExceptionMessage em = new ExceptionMessage(
                 notAllowed.getMessage(),
-                HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED
         );
-        return new ResponseEntity<>(em, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(em, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ResourceDuplicatedException.class)
@@ -52,6 +52,16 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessage> handleBadRequestException(BadRequestException badRequest) {
         ExceptionMessage em = new ExceptionMessage(
                 badRequest.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST
+        );
+        return new ResponseEntity<>(em, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionMessage> handleIllegalArgumentException(IllegalArgumentException illegal) {
+        ExceptionMessage em = new ExceptionMessage(
+                illegal.getMessage(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST
         );
