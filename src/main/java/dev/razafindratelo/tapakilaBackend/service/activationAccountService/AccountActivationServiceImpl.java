@@ -118,6 +118,7 @@ public class AccountActivationServiceImpl implements AccountActivationService {
     @Override
     public AccountActivation activateAccount(String email) {
         LocalDateTime NOW = LocalDateTime.now();
+
         if (email == null || email.isEmpty()) {
             throw new BadRequestException("User email cannot be null or empty");
         }
