@@ -144,21 +144,28 @@ public class MailMessageHandler {
                             <p>Let's get your account activated</p>
                         </div>
                         <div class="content">
-                            <p>Hi <strong>""" + accountActivation.getUser().getUsername() + """</strong>,</p>
-                            <p>We're excited to have you on board! To activate your account, simply click the code below to copy it:</p>
-                            <p id="activationCode" class="activation-code" onclick="copyCode()">""" + accountActivation.getActivationCode() + """</p>
-                            <p>Paste the code into the activation field in the app to complete your registration.</p>
-                            <p><strong>Note:</strong> This code will expire in 10 minutes, so don't wait too long!</p>
-                            <p>If you didn't sign up for Tapakila, no worries—just ignore this email.</p>
-                        </div>
-                        <div class="footer">
-                            <p>&copy; 2025 Tapakila 3BEW. All rights reserved.</p>
-                        </div>
-                    </div>
-                    <div id="toast" class="toast"></div>
-                </body>
-                </html>
-                """;
+                            <p>Hi <strong>
+                """
+				+ accountActivation.getUser().getUsername() + 
+				"""
+							</strong>,</p>
+							<p>We're excited to have you on board! To activate your account, simply click the code below to copy it:</p>
+							<p id="activationCode" class="activation-code" onclick="copyCode()">
+				""" 
+				+ accountActivation.getActivationCode() + 
+				"""
+							</p>
+							<p>Paste the code into the activation field in the app to complete your registration.</p>
+							<p><strong>Note:</strong> This code will expire in 10 minutes, so don't wait too long!</p>
+						</div>
+						<div class="footer">
+							<p>&copy; 2025 Tapakila 3BEW. All rights reserved.</p>
+						</div>
+					</div>
+					 <div id="toast" class="toast"></div>
+					</body>
+				</html>
+				""";
     }
 
     public static String getEmailResetPassword(AccountActivation accountActivation) {
@@ -299,21 +306,29 @@ public class MailMessageHandler {
                             <p>Let's get you back into your account</p>
                         </div>
                         <div class="content">
-                            <p>Hi <strong>""" + accountActivation.getUser().getUsername() + """</strong>,</p>
-                            <p>We received a request to reset your Tapakila password. Click the code below to copy it:</p>
-                            <p id="resetCode" class="reset-code" onclick="copyCode()">""" + accountActivation.getActivationCode() + """</p>
-                            <p>Paste the code into the password reset field in the app to continue.</p>
-                            <p><strong>Note:</strong> This code will expire in 10 minutes, so act fast!</p>
-                            <p>If you didn't request a password reset, you can safely ignore this email.</p>
-                        </div>
-                        <div class="footer">
-                            <p>&copy; 2025 Tapakila 3BEW. All rights reserved.</p>
-                        </div>
-                    </div>
-                    <div id="toast" class="toast"></div>
-                </body>
-                </html>
-                """;
+                            <p>Hi <strong>
+                """
+						+ accountActivation.getUser().getUsername() +
+				"""
+							</strong>,</p>
+							<p>We received a request to reset your Tapakila password. Click the code below to copy it:</p>
+							<p id="resetCode" class="reset-code" onclick="copyCode()">
+				""" 
+					+ accountActivation.getActivationCode() +
+				"""
+							</p>
+							 <p>Paste the code into the password reset field in the app to continue.</p>
+							 <p><strong>Note:</strong> This code will expire in 10 minutes, so act fast!</p>
+							 <p>If you didn't request a password reset, you can safely ignore this email.</p>
+						</div>
+						<div class="footer">
+							<p>&copy; 2025 Tapakila 3BEW. All rights reserved.</p>
+						</div>
+					</div>
+					<div id="toast" class="toast"></div>
+					</body>
+				</html>
+				""";
     }
 
     public static String getEMailReminderMessage(User user) {
