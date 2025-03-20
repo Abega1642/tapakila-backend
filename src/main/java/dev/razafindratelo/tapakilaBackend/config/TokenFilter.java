@@ -1,22 +1,63 @@
 package dev.razafindratelo.tapakilaBackend.config;
 
+import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.token.AccessToken;
+import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
+import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
+import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.lang.NonNullApi;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
+@AllArgsConstructor
+@Getter
 public class TokenFilter extends OncePerRequestFilter {
+    private final TokenService tokenService;
+    private final UserService userService;
+    private final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        throw new NotImplementedException("TokenFilter.doFilterInternal not implemented yet");
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() < 10)
+            throw new ActionNotAllowedException("No authorization found or authorization header format not valid");
+
+        String accessTokenValue = authHeader.replace("Bearer ", "");
+        AccessToken correspondingAccessToken = tokenService.findByValue(accessTokenValue);
+
+        if (!correspondingAccessToken.isValid() || correspondingAccessToken.getExpiresAt().isBefore(DEFAULT_DATE_TIME))
+            throw new ActionNotAllowedException("Access token has expired.");
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            User correspondingUser = userService.findByEmail(correspondingAccessToken.getUserEmail());
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    correspondingUser,
+                    null,
+                    correspondingUser.getAuthorities()
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+
+        filterChain.doFilter(request, response);
     }
 }
