@@ -1,13 +1,20 @@
 package dev.razafindratelo.tapakilaBackend.service.jwtService;
 
 import dev.razafindratelo.tapakilaBackend.dao.TokenDao;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutStatus;
+import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.token.AccessToken;
 import dev.razafindratelo.tapakilaBackend.entity.token.RefreshToken;
 import dev.razafindratelo.tapakilaBackend.entity.token.Token;
+import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -26,6 +33,50 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public RefreshToken findByCreationExpirationDateAndUserEmail(LocalDateTime creation, LocalDateTime expiration, String userEmail) {
+        if (creation == null || expiration == null || userEmail == null)
+            throw new IllegalArgumentException("TokenService :: Creation or expiration date or email cannot be null");
+
+        if (creation.isAfter(expiration))
+            throw new IllegalArgumentException("TokenService :: Creation expiration date cannot be after expiration date");
+
+        if (userEmail.trim().isEmpty())
+            throw new IllegalArgumentException("TokenService :: User email cannot be null or empty");
+
+        return tokenDao.findRefreshTokenByCreationAndExpirationDateTimeAndUserEmail(
+                creation,
+                expiration,
+                userEmail.trim()
+        ).orElseThrow(() -> new ResourceNotFoundException("TokenService :: Refresh token not found"));
+    }
+
+    @Override
+    public LogOutDto disableTokens(String accessToken) {
+        AccessToken accessTokenUsed = findByValue(accessToken);
+        RefreshToken refreshTokenUsed = findByCreationExpirationDateAndUserEmail(
+                accessTokenUsed.getCreatedAt(), accessTokenUsed.getExpiresAt(), accessTokenUsed.getUserEmail()
+        );
+
+
+        boolean areDisabled = tokenDao.disableTokens(accessTokenUsed.getAccessToken(), refreshTokenUsed.getRefreshToken());
+
+        LogOutStatus status = (areDisabled) ? LogOutStatus.SUCCESS
+                : LogOutStatus.ERROR;
+        String message = status.getMessage();
+
+        LogOutDto logOut = new LogOutDto(
+                accessTokenUsed.getUserEmail(),
+                status,
+                message
+        );
+
+        if (!areDisabled)
+            throw new RuntimeException(logOut.toString());
+
+        return logOut;
+    }
+
+    @Override
     public RefreshToken findByRefreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.trim().isEmpty())
             throw new IllegalArgumentException("TokenService :: Refresh token cannot be null or empty");
@@ -33,6 +84,8 @@ public class TokenServiceImpl implements TokenService {
         return tokenDao.findRefreshTokenByValue(refreshToken)
                 .orElseThrow(() -> new ResourceNotFoundException("TokenService :: Refresh token not found"));
     }
+
+
 
     @Override
     public Map<String, Token> saveTokens(AccessToken accessToken, RefreshToken refreshToken) {
@@ -45,6 +98,7 @@ public class TokenServiceImpl implements TokenService {
         if (refreshToken.getRefreshToken() == null || refreshToken.getRefreshToken().trim().isEmpty())
             throw new IllegalArgumentException("ToKenService :: Refresh token cannot be null or empty");
 
-        return tokenDao.saveToken(accessToken, refreshToken);
+        return tokenDao.saveToken(accessToken, refreshToken)
+                .orElseThrow(() -> new RuntimeException("TokenService :: Error while saving token"));
     }
 }

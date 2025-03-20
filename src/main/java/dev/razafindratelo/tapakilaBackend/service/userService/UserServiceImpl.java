@@ -5,6 +5,7 @@ import dev.razafindratelo.tapakilaBackend.dto.JwtDTO;
 import dev.razafindratelo.tapakilaBackend.dto.Login;
 import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.dto.ValidationCode;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
 import dev.razafindratelo.tapakilaBackend.entity.AccountActivation;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
@@ -18,7 +19,9 @@ import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.JwtService;
+import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +39,7 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserDao userDao;
     private final JwtService jwtService;
+    private final TokenService tokenService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AccountActivationService accountActivationService;
 
@@ -106,6 +110,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public JwtDTO signIn(Login login) {
         User user = findByEmail(login.email());
         return jwtService.generate(user);
+    }
+
+    @Override
+    public LogOutDto logOut(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String accessToken = auth.replace("Bearer ", "");
+        return tokenService.disableTokens(accessToken);
     }
 
     @Override
