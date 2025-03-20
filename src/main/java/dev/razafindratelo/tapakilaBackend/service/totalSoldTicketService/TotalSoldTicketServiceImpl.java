@@ -17,17 +17,20 @@ import java.util.List;
 public class TotalSoldTicketServiceImpl implements TotalSoldTicketService {
     private final TotalSoldTicketDao totalSoldTicketDao;
 
-    private final LocalDate DEFAULT_DATE = LocalDate.now();
-    private final Month DEFAULT_MONTH = DEFAULT_DATE.getMonth();
-    private final Year DEFAULT_YEAR = Year.of(DEFAULT_DATE.getYear());
-
     @Override
     public List<TotalSoldTicket> getTotalSoldTicketOfCurrentMonth() {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+        final Year DEFAULT_YEAR = Year.of(DEFAULT_DATE.getYear());
+        final Month DEFAULT_MONTH = DEFAULT_DATE.getMonth();
+
         return totalSoldTicketDao.getTotalSoldTickets(DEFAULT_MONTH, DEFAULT_YEAR.getValue());
     }
 
     @Override
     public List<SoldTicketStatOverYear> getSoldTicketStatOverYearOfCurrentYear() {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+        final Year DEFAULT_YEAR = Year.of(DEFAULT_DATE.getYear());
+
         return getTotalSoldTicketStatOverYear(DEFAULT_YEAR);
     }
 
@@ -62,6 +65,9 @@ public class TotalSoldTicketServiceImpl implements TotalSoldTicketService {
 
     @Override
     public List<SoldTicketStatOverYearRange> getTotalSoldTicketStatOverYearRange(Year startYear, Year endYear) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+        final Year DEFAULT_YEAR = Year.of(DEFAULT_DATE.getYear());
+
         if (endYear == null) {
             endYear = DEFAULT_YEAR;
         }

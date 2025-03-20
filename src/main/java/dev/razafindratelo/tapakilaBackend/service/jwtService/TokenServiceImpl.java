@@ -53,8 +53,11 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public LogOutDto disableTokens(String accessToken) {
         AccessToken accessTokenUsed = findByValue(accessToken);
+
         RefreshToken refreshTokenUsed = findByCreationExpirationDateAndUserEmail(
-                accessTokenUsed.getCreatedAt(), accessTokenUsed.getExpiresAt(), accessTokenUsed.getUserEmail()
+                accessTokenUsed.getCreatedAt(),
+                accessTokenUsed.getExpiresAt().plusDays(2), // because the refresh token expires 2 days after the access token
+                accessTokenUsed.getUserEmail()
         );
 
 

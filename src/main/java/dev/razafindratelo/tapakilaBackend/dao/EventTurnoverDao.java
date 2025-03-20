@@ -15,9 +15,9 @@ import java.util.List;
 public class EventTurnoverDao {
     private final DataSource dataSource;
     private final EventTurnoverMapper mapper;
-    private final static LocalDate DEFAULT_DATE = LocalDate.now();
 
     public EventTurnover findTurnoverByEventId(String eventId) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
         return findTurnoverByEventIdAtGivenDate(eventId, DEFAULT_DATE);
     }
 
@@ -97,6 +97,7 @@ public class EventTurnoverDao {
     }
 
     public List<EventTurnover> findAll(long page, long size) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
         return findAllAtAGivenDate(DEFAULT_DATE, page, size);
     }
 

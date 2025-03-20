@@ -5,7 +5,6 @@ import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.token.AccessToken;
 import dev.razafindratelo.tapakilaBackend.entity.token.RefreshToken;
 import io.github.cdimascio.dotenv.Dotenv;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,17 +24,18 @@ import java.util.Map;
 @Getter
 public class JwtServiceImpl implements JwtService {
     private final TokenService tokenService;
-	private final LocalDateTime DEFAULT_JWT_CREATION_DATE_TIME = LocalDateTime.now();
-    private final LocalDateTime DEFAULT_JWT_EXPIRATION_DATE_TIME = DEFAULT_JWT_CREATION_DATE_TIME.plusDays(2);
 
     @Override
     public JwtDTO generate(User user) {
+        final LocalDateTime DEFAULT_JWT_CREATION_DATE_TIME = LocalDateTime.now();
+        final LocalDateTime DEFAULT_JWT_EXPIRATION_DATE_TIME = DEFAULT_JWT_CREATION_DATE_TIME.plusDays(2);
+
         Instant NOW = DEFAULT_JWT_CREATION_DATE_TIME.toInstant(ZoneOffset.UTC);
 
         Date DEFAULT_JWT_CREATION_DATE = Date.from(NOW);
         Date DEFAULT_JWT_EXPIRATION_DATE = Date.from(NOW.plus(2, ChronoUnit.DAYS));
 
-        Map<String, String> claims = getUserClaims(user, DEFAULT_JWT_CREATION_DATE, DEFAULT_JWT_EXPIRATION_DATE);
+        Map<String, String> claims = getUserClaims(user, DEFAULT_JWT_CREATION_DATE_TIME, DEFAULT_JWT_EXPIRATION_DATE_TIME);
 
         String accessToken = Jwts.builder()
                 .subject(user.getEmail())
@@ -56,7 +56,7 @@ public class JwtServiceImpl implements JwtService {
         RefreshToken refreshTokenRes = new RefreshToken(
                 user.getEmail(),
                 DEFAULT_JWT_CREATION_DATE_TIME,
-                DEFAULT_JWT_EXPIRATION_DATE_TIME,
+                DEFAULT_JWT_EXPIRATION_DATE_TIME.plusDays(2), // we give 2 days more for the refresh-token to expire
                 true
         );
 
@@ -72,15 +72,15 @@ public class JwtServiceImpl implements JwtService {
         return Keys.hmacShaKeyFor(decoder);
     }
 
-    private Map<String, String> getUserClaims(User user, Date creation, Date expiration) {
+    private Map<String, String> getUserClaims(User user, LocalDateTime creation, LocalDateTime expiration) {
         return Map.of(
                 "email", user.getEmail(),
                 "lastName", user.getLastName(),
                 "firstName", user.getFirstName(),
                 "role", user.getUserRole().toString(),
                 "accountCreationDate", user.getCreatedAt().toString(),
-                "createdAt", DEFAULT_JWT_CREATION_DATE_TIME.toString(),
-                "expiresAt", DEFAULT_JWT_EXPIRATION_DATE_TIME.toString()
+                "createdAt", creation.toString(),
+                "expiresAt", expiration.toString()
         );
     }
 }

@@ -24,7 +24,6 @@ import java.util.*;
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
 	private final EventMapper eventMapper;
-    private static final LocalDate DEFAULT_DATE = LocalDate.now();
 
     /**
      * {@code getColumns} method is a methods that handle the list of most / frequently used columns in this {@link EventDao}
@@ -319,6 +318,7 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public Optional<Event> findById(String id) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
         Connection connection = dataSource.getConnection(EventDao.class.getName());
         List<Criteria> criteria = List.of (
                 new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
@@ -390,6 +390,8 @@ public class EventDao implements DAO<Event> {
      * @return : list of events corresponding to the given {@code criteria}
      */
     private List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+
         return findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection(
                 connection,
                 criteria,
