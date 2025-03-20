@@ -8,6 +8,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionController {
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionMessage> runtimeExceptionHandler(RuntimeException e) {
+        ExceptionMessage em = new ExceptionMessage(
+                e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+        return new ResponseEntity<>(em, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(NotImplementedException.class)
     public ResponseEntity<ExceptionMessage> handleNotImplementedException(NotImplementedException notImplemented) {
         ExceptionMessage em = new ExceptionMessage(
@@ -22,10 +32,10 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessage> handleNotAllowedException(ActionNotAllowedException notAllowed) {
         ExceptionMessage em = new ExceptionMessage(
                 notAllowed.getMessage(),
-                HttpStatus.UNAUTHORIZED.value(),
-                HttpStatus.UNAUTHORIZED
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN
         );
-        return new ResponseEntity<>(em, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(em, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ResourceDuplicatedException.class)
