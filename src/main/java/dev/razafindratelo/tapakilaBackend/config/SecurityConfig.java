@@ -3,6 +3,7 @@ package dev.razafindratelo.tapakilaBackend.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,11 +28,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSec) throws Exception {
         return httpSec.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/sign-up").permitAll()
-                                .requestMatchers("/account-activation/").permitAll()
-                                .requestMatchers("/sign-in").permitAll()
-                                .requestMatchers("update-password").permitAll()
-                                .requestMatchers("/ping-pong").permitAll()
+                        auth -> auth
+                                .requestMatchers(HttpMethod.POST,"/user/sign-up").permitAll()
+                                .requestMatchers(HttpMethod.PATCH, "/user/activate-account").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/user/sign-in").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/user/update-password").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/ping-pong").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(

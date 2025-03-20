@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -28,12 +29,27 @@ public class TokenFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
 
+	private static final List<String> EXCLUDED_PATHS = List.of(
+					"/user/sign-in",
+					"/user/sign-up",
+					"/user/activate-account",
+					"/user/update-password",
+					"/ping-pong"
+	);
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
+		String path = request.getServletPath();
+    
+		if (EXCLUDED_PATHS.contains(path)) {
+		    filterChain.doFilter(request, response);
+		    return;
+		}
 
         String authHeader = request.getHeader("Authorization");
 
