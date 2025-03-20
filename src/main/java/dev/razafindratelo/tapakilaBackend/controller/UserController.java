@@ -4,10 +4,12 @@ import dev.razafindratelo.tapakilaBackend.dto.Login;
 import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.dto.ValidationCode;
 import dev.razafindratelo.tapakilaBackend.dto.JwtDTO;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ public class UserController {
 
     @PostMapping("/user/sign-in")
     public ResponseEntity<JwtDTO> signIn(@RequestBody Login login) {
+		System.out.println("HELLOOOOO " + login);
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login.email(), login.password())
         );
@@ -38,6 +41,11 @@ public class UserController {
             throw new ActionNotAllowedException("Authentication failed for email " + login.email());
 
         return ResponseEntity.ok(userService.signIn(login));
+    }
+
+    @PostMapping("/user/log-out")
+    public ResponseEntity<LogOutDto> logOut(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.logOut(request));
     }
 
     @GetMapping("/users")
