@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,15 @@ public class UserController {
         return ResponseEntity.ok(userService.logOut(request));
     }
 
+    @GetMapping("/user/{userEmail}/refresh-token/{refreshToken}")
+    public ResponseEntity<JwtDTO> refreshToken(
+            @PathVariable("userEmail") String userEmail,
+            @PathVariable("refreshToken") String refreshToken
+    ) {
+        return new ResponseEntity<>(userService.refreshToken(userEmail, refreshToken), HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAllUsers(
             @RequestParam(value = "page", required = false) Long page,
@@ -54,14 +64,6 @@ public class UserController {
             @RequestParam(value = "username", required = false) String username
     ) {
         return ResponseEntity.ok(userService.findAllUserByUsername(username, page, size));
-    }
-
-    @GetMapping("/user/{userEmail}/refresh-token/{refreshToken}")
-    public ResponseEntity<JwtDTO> refreshToken(
-            @PathVariable("userEmail") String userEmail,
-            @PathVariable("refreshToken") String refreshToken
-    ) {
-        return new ResponseEntity<>(userService.refreshToken(userEmail, refreshToken), HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{userEmail}")

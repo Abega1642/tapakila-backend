@@ -5,6 +5,7 @@ import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.service.eventService.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.findById(eventId));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("events/user/{userId}")
     public ResponseEntity<List<Event>> findAllEventsByAdmin(@PathVariable("userId") String userId) {
         throw new NotImplementedException("Find all events by admin not implemented");

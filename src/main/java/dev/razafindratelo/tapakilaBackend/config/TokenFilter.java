@@ -34,7 +34,8 @@ public class TokenFilter extends OncePerRequestFilter {
 					"/user/sign-up",
 					"/user/activate-account",
 					"/user/update-password",
-					"/ping-pong"
+					"/ping-pong",
+                    "/events"
 	);
 
     @Override
