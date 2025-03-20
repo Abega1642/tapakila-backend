@@ -5,6 +5,7 @@ import dev.razafindratelo.tapakilaBackend.dto.JwtDTO;
 import dev.razafindratelo.tapakilaBackend.dto.Login;
 import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.dto.ValidationCode;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
 import dev.razafindratelo.tapakilaBackend.entity.AccountActivation;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
@@ -13,12 +14,17 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.BooleanOperator;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
+import dev.razafindratelo.tapakilaBackend.entity.token.RefreshToken;
+import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
+import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.JwtService;
+import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +32,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +44,7 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserDao userDao;
     private final JwtService jwtService;
+    private final TokenService tokenService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AccountActivationService accountActivationService;
 
@@ -109,8 +118,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public LogOutDto logOut(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String accessToken = auth.replace("Bearer ", "");
+        return tokenService.disableTokens(accessToken);
+    }
+
+    @Override
     public User update(User user) {
-        return null;
+        throw new NotImplementedException("UserService.update :: Not implemented yet");
     }
 
     @Override
@@ -162,6 +178,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (activatedUser == null) throw new RuntimeException("Could not activate user");
 
         return activatedUser;
+    }
+
+    @Override
+    public JwtDTO refreshToken(String userEmail, String refreshToken) {
+        LocalDateTime NOW = LocalDateTime.now();
+        User user = findByEmail(userEmail);
+        RefreshToken correspondingRefreshToken = tokenService.findByRefreshToken(refreshToken);
+
+        if (!user.getEmail().equals(correspondingRefreshToken.getUserEmail()))
+            throw new ActionNotAllowedException(
+                    "UserService.refreshToken :: refresh token doesn't match to the user " + user.getEmail()
+            );
+
+        if (!correspondingRefreshToken.isValid() || correspondingRefreshToken.getExpiresAt().isBefore(NOW))
+            throw new ActionNotAllowedException(
+                    "UserService.refreshToken :: refresh token has expired"
+            );
+
+        return jwtService.generate(user);
     }
 
     @Override

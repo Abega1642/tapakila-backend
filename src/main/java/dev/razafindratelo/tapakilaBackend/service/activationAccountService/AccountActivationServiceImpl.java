@@ -27,7 +27,6 @@ public class AccountActivationServiceImpl implements AccountActivationService {
     private final AccountActivationDao accountActivationDao;
     private final UserDao userDao;
     private final MailService mailService;
-    private static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
 
     @Override
     public AccountActivation create(String userEmail) throws MessagingException {

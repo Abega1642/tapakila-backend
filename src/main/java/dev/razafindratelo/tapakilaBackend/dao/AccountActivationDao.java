@@ -116,7 +116,7 @@ public class AccountActivationDao implements DAO<AccountActivation> {
 
     @Override
     public AccountActivation save(AccountActivation accountActivation) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(AccountActivationDao.class.getName());
         List<Column> columns = List.of(
                 Column.from(AvailableColumn.ACCOUNT_ACTIVATION_ID),
                 Column.from(AvailableColumn.ACCOUNT_ACTIVATION_CODE),
@@ -151,7 +151,7 @@ public class AccountActivationDao implements DAO<AccountActivation> {
 
     @Override
     public Optional<AccountActivation> findById(String id) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(AccountActivationDao.class.getName());
         List<Criteria> criteria = List.of(
                 new Filter(AvailableColumn.ACCOUNT_ACTIVATION_ID, OperatorType.EQUAL, id)
         );
@@ -174,7 +174,7 @@ public class AccountActivationDao implements DAO<AccountActivation> {
     }
 
     public Optional<AccountActivation> findByUserEmail(String userEmail) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(AccountActivationDao.class.getName());
         return findByUserEmailWithConnection(userEmail, connection);
     }
 
@@ -213,7 +213,7 @@ public class AccountActivationDao implements DAO<AccountActivation> {
 
     @Override
     public List<AccountActivation> findAllByCriteria(List<Criteria> criteria, long page, long size) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(AccountActivationDao.class.getName());
         QueryResult sqlQuery = makeQueryResult(criteria, List.of());
 
         String finaLQuery = sqlQuery.sql()
@@ -248,7 +248,7 @@ public class AccountActivationDao implements DAO<AccountActivation> {
     }
 
     public List<AccountActivation> update(String email, LocalDateTime activatedTime) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(AccountActivationDao.class.getName());
 
         List<Column> activatedAt = List.of (
                 new Column(AvailableColumn.ACCOUNT_ACTIVATION_ACTIVATED_AT, activatedTime.toString())

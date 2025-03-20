@@ -18,7 +18,7 @@ public class TotalSoldTicketDao {
     private final DataSource dataSource;
 
     public List<TotalSoldTicket> getTotalSoldTickets(Month month, int year) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(TotalSoldTicketDao.class.getName());
         List<TotalSoldTicket> totalSoldTickets = new ArrayList<>();
 
         String sqlRequest =

@@ -3,7 +3,6 @@ package dev.razafindratelo.tapakilaBackend.dao;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,10 +21,10 @@ public class DataSource {
         this.password = dotenv.get("DB_PASSWORD");
     }
 
-    public Connection getConnection(){
+    public Connection getConnection(String className){
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
-            log.info("Connection established !");
+            log.info("{} :: Connection established !", className);
             return connection;
         } catch (SQLException e) {
             throw new RuntimeException(e);

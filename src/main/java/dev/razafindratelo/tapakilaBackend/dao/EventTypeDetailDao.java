@@ -103,7 +103,7 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
 
     @Override
     public EventTypeDetail save(EventTypeDetail eventTypeDetail) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTypeDetailDao.class.getName());
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.EVENT_TYPE_ID),
                 Column.from(AvailableColumn.EVENT_TYPE__),
@@ -150,7 +150,7 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
         QueryResult sqlQuery = makeQuery(List.of(), extraCriteria);
         String finaLQuery = sqlQuery.sql();
 
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTypeDetailDao.class.getName());
 
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
             findStmt.setLong(1, 1);
@@ -189,7 +189,7 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
                   """;
 
         List<EventTypeDetail> eventTypes = new ArrayList<>();
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTypeDetailDao.class.getName());
 
         try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(finaLQuery)) {
 

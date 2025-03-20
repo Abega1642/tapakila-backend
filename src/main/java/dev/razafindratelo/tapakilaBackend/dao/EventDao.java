@@ -24,7 +24,6 @@ import java.util.*;
 public class EventDao implements DAO<Event> {
     private final DataSource dataSource;
 	private final EventMapper eventMapper;
-    private static final LocalDate DEFAULT_DATE = LocalDate.now();
 
     /**
      * {@code getColumns} method is a methods that handle the list of most / frequently used columns in this {@link EventDao}
@@ -52,6 +51,7 @@ public class EventDao implements DAO<Event> {
                 new Column (AvailableColumn.USER_FIRST_NAME, "user_first_name"),
                 new Column (AvailableColumn.USER_PROFILE_IMAGE_PATH, "user_img_profil_path"),
                 new Column (AvailableColumn.USER_ROLE, "user_role"),
+                new Column (AvailableColumn.USER_PASSWORD, "user_password"),
                 new Column (AvailableColumn.USER_STATUS, "user_status"),
                 new Column (AvailableColumn.USER_CREATED_AT, "user_creation_date")
         );
@@ -239,7 +239,7 @@ public class EventDao implements DAO<Event> {
     }
 
     public List<Event> findAllBetweenDates(LocalDate from, LocalDate to) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
         QueryResult sqlQuery = makeQuery(List.of(), List.of());
 
         String finalQuery = sqlQuery.sql().substring(0, 134) + sqlQuery.sql().substring(155);
@@ -258,14 +258,16 @@ public class EventDao implements DAO<Event> {
             return events;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(
+                    String.format("EventDao.findAllBetweenDates :: %s", e.getMessage())
+            );
         }
     }
 
 
     @Override
     public Event save(Event event) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.EVENT_ID),
                 Column.from(AvailableColumn.EVENT_ORGANIZER),
@@ -307,14 +309,17 @@ public class EventDao implements DAO<Event> {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("EventDao.save :: %s", e.getMessage())
+            );
         }
-        throw new RuntimeException("Failed to save event with id " + event.getId());
+        throw new RuntimeException("EventDao.save :: Failed to save event with id " + event.getId());
     }
 
     @Override
     public Optional<Event> findById(String id) {
-        Connection connection = dataSource.getConnection();
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
         List<Criteria> criteria = List.of (
                 new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
         );
@@ -340,8 +345,11 @@ public class EventDao implements DAO<Event> {
 
             event.setEventTypeDetail(eventTypes);
             return Optional.of(event);
+
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("EventDao.findById :: %s", e.getMessage())
+            );
         }
     }
 
@@ -356,14 +364,14 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public List<Event> findAllByCriteria(List<Criteria> criteria, long page, long size) {
-        return findAllByCriteriaWithGivenConnection(criteria, page, size, dataSource.getConnection());
+        return findAllByCriteriaWithGivenConnection(criteria, page, size, dataSource.getConnection(EventDao.class.getName()));
     }
 
     public List<Event> findAllByCriteriaWithTicketDateInterval
             (List<Criteria> criteria, LocalDate ticketDateFrom, LocalDate ticketDateTo, long page, long size) {
 
         return findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection(
-                dataSource.getConnection(),
+                dataSource.getConnection(EventDao.class.getName()),
                 criteria,
                 ticketDateFrom,
                 ticketDateTo,
@@ -382,6 +390,8 @@ public class EventDao implements DAO<Event> {
      * @return : list of events corresponding to the given {@code criteria}
      */
     private List<Event> findAllByCriteriaWithGivenConnection(List<Criteria> criteria, long page, long size, Connection connection) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
+
         return findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection(
                 connection,
                 criteria,
@@ -442,14 +452,20 @@ public class EventDao implements DAO<Event> {
                 events.add(ev);
             }
             return events;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format(
+                            "EventDao.findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection :: %s",
+                            e.getMessage()
+                    )
+            );
         }
     }
 
     @Override
     public List<Event> update(List<Column> columnsToBeUpdated, List<Filter> updateColumnReferences) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
 
         List<Criteria> criteria = new ArrayList<>(updateColumnReferences);
         Query queryMaker = new Query.Builder()
@@ -469,14 +485,16 @@ public class EventDao implements DAO<Event> {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("EventDao.update :: %s", e.getMessage())
+            );
         }
 
-        throw new RuntimeException("Error while updating event(s)");
+        throw new RuntimeException("EventDao.update :: Error while updating event(s)");
     }
 
     @Override
     public Optional<Event> delete(String id) {
-        throw new NotImplementedException("Deleting event not implemented yet");
+        throw new NotImplementedException("EventDao.delete :: Deleting event not implemented yet");
     }
 }

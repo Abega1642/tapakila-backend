@@ -4,13 +4,16 @@ import dev.razafindratelo.tapakilaBackend.dto.Login;
 import dev.razafindratelo.tapakilaBackend.dto.UserUpdatePassword;
 import dev.razafindratelo.tapakilaBackend.dto.ValidationCode;
 import dev.razafindratelo.tapakilaBackend.dto.JwtDTO;
+import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,9 +40,23 @@ public class UserController {
         if (!auth.isAuthenticated())
             throw new ActionNotAllowedException("Authentication failed for email " + login.email());
 
-        return ResponseEntity.ok(userService.signIn(login));
+        return new ResponseEntity<>(userService.signIn(login), HttpStatus.CREATED);
     }
 
+    @PostMapping("/user/log-out")
+    public ResponseEntity<LogOutDto> logOut(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.logOut(request));
+    }
+
+    @GetMapping("/user/{userEmail}/refresh-token/{refreshToken}")
+    public ResponseEntity<JwtDTO> refreshToken(
+            @PathVariable("userEmail") String userEmail,
+            @PathVariable("refreshToken") String refreshToken
+    ) {
+        return new ResponseEntity<>(userService.refreshToken(userEmail, refreshToken), HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAllUsers(
             @RequestParam(value = "page", required = false) Long page,

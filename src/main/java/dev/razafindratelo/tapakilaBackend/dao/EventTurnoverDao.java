@@ -15,14 +15,14 @@ import java.util.List;
 public class EventTurnoverDao {
     private final DataSource dataSource;
     private final EventTurnoverMapper mapper;
-    private final static LocalDate DEFAULT_DATE = LocalDate.now();
 
     public EventTurnover findTurnoverByEventId(String eventId) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
         return findTurnoverByEventIdAtGivenDate(eventId, DEFAULT_DATE);
     }
 
     public EventTurnover findTurnoverByEventIdAtGivenDate(String eventId, LocalDate date) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTurnoverDao.class.getName());
         String sqlQuery =
                 """
                         WITH TicketType AS (
@@ -97,11 +97,12 @@ public class EventTurnoverDao {
     }
 
     public List<EventTurnover> findAll(long page, long size) {
+        final LocalDate DEFAULT_DATE = LocalDate.now();
         return findAllAtAGivenDate(DEFAULT_DATE, page, size);
     }
 
     public List<EventTurnover> findAllAtAGivenDate(LocalDate date, long page, long size) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTurnoverDao.class.getName());
         List<EventTurnover> turnovers = new ArrayList<>();
         String sqlQuery =
                 """
