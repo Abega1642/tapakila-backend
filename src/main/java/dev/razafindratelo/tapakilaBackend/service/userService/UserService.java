@@ -22,5 +22,5 @@ public interface UserService {
     User update(User user);
     User updateUserPassword(UserUpdatePassword userUpdatePassword);
     User activateAccount(ValidationCode validationCode);
-
+    JwtDTO refreshToken(String userEmail, String refreshToken);
 }
