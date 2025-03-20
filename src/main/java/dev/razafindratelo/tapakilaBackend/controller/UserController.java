@@ -32,7 +32,6 @@ public class UserController {
 
     @PostMapping("/user/sign-in")
     public ResponseEntity<JwtDTO> signIn(@RequestBody Login login) {
-		System.out.println("HELLOOOOO " + login);
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login.email(), login.password())
         );
@@ -40,7 +39,7 @@ public class UserController {
         if (!auth.isAuthenticated())
             throw new ActionNotAllowedException("Authentication failed for email " + login.email());
 
-        return ResponseEntity.ok(userService.signIn(login));
+        return new ResponseEntity<>(userService.signIn(login), HttpStatus.CREATED);
     }
 
     @PostMapping("/user/log-out")
@@ -55,6 +54,14 @@ public class UserController {
             @RequestParam(value = "username", required = false) String username
     ) {
         return ResponseEntity.ok(userService.findAllUserByUsername(username, page, size));
+    }
+
+    @GetMapping("/user/{userEmail}/refresh-token/{refreshToken}")
+    public ResponseEntity<JwtDTO> refreshToken(
+            @PathVariable("userEmail") String userEmail,
+            @PathVariable("refreshToken") String refreshToken
+    ) {
+        return new ResponseEntity<>(userService.refreshToken(userEmail, refreshToken), HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{userEmail}")
