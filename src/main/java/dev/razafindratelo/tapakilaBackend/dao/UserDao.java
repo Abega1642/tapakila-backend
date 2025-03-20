@@ -104,7 +104,7 @@ public class UserDao implements DAO<User> {
 
     @Override
     public User save(User user) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.USER_EMAIL),
                 Column.from(AvailableColumn.USER_LAST_NAME),
@@ -134,15 +134,19 @@ public class UserDao implements DAO<User> {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("UserDao.save :: %s",e.getMessage())
+            );
         }
 
-        throw new RuntimeException("Failed to save user with email = " + user.getEmail());
+        throw new RuntimeException(
+                String.format("UserDao.save :: failed to save user with email = %s",user.getEmail())
+        );
     }
 
     @Override
     public Optional<User> findById(String email) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
         return findByIdWithGivenConnection(email, connection);
     }
 
@@ -162,8 +166,11 @@ public class UserDao implements DAO<User> {
                 return Optional.of(new UserMapper().mapFrom(rs));
             }
             return Optional.empty();
+
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("UserDao.findByIdWithGivenConnection :: %s",e.getMessage())
+            );
         }
     }
 
@@ -174,7 +181,7 @@ public class UserDao implements DAO<User> {
 
     @Override
     public List<User> findAllByCriteria(List<Criteria> criteria, long page, long size) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
         return findAllByCriteriaWithGivenConnection(criteria, page, size, connection);
     }
     
@@ -207,13 +214,15 @@ public class UserDao implements DAO<User> {
             return users;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("UserDao.findAllByCriteriaWithGivenConnection :: %s",e.getMessage())
+            );
         }
     }
 
     @Override
     public List<User> update(List<Column> columnToBeUpdated, List<Filter> updateColumnReferences) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
 
         List<Criteria> criteria = new ArrayList<>(updateColumnReferences);
 
@@ -234,16 +243,20 @@ public class UserDao implements DAO<User> {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(
+                    String.format("UserDao.update :: %s", e.getMessage())
+            );
         }
 
-        throw new RuntimeException("Error while updating user(s)");
+        throw new RuntimeException(
+                "UserDao.update :: Error while updating user(s)"
+        );
     }
 
     @Override
     public Optional<User> delete(String email) {
         List<Column> column = List.of (
-                Column.from(AvailableColumn.USER_STATUS)
+               new Column(AvailableColumn.USER_STATUS, "false")
         );
 
         List<Filter> filters = List.of(

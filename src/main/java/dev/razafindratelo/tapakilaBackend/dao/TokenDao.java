@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Getter
@@ -17,7 +18,7 @@ import java.util.Map;
 public class TokenDao {
     private final DataSource dataSource;
 
-    public RefreshToken findRefreshTokenByValue(String token) {
+    public Optional<RefreshToken> findRefreshTokenByValue(String token) {
         String sqlQuery =
                 """
                 SELECT
@@ -29,22 +30,25 @@ public class TokenDao {
                 FROM refresh_token rt
                 WHERE rt.refresh_token = ?
                 """;
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(TokenDao.class.getName());
 
         try(PreparedStatement findAccessTokenStmt = connection.prepareStatement(sqlQuery)) {
+            findAccessTokenStmt.setString(1, token);
 
             ResultSet rs = findAccessTokenStmt.executeQuery();
+
             if (rs.next()) {
-                return TokenMapper.mapRefreshTokenFrom(rs);
+                return Optional.of(TokenMapper.mapRefreshTokenFrom(rs));
             }
-            throw new ResourceNotFoundException("Refresh token not found");
+
+            return Optional.empty();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public AccessToken findAccessTokenByValue(String token) {
+    public Optional<AccessToken> findAccessTokenByValue(String token) {
         String sqlQuery =
                 """
                 SELECT
@@ -56,15 +60,18 @@ public class TokenDao {
                 FROM access_token at
                 WHERE at.access_token = ?
                 """;
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(TokenDao.class.getName());
 
         try(PreparedStatement findAccessTokenStmt = connection.prepareStatement(sqlQuery)) {
+            findAccessTokenStmt.setString(1, token);
 
             ResultSet rs = findAccessTokenStmt.executeQuery();
+
             if (rs.next()) {
-                return TokenMapper.mapAccessTokenFrom(rs);
+                return Optional.of(TokenMapper.mapAccessTokenFrom(rs));
             }
-            throw new ResourceNotFoundException("Access token not found");
+
+            return Optional.empty();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -80,7 +87,7 @@ public class TokenDao {
                 """
                 INSERT INTO refresh_token VALUES (?, ?, ?, ?, ?);
                 """;
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(TokenDao.class.getName());
 
         try (PreparedStatement saveAccessTokenStmt = connection.prepareStatement(saveAccessTokenSQLQuery);
             PreparedStatement saveRefreshTokenStmt = connection.prepareStatement(saveRefreshTokenSQLQuery)

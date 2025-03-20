@@ -22,7 +22,7 @@ public class EventTurnoverDao {
     }
 
     public EventTurnover findTurnoverByEventIdAtGivenDate(String eventId, LocalDate date) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTurnoverDao.class.getName());
         String sqlQuery =
                 """
                         WITH TicketType AS (
@@ -101,7 +101,7 @@ public class EventTurnoverDao {
     }
 
     public List<EventTurnover> findAllAtAGivenDate(LocalDate date, long page, long size) {
-        Connection connection = dataSource.getConnection();
+        Connection connection = dataSource.getConnection(EventTurnoverDao.class.getName());
         List<EventTurnover> turnovers = new ArrayList<>();
         String sqlQuery =
                 """
