@@ -17,13 +17,13 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
         for (Filter filter : filters) {
             switch (filter.getOperatorType()) {
                 case CONTAINS:
-                    joiner.add("AND")
+                    joiner.add(filter.getBooleanOperator().toString())
                             .add(filter.getColumnName().getValue())
                             .add(filter.getOperatorType().getRepresentation())
                             .add("'%' || ? || '%'");
                     break;
                 case BETWEEN:
-                    joiner.add("AND")
+                    joiner.add(filter.getBooleanOperator().toString())
                             .add(filter.getColumnName().getValue())
                             .add(filter.getOperatorType().getRepresentation())
                             .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")")
@@ -32,12 +32,12 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
                     break;
                 default:
                     if (filter.getColumnName().getValueType().equals(ValueType.REQUEST)) {
-                        joiner.add("AND")
+                        joiner.add(filter.getBooleanOperator().toString())
                                 .add(filter.getColumnName().getValue())
                                 .add(filter.getOperatorType().getRepresentation())
                                 .add(filter.getValue().toString());
                     } else {
-                        joiner.add("AND")
+                        joiner.add(filter.getBooleanOperator().toString())
                                 .add(filter.getColumnName().getValue())
                                 .add(filter.getOperatorType().getRepresentation())
                                 .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")");
@@ -57,13 +57,13 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
             String columnName = filter.getColumnName().getValue().split("\\.")[1];
             switch (filter.getOperatorType()) {
                 case CONTAINS:
-                    joiner.add("AND")
+                    joiner.add(filter.getBooleanOperator().toString())
                             .add(columnName)
                             .add(filter.getOperatorType().getRepresentation())
                             .add("'%' || ? || '%'");
                     break;
                 case BETWEEN:
-                    joiner.add("AND")
+                    joiner.add(filter.getBooleanOperator().toString())
                             .add(columnName)
                             .add(filter.getOperatorType().getRepresentation())
                             .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")")
@@ -72,12 +72,12 @@ public class FilterQueryFactory implements SubQueryFactory<Filter> {
                     break;
                 default:
                     if (filter.getColumnName().getValueType().equals(ValueType.REQUEST)) {
-                        joiner.add("AND")
+                        joiner.add(filter.getBooleanOperator().toString())
                                 .add(columnName)
                                 .add(filter.getOperatorType().getRepresentation())
                                 .add(filter.getValue().toString());
                     } else {
-                        joiner.add("AND")
+                        joiner.add(filter.getBooleanOperator().toString())
                                 .add(columnName)
                                 .add(filter.getOperatorType().getRepresentation())
                                 .add("(?::" + filter.getColumnName().getValueType().getRepresentation() + ")");

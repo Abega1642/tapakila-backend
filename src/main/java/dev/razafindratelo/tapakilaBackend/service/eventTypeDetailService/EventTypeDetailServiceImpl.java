@@ -5,6 +5,7 @@ import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
+import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -29,13 +30,13 @@ public class EventTypeDetailServiceImpl implements EventTypeDetailService {
 
     @Override
     public List<EventTypeDetail> findAll(Long page, Long size) {
-        size = (size == null) ? 10L : size;
-        page = (page == null) ? 1L : page;
+        long finalPage = PaginationFormatUtil.normalizePage(page);
+        long finalSize = PaginationFormatUtil.normalizeSize(size);
 
         if (page < 0 || size < 0) {
             throw new BadRequestException("Page and size cannot be negative");
         }
-        return eventTypeDetailDao.findAll(page, size);
+        return eventTypeDetailDao.findAll(finalPage, finalSize);
     }
 
     @Override

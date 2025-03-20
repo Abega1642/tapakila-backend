@@ -1,4 +1,4 @@
-INSERT INTO "user" (email, profile_img_path, last_name, first_name, password, user_role, status) VALUES
+INSERT INTO "user" (email, profile_img_path, last_name, first_name, password, user_role, is_active) VALUES
 ('admin@example.com', '/user/admin/profile.jpg', 'Doe', 'John', 'hashed_password_123', 'ADMIN', true);
 
 INSERT INTO "event" (
@@ -167,6 +167,15 @@ INSERT INTO ticket_price (id, id_ticket_type, id_event, price, currency) VALUES
 
 -- tickets
 INSERT INTO ticket (id, qr_code_path, payement_ref, ticket_owner_name, user_email, id_ticket_price, id_payment_mode) VALUES
+(
+ '$Tkt-' || gen_random_uuid(),
+ 'qr_codes/ticket1.png',
+ 'PAY123456',
+ 'Just some random owner',
+ 'admin@example.com',
+ (SELECT id from ticket_price WHERE id_event = '$Eve-7814f307-69f5-4f41-9ca5-55e8020083dd' AND price = 50000),
+ '$PmD-afb64532-3a83-4ed3-bb70-308d757da4ed'
+),
 (
  '$Tkt-' || gen_random_uuid(),
  'qr_codes/ticket1.png',

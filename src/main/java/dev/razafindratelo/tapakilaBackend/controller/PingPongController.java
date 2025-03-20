@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingPongController {
 
-    @GetMapping("/api/ping-pong")
+    @GetMapping("ping-pong")
     public String pingPong() {
         return "Ping-Pong controller";
     }

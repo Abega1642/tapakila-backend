@@ -14,17 +14,31 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode
 public class TicketPriceInfo {
-    @JsonProperty("id")  private String id;
-    @JsonProperty("price") private double price;
-    @JsonProperty("currency") private Currency currency;
+    @JsonProperty("id")
+    private String id;
 
-    @JsonProperty("created_at")
+    @JsonProperty("price")
+    private double price;
+
+    @JsonProperty("currency")
+    private Currency currency;
+
+    @JsonProperty("createdAt")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
 	private LocalDateTime createdAt;
-    @JsonProperty("max_number") private long maxNumber;
-    @JsonProperty("corresponding_ticket_type") private Ticket ticketType;
-    @JsonProperty("left_tickets") private long leftTickets;
-    @JsonProperty("associated_event_id") private String associatedEventId;
+
+    @JsonProperty("maxNumber")
+    private long maxNumber;
+
+    @JsonProperty("correspondingTicketType")
+    private Ticket ticketType;
+
+    @JsonProperty("leftTickets")
+    private long leftTickets;
+
+    @JsonProperty("associatedEventId")
+    private String associatedEventId;
+
 
     @Override
     public String toString() {

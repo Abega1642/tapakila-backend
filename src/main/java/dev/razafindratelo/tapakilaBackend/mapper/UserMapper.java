@@ -21,9 +21,10 @@ public class UserMapper implements Mapper<User>{
                 rs.getString("user_last_name"),
                 rs.getString("user_first_name"),
                 rs.getString("user_img_profil_path"),
-                "__password__",
+                rs.getString("user_password"),
                 UserRole.valueOf(rs.getString("user_role")),
                 rs.getBoolean("user_status"),
+                rs.getTimestamp("user_creation_date").toLocalDateTime(),
                 top5Categories
         );
     }

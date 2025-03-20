@@ -457,8 +457,9 @@ CREATE TABLE "user" (
     last_name       	VARCHAR(255) NOT NULL,
     first_name      	VARCHAR(255) NOT NULL,
     password        	TEXT NOT NULL,
+    created_at          TIMESTAMP DEFAULT current_timestamp,
     user_role       	user_role NOT NULL,
-    status          	BOOLEAN DEFAULT false,
+    is_active          	BOOLEAN DEFAULT false,
 
     UNIQUE (last_name, first_name, user_role)
 );
@@ -527,24 +528,82 @@ CREATE TABLE ticket (
     FOREIGN KEY (id_payment_mode) REFERENCES "payment_mode"(id)
 );
 
+CREATE TABLE account_activation (
+    id              VARCHAR(41) PRIMARY KEY,
+    created_at      TIMESTAMP DEFAULT current_timestamp,
+    expired_at      TIMESTAMP GENERATED ALWAYS AS ( created_at + INTERVAL '10 minutes') STORED,
+	activated_at	TIMESTAMP,
+    code            VARCHAR(9) NOT NULL,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (user_email) REFERENCES "user"(email)
+);
+
+CREATE TABLE access_token (
+    access_token    TEXT NOT NULL,
+    createdAt       TIMESTAMP DEFAULT current_timestamp,
+    expiresAt       TIMESTAMP NOT NULL,
+    isValid         BOOLEAN DEFAULT false,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY ("user_email") REFERENCES "user"(email),
+    UNIQUE(access_token, user_email, createdAt, expiresAt)
+);
+
+CREATE TABLE refresh_token (
+    refresh_token   VARCHAR(41) PRIMARY KEY,
+    createdAt       TIMESTAMP DEFAULT current_timestamp,
+    expiresAt       TIMESTAMP NOT NULL,
+    isValid         BOOLEAN DEFAULT false,
+    user_email      VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY ("user_email") REFERENCES "user"(email),
+    UNIQUE(refresh_token, user_email, createdAt, expiresAt)
+);
+
+
+
+CREATE OR REPLACE FUNCTION is_activation_active (activation_id VARCHAR)
+RETURNS BOOLEAN AS $$
+    DECLARE
+        expiration  TIMESTAMP;
+
+    BEGIN
+        SELECT expired_at INTO expiration
+        FROM account_activation WHERE id = activation_id;
+
+        RETURN current_timestamp < expiration;
+    END;
+$$ LANGUAGE plpgsql;
+
 -- This SQL function will allow us to calculate the value of left ticket for a given event
 --  If you notice, the event table doesn't have the attribute >> leftTicket << nor we don't have any information
 -- about how many tickets left for a given event resource OR MORE IMPORTANT how many VIP, Bronze, Early Bird tickets left.
 -- So, here we calculate the left ticket for a given ticket type.
 -- @left_ticket = this is the left tickets of the subject_ticket_type of the particular event_id
-CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type (event_id VARCHAR, subject_ticket_type ticket_type)
-RETURNS INT8 AS $$
-    DECLARE
-        result              int8;
-        left_ticket		    INT8;
-        ticket_price_id     VARCHAR(41);
-        total_ticket	    INT8 := 0;
-        sold_ticket 	    INT8 := 0;
+CREATE OR REPLACE FUNCTION get_event_left_ticket_of_given_ticket_type_at_a_given_date
+(event_id VARCHAR, subject_ticket_type ticket_type, intervalDateStart date, intervalDateEnd date)
+    RETURNS INT8 AS $$
+DECLARE
+    result              int8;
+    ticket_price_id     VARCHAR(41);
+    total_ticket	    INT8 := 0;
+    sold_ticket 	    INT8 := 0;
+    ticketCreatedAt     TIMESTAMP;
 BEGIN
+
     SELECT id INTO ticket_price_id
     FROM ticket_price
     WHERE id_event = event_id
       AND id_ticket_type = (SELECT tkt.id FROM tickets_type tkt WHERE tkt.ticket_type = subject_ticket_type);
+
+    SELECT created_at INTO ticketCreatedAt
+    FROM ticket_price tp
+    WHERE tp.id = ticket_price_id;
+
+    IF intervalDateStart IS NULL THEN
+        intervalDateStart := ticketCreatedAt;
+    END IF;
 
     SELECT max_number INTO total_ticket
     FROM ticket_price tp
@@ -552,7 +611,8 @@ BEGIN
 
     SELECT COUNT(*) INTO sold_ticket
     FROM ticket t
-    WHERE id_ticket_price = ticket_price_id;
+    WHERE id_ticket_price = ticket_price_id
+      AND purchased_at BETWEEN intervalDateStart::timestamp AND intervalDateEnd::timestamp;
 
     result := total_ticket - sold_ticket;
 

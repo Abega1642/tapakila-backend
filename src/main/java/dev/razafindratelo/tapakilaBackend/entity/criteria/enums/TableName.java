@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum TableName {
     EVENT("event e"),
+    ACCOUNT_ACTIVATION("account_activation acc"),
     USER("\"user\" u"),
     EVENTS_TYPE("events_type ety"),
     EVENTS_CATEGORY("events_category ec"),

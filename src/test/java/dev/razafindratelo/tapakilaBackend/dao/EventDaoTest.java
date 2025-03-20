@@ -67,9 +67,10 @@ class EventDaoTest {
                 "Doe",
                 "John",
                 "/user/admin/profile.jpg",
-                "__password__",
+                "__sorry_but_you_cannot_have_a_look_at_the_user_password__",
                 UserRole.ADMIN,
                 true,
+                LocalDateTime.of(2025, 3, 7, 16, 28, 50, 306472000),
                 List.of(
                     new EventCategoryDetail(
                             "$EvC-250ea1b3-6402-4113-9db8-ba4a77c900b9",
