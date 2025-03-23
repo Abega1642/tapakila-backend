@@ -1,0 +1,9 @@
+event_type = $EvT-
+event_category = $EvC-
+event = $Evt-
+
+tickets_type = $Tik-
+tickets = $Tkt-
+ticket_price = $TkP-
+
+payement_mode = $PmD-
