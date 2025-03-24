@@ -371,6 +371,96 @@ paths:
               schema:
                 $ref: "#/components/schemas/EventTypeDetail"
 
+  /tickets-stats/current-year:
+    get:
+      operationId: getTicketsStatOfCurrentYear
+      summary: get a statistics of all tickets over the current year
+      tags:
+        - Tickets Statistics
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of sold ticket status over the current year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoldTicketStatOverYear"
+
+  /tickets-stats/current-month:
+    get:
+      operationId: getTotalSoldTicketStatOfCurrentMonth
+      summary: get the statistics of all tickets at the current month
+      tags:
+        - Tickets Statistics
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of all tickets statistics at the current month
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TotalSoldTicket"
+
+  /tickets-stats/month/{month}/of-year/{year}:
+    get:
+      operationId: getTotalSoldTicketStatOfMonth
+      summary: get tickets stats at a given month of a given year
+      tags:
+        - Tickets Statistics
+      parameters:
+        - $ref: "#/components/parameters/month"
+        - $ref: "#/components/parameters/year"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of tickets stats at the given month of the given year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TotalSoldTicket"
+
+  /tickets-stats/over-year-range:
+    get:
+      operationId: getTotalSOldTicketStatOverYearRange
+      summary: get tickets stats over a year range
+      tags:
+        - Tickets Statistics
+      parameters:
+        - $ref: "#/components/parameters/startYear"
+        - $ref: "#/components/parameters/endYear"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: tickets stats over the year range
+          content:
+            application/json :
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoleTicketStatOverYearRange"
+
 
 components:
   parameters:
@@ -447,7 +537,80 @@ components:
         type: string
         format: $EvT-...
 
+    month:
+      in: path
+      name: month
+      required: true
+      schema:
+        $ref: "#/components/schemas/month"
+
+    year:
+      in: path
+      name: year
+      required: true
+      schema:
+        $ref: "#/components/schemas/year"
+
+    startYear:
+      in: query
+      name: startYear
+      required: false
+      schema:
+        $ref: "#/components/schemas/year"
+
+    endYear:
+      in: query
+      name: endYear
+      required: true
+      schema:
+        $ref: "#/components/schemas/year"
+
   schemas:
+    month:
+      type: string
+      enum: [ JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER ]
+
+    year:
+      type: number
+      format: int32
+      example: 2025
+
+    TotalSoldTicket:
+      type: object
+      properties:
+        ticketType:
+          $ref: "#/components/schemas/TicketType"
+        month:
+          $ref: "#/components/schemas/month"
+        year:
+          $ref: "#/components/schemas/year"
+        sold:
+          type: number
+          format: int32
+          example: 785
+        percentage:
+          type: number
+          format: float
+          example: 8.5
+
+    SoldTicketStatOverYear:
+      type: object
+      properties:
+        year:
+          $ref: "#/components/schemas/year"
+        totalSoldTickets:
+          $ref: "#/components/schemas/TotalSoldTicket"
+
+    SoleTicketStatOverYearRange:
+      type: object
+      properties:
+        year:
+          $ref: "#/components/schemas/year"
+        soldTicketStatOverYears:
+          type: array
+          items:
+            $ref: "#/components/schemas/SoldTicketStatOverYear"
+
     EventTypeDetail:
       type: object
       properties: 
@@ -465,6 +628,10 @@ components:
           items:
             $ref: "#/components/schemas/EventCategoryDetail"
 
+    TicketType:
+      type: string
+      enum: [ VIP, STANDARD, EARLY_BIRD ]
+
     Ticket:
       type: object
       properties:
@@ -477,8 +644,8 @@ components:
           type: string
           format: url
         ticketType:
-          type: string
-          enum: [ VIP, STANDARD, EARLY_BIRD ]
+          $ref: "#/components/schemas/TicketType"
+
 
     TicketPriceInfo:
       type: object
