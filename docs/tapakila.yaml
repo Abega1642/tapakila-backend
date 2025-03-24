@@ -13,6 +13,76 @@ servers:
   - url: 'http://localhost:8080/tapakila-api'
 
 paths:
+  /account-activations:
+    get:
+      operationId: findAllActivationAccounts
+      summary: get all account activations
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of all account activations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
+  /account-activation/{userEmail}:
+    get:
+      operationId: findByUserEmail
+      summary: get the last account activation of an user
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: the last account activation of an user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
+  /account-activations/date-filters:
+    get:
+      operationId: findAllDateFilterAccountActivations
+      summary: get all account activation with date interval
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/starts_at"
+        - $ref: "#/components/parameters/ends_at"
+      responses:
+        200:
+          description: all account activation within a date interval
+          content:
+            appliocation/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccountActivation"
+
+  /account-activation/activate/{userEmail}:
+    patch:
+      operationId: activateAccount
+      summary: activate the user account
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: update account activation date
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
   /user/sign-up:
     post:
       operationId: signUp
@@ -317,6 +387,22 @@ components:
         type: string
         format: date
 
+    starts_at:
+      in: query
+      name: starts_at
+      required: false
+      schema:
+        type: string
+        format: date
+
+    ends_at:
+      in: query
+      name: ends_at
+      required: false
+      schema:
+        type: string
+        format: date
+
   schemas:
     EventTypeDetail:
       type: object
@@ -502,6 +588,31 @@ components:
           type: string
           format: password
 
+    AccountActivation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: $AcA-...
+        correspondingUser:
+          $ref: "#/components/schemas/User"
+        activationCode:
+          type: string
+          maxLength: 9
+          minLength: 9
+          description: number with length 9
+          example: 0953147685
+        createdAt:
+          type: string
+          format: date
+        expiredAt:
+          type: string
+          format: date
+        activatedAt:
+          type: string
+          format: date
+        isActive:
+          type: boolean
 
     BaseUser:
       type: object
