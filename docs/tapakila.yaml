@@ -3,8 +3,15 @@ info:
   title: Tapakila API
   description: Tapakila API
   version: 1.0.0
+  contact:
+    email: a.razafindratelo@gmail.com
+    name: Abegà Razafindratelo
+    url: https://github.com/Abega1642
+  license:
+    name: 3BEW
 servers:
   - url: 'http://localhost:8080/tapakila-api'
+
 paths:
   /user/sign-up:
     post:
@@ -156,6 +163,40 @@ paths:
                 $ref: "#/components/schemas/User"
 
 
+  /events:
+    get:
+      operationId: findAllEvents
+      summary: get all events (paginated)
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: all events (paginated)
+          content:
+            application/json :
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /event/{eventId}:
+    get:
+      operationId: findEventById
+      summary: find an event
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      responses:
+        200:
+          description: the corresponding event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+
 components:
   parameters:
     page:
@@ -191,7 +232,123 @@ components:
       schema:
         type: string
 
+    eventId:
+      in: path
+      name: eventId
+      required: true
+      schema:
+        type: string
+        example: "$Evt-..."
+
   schemas:
+    EventTypeDetail:
+      type: object
+      properties: 
+        id:
+          type: string
+          example: "$EvT-"
+        eventType:
+          type: string
+          enum: [ ENTERTAINMENT, MUSIC, SPORTS, THEATER_AND_SHOWS, EDUCATION, CINEMA, EXHIBITIONS_AND_CULTURE, FESTIVALS_AND_FAIRS, PARTIES, GAMING, BUSINESS, RELIGIOUS, FOOD_AND_DRINK, CHARITY, TRAVEL, FASHION, TECHNOLOGY, ENVIRONMENTAL, FAMILY_AND_KIDS, HEALTH_AND_WELLNESS, LITERATURE_AND_BOOKS, COMEDY, NIGHTLIFE, OUTDOOR_AND_ADVENTURE, COMMUNITY_AND_SOCIAL, HISTORY_AND_HERITAGE, SCIENCE_AND_TECH, ANIMALS_AND_NATURE ]
+        description:
+          type: string
+          format: text
+        correspondingCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventCategoryDetail"
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+          format: text
+        imgPath:
+          type: string
+          format: url
+        ticketType:
+          type: string
+          enum: [ VIP, STANDARD, EARLY_BIRD ]
+
+    TicketPriceInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        price:
+          type: number
+          format: float
+        currency:
+          type: string
+          enum : [ MGA, DOLLAR, EURO ]
+        createdAt:
+           type: string
+           format: date
+        maxNumber:
+          type: number
+          format: int64
+        correspondingTicketType:
+          $ref: "#/components/schemas/Ticket"
+        leftTickets:
+          type: number
+          format: int64
+        associatedEventId:
+          type: string
+          example : "$Evt-..."
+
+    Event:
+      type: object
+      properties: 
+        id:
+          type: string
+          example: "$Evt-..."
+        organizer:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        dateTime:
+          type: string
+          format: date
+          description: The date time of the event
+        timeZone:
+          type: string
+          enum: [ UTC_MINUS_12_BAKER_ISLAND, UTC_MINUS_11_SAMOA_TIME, UTC_MINUS_10_HAWAII_ALEUTIAN_STANDARD_TIME, UTC_MINUS_9_ALASKA_STANDARD_TIME, UTC_MINUS_8_PACIFIC_STANDARD_TIME, UTC_MINUS_7_MOUNTAIN_STANDARD_TIME, UTC_MINUS_6_CENTRAL_STANDARD_TIME, UTC_MINUS_5_EASTERN_STANDARD_TIME, UTC_MINUS_4_ATLANTIC_STANDARD_TIME, UTC_MINUS_3_ARGENTINA_TIME, UTC_MINUS_2_SOUTH_GEORGIA_TIME, UTC_MINUS_1_AZORES_TIME, UTC_0_GREENWICH_MEAN_TIME, UTC_0_WESTERN_EUROPEAN_TIME, UTC_1_CENTRAL_EUROPEAN_TIME, UTC_1_WEST_AFRICA_TIME, UTC_2_EASTERN_EUROPEAN_TIME, UTC_2_CENTRAL_AFRICA_TIME, UTC_3_MOSCOW_STANDARD_TIME, UTC_3_EAST_AFRICA_TIME, UTC_3_30_IRAN_STANDARD_TIME, UTC_4_UNITED_ARAB_EMIRATES_TIME, UTC_4_30_AFGHANISTAN_TIME, UTC_5_PAKISTAN_STANDARD_TIME, UTC_5_30_INDIA_STANDARD_TIME, UTC_5_45_NEPAL_TIME, UTC_6_BANGLADESH_STANDARD_TIME, UTC_6_30_MYANMAR_TIME, UTC_7_INDOCHINA_TIME, UTC_8_CHINA_STANDARD_TIME, UTC_8_30_NORTH_KOREA_TIME, UTC_9_JAPAN_STANDARD_TIME, UTC_9_30_AUSTRALIA_CENTRAL_STANDARD_TIME, UTC_10_EASTERN_AUSTRALIA_STANDARD_TIME, UTC_11_SOLOMON_ISLANDS_TIME, UTC_12_NEW_ZEALAND_STANDARD_TIME, UTC_12_FIJI_TIME, UTC_13_TONGA_TIME, UTC_14_KIRIBATI_TIME ]
+        location:
+          type: string
+        locationUrl:
+          type: string
+          format: url
+        imagePath:
+          type: string
+          format: url
+        eventTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventTypeDetail"
+        category:
+          $ref: "#/components/schemas/EventCategoryDetail"
+        status:
+          type: string
+          enum: [ DRAFT, PUBLISHED, SCHEDULED, ONGOING, COMPLETED, CANCELED ]
+        numberOfTickets:
+          type: number
+        eventLeftTickets:
+          $ref: "#/components/schemas/TicketPriceInfo"
+        maxTicketPerUser:
+          type: number
+          format: int32
+        createdBy:
+          $ref: "#/components/schemas/User"
+        updatedAt:
+          type: string
+          format: date
+
+    
     EventCategoryDetail:
       type: object
       properties:
