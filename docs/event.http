@@ -1,0 +1,7 @@
+POST http://localhost:8080/tapakila-api/user/sign-in
+Content-Type: application/json
+
+{
+  "email": "tapakila.noreply@gmail.com",
+  "password": "this_is_tapakila_password"
+}
