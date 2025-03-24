@@ -3,15 +3,181 @@ info:
   title: Tapakila API
   description: Tapakila API
   version: 1.0.0
+  contact:
+    email: a.razafindratelo@gmail.com
+    name: Abegà Razafindratelo
+    url: https://github.com/Abega1642
+  license:
+    name: 3BEW
 servers:
-  - url: 'https://example.com'
+  - url: 'http://localhost:8080/tapakila-api'
+
 paths:
+
+  /ping-pong:
+    get:
+      operationId: pingPong
+      summary: ping pong
+      tags:
+        - Ping Pong
+      responses:
+        200:
+          description: string
+          content:
+            text/plain:
+              schema:
+                type: string
+                example : Ping-Pong controller
+
+  /account-activations:
+    get:
+      operationId: findAllActivationAccounts
+      summary: get all account activations
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of all account activations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
+  /account-activation/{userEmail}:
+    get:
+      operationId: findByUserEmail
+      summary: get the last account activation of an user
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: the last account activation of an user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
+  /account-activations/date-filters:
+    get:
+      operationId: findAllDateFilterAccountActivations
+      summary: get all account activation with date interval
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/starts_at"
+        - $ref: "#/components/parameters/ends_at"
+      responses:
+        200:
+          description: all account activation within a date interval
+          content:
+            appliocation/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccountActivation"
+
+  /account-activation/activate/{userEmail}:
+    patch:
+      operationId: activateAccount
+      summary: activate the user account
+      tags:
+        - Account Activation
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: update account activation date
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountActivation"
+
+  /user/sign-up:
+    post:
+      operationId: signUp
+      summary: sign-up a new account
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BaseUser"
+      responses:
+        201:
+          description: User account created with success but not yet activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /user/sign-in:
+    post:
+      operationId: signIn
+      summary: log-in, to sign-in
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        201:
+          description: user connected with the system and receive pairwise access-refresh token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JwtDTO"
+  /user/log-out:
+    post:
+      operationId: logOut
+      summary: log-out, disconnection
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: message indicates whether the user has been successfully disconnected or not
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogOutDto"
+
+  /user/{userEmail}/refresh-token/{refreshToken}:
+    get:
+      operationId: refreshToken
+      summary: get a new access token through a valid refresh token
+      tags:
+        - User
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+        - $ref: "#/components/parameters/refreshToken"
+      responses:
+        201:
+          description: a new access token has been created for the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JwtDTO"
   /users:
     get:
       operationId: findAllUsers
       summary: Get all users
       tags:
         - User
+      security:
+        - bearerAuth: []
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
       parameters:
         - $ref: "#/components/parameters/page"
         - $ref: "#/components/parameters/size"
@@ -25,7 +191,292 @@ paths:
                   type: array
                   items:
                     $ref: "#/components/schemas/User"
-          
+  /user/{userEmail}:
+    get:
+      operationId: findUserByEmail
+      summary: search/find an user by its email
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: the user corresponding to the given user email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /user/activate-account:
+    patch:
+      operationId: activateAccount
+      summary: activate the user account with code activation
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidationCode"
+      responses:
+        202:
+          description: the account activation has been accepted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /user/update-password:
+    patch:
+      operationId: updateUserPassword
+      summary: reset user password
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdatePassword"
+      responses:
+        201:
+          description: the password has been updated with success, returns the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+
+  /events:
+    get:
+      operationId: findAllEvents
+      summary: get all events (paginated)
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: all events (paginated)
+          content:
+            application/json :
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /event/{eventId}:
+    get:
+      operationId: findEventById
+      summary: find an event
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      responses:
+        200:
+          description: the corresponding event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events-turnover:
+    get:
+      operationId: findALlEventTurnovers
+      summary: get each events turnovers
+      tags:
+        - Event turnover
+      security:
+        - bearerAuth : [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of event turnovers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTurnover"
+
+  /events-turnover/{date}:
+    get:
+      operationId: findAllEventTurnoverAtDate
+      summary: get each events turnovers at a given date
+      tags:
+        - Event turnover
+      parameters:
+        - $ref: "#/components/parameters/date"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of events turnovers a the given date
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTurnover"
+
+  /event-turnover/{eventId}:
+    get:
+      operationId: findEventTurnoverById
+      summary: get a particular event turnover
+      tags:
+        - Event turnover
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: turnover of the corresponding event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventTurnover"
+
+  /event-types:
+    get:
+      operationId: findAllEventType
+      summary: get all possible event types
+      tags:
+        - Event type
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of all possible events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTypeDetail"
+
+  /event-type/{eventTypeId}:
+    get:
+      operationId: findEventTypeById
+      summary: get an event type
+      tags:
+        - Event type
+      parameters:
+        - $ref: "#/components/parameters/eventTypeId"
+      responses:
+        200:
+          description: the corresponding event type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventTypeDetail"
+
+  /tickets-stats/current-year:
+    get:
+      operationId: getTicketsStatOfCurrentYear
+      summary: get a statistics of all tickets over the current year
+      tags:
+        - Tickets Statistics
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of sold ticket status over the current year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoldTicketStatOverYear"
+
+  /tickets-stats/current-month:
+    get:
+      operationId: getTotalSoldTicketStatOfCurrentMonth
+      summary: get the statistics of all tickets at the current month
+      tags:
+        - Tickets Statistics
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of all tickets statistics at the current month
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TotalSoldTicket"
+
+  /tickets-stats/month/{month}/of-year/{year}:
+    get:
+      operationId: getTotalSoldTicketStatOfMonth
+      summary: get tickets stats at a given month of a given year
+      tags:
+        - Tickets Statistics
+      parameters:
+        - $ref: "#/components/parameters/month"
+        - $ref: "#/components/parameters/year"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of tickets stats at the given month of the given year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TotalSoldTicket"
+
+  /tickets-stats/over-year-range:
+    get:
+      operationId: getTotalSOldTicketStatOverYearRange
+      summary: get tickets stats over a year range
+      tags:
+        - Tickets Statistics
+      parameters:
+        - $ref: "#/components/parameters/startYear"
+        - $ref: "#/components/parameters/endYear"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: tickets stats over the year range
+          content:
+            application/json :
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoleTicketStatOverYearRange"
+
 
 components:
   parameters:
@@ -47,7 +498,247 @@ components:
       required: false
       schema:
         type: string
+
+    useEmail:
+      in: path
+      name: userEmail
+      required: true
+      schema:
+        type: string
+        format: email
+    refreshToken:
+      in: path
+      name: refreshToken
+      required: true
+      schema:
+        type: string
+
+    eventId:
+      in: path
+      name: eventId
+      required: true
+      schema:
+        type: string
+        example: "$Evt-..."
+
+    date:
+      in: path
+      name: date
+      required: true
+      schema:
+        type: string
+        format: date
+
+    starts_at:
+      in: query
+      name: starts_at
+      required: false
+      schema:
+        type: string
+        format: date
+
+    ends_at:
+      in: query
+      name: ends_at
+      required: false
+      schema:
+        type: string
+        format: date
+
+    eventTypeId:
+      in: path
+      name: eventTypeId
+      required: true
+      schema:
+        type: string
+        format: $EvT-...
+
+    month:
+      in: path
+      name: month
+      required: true
+      schema:
+        $ref: "#/components/schemas/month"
+
+    year:
+      in: path
+      name: year
+      required: true
+      schema:
+        $ref: "#/components/schemas/year"
+
+    startYear:
+      in: query
+      name: startYear
+      required: false
+      schema:
+        $ref: "#/components/schemas/year"
+
+    endYear:
+      in: query
+      name: endYear
+      required: true
+      schema:
+        $ref: "#/components/schemas/year"
+
   schemas:
+    month:
+      type: string
+      enum: [ JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER ]
+
+    year:
+      type: number
+      format: int32
+      example: 2025
+
+    TotalSoldTicket:
+      type: object
+      properties:
+        ticketType:
+          $ref: "#/components/schemas/TicketType"
+        month:
+          $ref: "#/components/schemas/month"
+        year:
+          $ref: "#/components/schemas/year"
+        sold:
+          type: number
+          format: int32
+          example: 785
+        percentage:
+          type: number
+          format: float
+          example: 8.5
+
+    SoldTicketStatOverYear:
+      type: object
+      properties:
+        year:
+          $ref: "#/components/schemas/year"
+        totalSoldTickets:
+          $ref: "#/components/schemas/TotalSoldTicket"
+
+    SoleTicketStatOverYearRange:
+      type: object
+      properties:
+        year:
+          $ref: "#/components/schemas/year"
+        soldTicketStatOverYears:
+          type: array
+          items:
+            $ref: "#/components/schemas/SoldTicketStatOverYear"
+
+    EventTypeDetail:
+      type: object
+      properties: 
+        id:
+          type: string
+          example: "$EvT-"
+        eventType:
+          type: string
+          enum: [ ENTERTAINMENT, MUSIC, SPORTS, THEATER_AND_SHOWS, EDUCATION, CINEMA, EXHIBITIONS_AND_CULTURE, FESTIVALS_AND_FAIRS, PARTIES, GAMING, BUSINESS, RELIGIOUS, FOOD_AND_DRINK, CHARITY, TRAVEL, FASHION, TECHNOLOGY, ENVIRONMENTAL, FAMILY_AND_KIDS, HEALTH_AND_WELLNESS, LITERATURE_AND_BOOKS, COMEDY, NIGHTLIFE, OUTDOOR_AND_ADVENTURE, COMMUNITY_AND_SOCIAL, HISTORY_AND_HERITAGE, SCIENCE_AND_TECH, ANIMALS_AND_NATURE ]
+        description:
+          type: string
+          format: text
+        correspondingCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventCategoryDetail"
+
+    TicketType:
+      type: string
+      enum: [ VIP, STANDARD, EARLY_BIRD ]
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+          format: text
+        imgPath:
+          type: string
+          format: url
+        ticketType:
+          $ref: "#/components/schemas/TicketType"
+
+
+    TicketPriceInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        price:
+          type: number
+          format: float
+        currency:
+          type: string
+          enum : [ MGA, DOLLAR, EURO ]
+        createdAt:
+           type: string
+           format: date
+        maxNumber:
+          type: number
+          format: int64
+        correspondingTicketType:
+          $ref: "#/components/schemas/Ticket"
+        leftTickets:
+          type: number
+          format: int64
+        associatedEventId:
+          type: string
+          example : "$Evt-..."
+
+    Event:
+      type: object
+      properties: 
+        id:
+          type: string
+          example: "$Evt-..."
+        organizer:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        dateTime:
+          type: string
+          format: date
+          description: The date time of the event
+        timeZone:
+          type: string
+          enum: [ UTC_MINUS_12_BAKER_ISLAND, UTC_MINUS_11_SAMOA_TIME, UTC_MINUS_10_HAWAII_ALEUTIAN_STANDARD_TIME, UTC_MINUS_9_ALASKA_STANDARD_TIME, UTC_MINUS_8_PACIFIC_STANDARD_TIME, UTC_MINUS_7_MOUNTAIN_STANDARD_TIME, UTC_MINUS_6_CENTRAL_STANDARD_TIME, UTC_MINUS_5_EASTERN_STANDARD_TIME, UTC_MINUS_4_ATLANTIC_STANDARD_TIME, UTC_MINUS_3_ARGENTINA_TIME, UTC_MINUS_2_SOUTH_GEORGIA_TIME, UTC_MINUS_1_AZORES_TIME, UTC_0_GREENWICH_MEAN_TIME, UTC_0_WESTERN_EUROPEAN_TIME, UTC_1_CENTRAL_EUROPEAN_TIME, UTC_1_WEST_AFRICA_TIME, UTC_2_EASTERN_EUROPEAN_TIME, UTC_2_CENTRAL_AFRICA_TIME, UTC_3_MOSCOW_STANDARD_TIME, UTC_3_EAST_AFRICA_TIME, UTC_3_30_IRAN_STANDARD_TIME, UTC_4_UNITED_ARAB_EMIRATES_TIME, UTC_4_30_AFGHANISTAN_TIME, UTC_5_PAKISTAN_STANDARD_TIME, UTC_5_30_INDIA_STANDARD_TIME, UTC_5_45_NEPAL_TIME, UTC_6_BANGLADESH_STANDARD_TIME, UTC_6_30_MYANMAR_TIME, UTC_7_INDOCHINA_TIME, UTC_8_CHINA_STANDARD_TIME, UTC_8_30_NORTH_KOREA_TIME, UTC_9_JAPAN_STANDARD_TIME, UTC_9_30_AUSTRALIA_CENTRAL_STANDARD_TIME, UTC_10_EASTERN_AUSTRALIA_STANDARD_TIME, UTC_11_SOLOMON_ISLANDS_TIME, UTC_12_NEW_ZEALAND_STANDARD_TIME, UTC_12_FIJI_TIME, UTC_13_TONGA_TIME, UTC_14_KIRIBATI_TIME ]
+        location:
+          type: string
+        locationUrl:
+          type: string
+          format: url
+        imagePath:
+          type: string
+          format: url
+        eventTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventTypeDetail"
+        category:
+          $ref: "#/components/schemas/EventCategoryDetail"
+        status:
+          type: string
+          enum: [ DRAFT, PUBLISHED, SCHEDULED, ONGOING, COMPLETED, CANCELED ]
+        numberOfTickets:
+          type: number
+        eventLeftTickets:
+          $ref: "#/components/schemas/TicketPriceInfo"
+        maxTicketPerUser:
+          type: number
+          format: int32
+        createdBy:
+          $ref: "#/components/schemas/User"
+        updatedAt:
+          type: string
+          format: date
+
+    
     EventCategoryDetail:
       type: object
       properties:
@@ -59,23 +750,115 @@ components:
           enum: [MAGIC_AND_ILLUSIONS, ARTISTIC_PERFORMANCES, STREET_PERFORMANCES, CIRCUS_SHOW, VARIETY_SHOW, PUPPETRY, STORYTELLING, LIVE_CONCERT, MUSIC_FESTIVAL, DJ_SET, ORCHESTRA, OPERA_FESTIVAL, ACOUSTIC_CONCERT, JAZZ_FESTIVAL, ROCK_CONCERT, CLASSICAL_MUSIC, KARAOKE_NIGHT, MATCH, TOURNAMENT, MARATHON_AND_RACE, BATTLE, WATER_SPORTS, WINTER_SPORTS, CYCLING_RACE, TRIATHLON, EXTREME_SPORTS, EQUESTRIAN_EVENT, FITNESS_CHALLENGE, THEATER_PLAY, MUSICAL_COMEDY, OPERA, BALLET_AND_DANCE, IMPROV_THEATER, PUPPET_SHOW, CABARET, MIME_SHOW, ONE_MAN_SHOW, CHILDREN_THEATER, WORKSHOP, MASTERCLASS, SEMINAR, ONLINE_COURSE, LECTURE, HACKATHON, CODING_BOOTCAMP, LANGUAGE_EXCHANGE, PREMIERE_SCREENING, MOVIE_SCREENING, OPEN_AIR_CINEMA, FILM_FESTIVAL, DOCUMENTARY_SCREENING, CLASSIC_MOVIE_SCREENING, ANIME_SCREENING, SHORT_FILM_FESTIVAL, SILENT_MOVIE_NIGHT, ART_EXHIBITION, FAIR, SCIENCE_EXHIBITION, HISTORY_EXHIBITION, CULTURAL_TOUR, PHOTOGRAPHY_EXHIBITION, SCULPTURE_EXHIBITION, HISTORICAL_REENACTMENT, CULTURAL_WORKSHOP, CULTURAL_FESTIVAL, EXPO, CARNIVAL, GEEK_CONVENTION, FOOD_FESTIVAL, WINE_FESTIVAL, BOOK_FAIR, COMIC_CON, HARVEST_FESTIVAL, FLOWER_FESTIVAL, NIGHTCLUB_PARTY, POOL_PARTY, COSTUME_PARTY, BEACH_PARTY, THEMED_PARTY, GLOW_PARTY, SILENT_DISCO, ROOFTOP_PARTY, NEW_YEAR_EVE_PARTY, ESPORT_TOURNAMENT, GAMING_CONFERENCE, LAN_PARTY, VIDEO_GAME_RELEASE, BOARD_GAME_NIGHT, COSPLAY_EVENT, GAMING_MARATHON, VIRTUAL_REALITY_EXPO, PROFESSIONAL_FAIR, BUSINESS_CONFERENCE, STARTUP_PITCH_EVENT, CORPORATE_SOCIAL, NETWORKING_EVENT, INVESTOR_PITCH, TRADE_SHOW, CORPORATE_TRAINING, RELIGIOUS_CEREMONY, SPIRITUAL_SONGS_AND_MUSIC, PILGRIMAGE, FAITH_HEALING, SPIRITUAL_RETREAT, PRAYER_MEETING, RELIGIOUS_CONFERENCE, HOLY_DAY_CELEBRATION, WINE_TASTING, BEER_FESTIVAL, COFFEE_EXPO, COCKTAIL_WORKSHOP, CHOCOLATE_FESTIVAL, STREET_FOOD_FESTIVAL, CHARITY_GALA, CHARITY_RUN, VOLUNTEER_EVENT, FUNDRAISING_GALA, CHARITY_AUCTION, COMMUNITY_SERVICE, TRAVEL_EXPO, ADVENTURE_TOUR, EXOTIC_TRAVEL, CRUISE_EVENT, ADVENTURE_CAMP, CULTURAL_IMMERSION, FASHION_SHOW, FASHION_EXPO, FASHION_WORKSHOP, FASHION_AWARD, POP_UP_STORE, DESIGNER_SHOWCASE, TECH_CONFERENCE, GADGET_EXPO, INNOVATION_SUMMIT, AI_CONFERENCE, ROBOTICS_EXPO, CYBERSECURITY_SUMMIT, CLEANUP_EVENT, GREEN_CONFERENCE, ECO_FESTIVAL, TREE_PLANTING, SUSTAINABILITY_WORKSHOP, ECO_FRIENDLY_MARKET, KIDS_THEATER, FAMILY_CARNIVAL, CHILDREN_WORKSHOP, AMUSEMENT_PARK_EVENT, STORYTELLING_SESSION, YOGA_CLASS, MEDITATION_SESSION, HEALTH_FITNESS_CHALLENGE, WELLNESS_RETREAT, HEALTH_FAIR, BOOK_SIGNING, AUTHOR_TALK, POETRY_READING, WRITING_WORKSHOP, BOOK_CLUB_MEETING, STAND_UP_COMEDY, IMPROV_COMEDY, COMEDY_CLUB_NIGHT, SATIRE_SHOW, COMEDY_FESTIVAL, NIGHTCLUB_EVENT, LOUNGE_PARTY, NIGHTLIFE_KARAOKE_NIGHT, THEMED_NIGHT, AFTER_PARTY, HIKING_TOUR, CAMPING_EVENT, ROCK_CLIMBING, KAYAKING_TOUR, ADVENTURE_RACE, NEIGHBORHOOD_FAIR, COMMUNITY_POTLUCK, VOLUNTEER_MEETUP, SOCIAL_CLUB_EVENT, CULTURAL_EXCHANGE, HISTORICAL_TOUR, REENACTMENT_EVENT, HERITAGE_FESTIVAL, ARCHAEOLOGY_TALK, MUSEUM_NIGHT, SCIENCE_FAIR, TECH_DEMO, STEM_WORKSHOP, ASTRONOMY_NIGHT, INNOVATION_EXPO, WILDLIFE_TOUR, PET_ADOPTION_EVENT, BIRD_WATCHING, NATURE_PHOTOGRAPHY, ANIMAL_SANCTUARY_VISIT]
         description:
           type: string
-    User:
+
+    ValidationCode:
       type: object
       properties:
         email:
           type: string
           format: email
+        activationCode:
+          type: string
+          maxLength: 9
+          minLength: 9
+          description: number with length 9
+          example: 0953147685
+
+    JwtDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+          description: access token
+        refreshToken:
+          type: string
+
+    Login :
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    LogOutDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        LogoutStatus:
+          type: string
+          enum: [ SUCCESS, ERROR ]
+        LogOutStatusMessage:
+          type: string
+          enum: [ The user is logged out with success, The user could not be logged out ]
+
+    UserUpdatePassword:
+      type: object
+      properties:
+        validationCode:
+          type: string
+          maxLength: 9
+          minLength: 9
+          description: number with length 9
+          example: 0953147685
+        email:
+          type: string
+          format: email
+        newPassword:
+          type: string
+          format: password
+
+    AccountActivation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: $AcA-...
+        correspondingUser:
+          $ref: "#/components/schemas/User"
+        activationCode:
+          type: string
+          maxLength: 9
+          minLength: 9
+          description: number with length 9
+          example: 0953147685
+        createdAt:
+          type: string
+          format: date
+        expiredAt:
+          type: string
+          format: date
+        activatedAt:
+          type: string
+          format: date
+        isActive:
+          type: boolean
+
+    BaseUser:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Login"
+      properties:
         lastName:
           type: string
         firstName:
           type: string
-        imgProfilePath:
-          type: string
-        password:
-          type: string
         userRole:
           type: string
-          enum: [ADMIN, USER]
+          enum: [ ADMIN, USER ]
+
+    User:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/BaseUser"
+      properties:
         userStatus:
           type: boolean
         userCreatedAt:
@@ -90,3 +873,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/EventCategoryDetail"
+
+    Turnover:
+      type: object
+      properties:
+        turnover:
+          type: number
+          format: double
+        ticketInfo:
+          $ref: "#/components/schemas/TicketPriceInfo"
+
+    EventTurnover:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: $Eve...
+        eventTurnover:
+          type: array
+          items:
+            $ref: "#/components/schemas/Turnover"
