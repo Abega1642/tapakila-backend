@@ -1,6 +1,7 @@
 event_type = $EvT-
 event_category = $EvC-
 event = $Evt-
+event_turnover = $Eve-
 
 tickets_type = $Tik-
 tickets = $Tkt-
