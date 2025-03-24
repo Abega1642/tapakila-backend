@@ -13,6 +13,22 @@ servers:
   - url: 'http://localhost:8080/tapakila-api'
 
 paths:
+
+  /ping-pong:
+    get:
+      operationId: pingPong
+      summary: ping pong
+      tags:
+        - Ping Pong
+      responses:
+        200:
+          description: string
+          content:
+            text/plain:
+              schema:
+                type: string
+                example : Ping-Pong controller
+
   /account-activations:
     get:
       operationId: findAllActivationAccounts
