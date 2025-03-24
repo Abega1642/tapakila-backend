@@ -196,6 +196,75 @@ paths:
               schema:
                 $ref: "#/components/schemas/Event"
 
+  /events-turnover:
+    get:
+      operationId: findALlEventTurnovers
+      summary: get each events turnovers
+      tags:
+        - Event
+      security:
+        - bearerAuth : [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of event turnovers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTurnover"
+
+  /events-turnover/{date}:
+    get:
+      operationId: findAllEventTurnoverAtDate
+      summary: get each events turnovers at a given date
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/date"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: list of events turnovers a the given date
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTurnover"
+
+  /event-turnover/{eventId}:
+    get:
+      operationId: findEventTurnoverById
+      summary: get a particular event turnover
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      security:
+        - bearerAuth: [ ]
+      x-42c-no-authentication: false
+      x-roles:
+        - ADMIN
+      responses:
+        200:
+          description: turnover of the corresponding event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventTurnover"
 
 components:
   parameters:
@@ -239,6 +308,14 @@ components:
       schema:
         type: string
         example: "$Evt-..."
+
+    date:
+      in: path
+      name: date
+      required: true
+      schema:
+        type: string
+        format: date
 
   schemas:
     EventTypeDetail:
@@ -458,3 +535,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/EventCategoryDetail"
+
+    Turnover:
+      type: object
+      properties:
+        turnover:
+          type: number
+          format: double
+        ticketInfo:
+          $ref: "#/components/schemas/TicketPriceInfo"
+
+    EventTurnover:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: $Eve...
+        eventTurnover:
+          type: array
+          items:
+            $ref: "#/components/schemas/Turnover"
