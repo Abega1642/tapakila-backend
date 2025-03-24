@@ -271,7 +271,7 @@ paths:
       operationId: findALlEventTurnovers
       summary: get each events turnovers
       tags:
-        - Event
+        - Event turnover
       security:
         - bearerAuth : [ ]
       x-42c-no-authentication: false
@@ -295,7 +295,7 @@ paths:
       operationId: findAllEventTurnoverAtDate
       summary: get each events turnovers at a given date
       tags:
-        - Event
+        - Event turnover
       parameters:
         - $ref: "#/components/parameters/date"
         - $ref: "#/components/parameters/page"
@@ -320,7 +320,7 @@ paths:
       operationId: findEventTurnoverById
       summary: get a particular event turnover
       tags:
-        - Event
+        - Event turnover
       parameters:
         - $ref: "#/components/parameters/eventId"
       security:
@@ -335,6 +335,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventTurnover"
+
+  /event-types:
+    get:
+      operationId: findAllEventType
+      summary: get all possible event types
+      tags:
+        - Event type
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of all possible events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTypeDetail"
+
+  /event-type/{eventTypeId}:
+    get:
+      operationId: findEventTypeById
+      summary: get an event type
+      tags:
+        - Event type
+      parameters:
+        - $ref: "#/components/parameters/eventTypeId"
+      responses:
+        200:
+          description: the corresponding event type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventTypeDetail"
+
 
 components:
   parameters:
@@ -402,6 +438,14 @@ components:
       schema:
         type: string
         format: date
+
+    eventTypeId:
+      in: path
+      name: eventTypeId
+      required: true
+      schema:
+        type: string
+        format: $EvT-...
 
   schemas:
     EventTypeDetail:
