@@ -9,6 +9,8 @@ import dev.razafindratelo.tapakilaBackend.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Service
@@ -23,4 +25,5 @@ public interface UserService {
     User updateUserPassword(UserUpdatePassword userUpdatePassword);
     User activateAccount(ValidationCode validationCode);
     JwtDTO refreshToken(String userEmail, String refreshToken);
+    User updateAvatar(MultipartFile file, String userEmail);
 }
