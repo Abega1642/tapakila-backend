@@ -9,6 +9,8 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
+import dev.razafindratelo.tapakilaBackend.service.imgServices.eventImgService.EventImgService;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,14 +21,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventServiceImpl implements EventService {
     private final EventDao eventDao;
+    private final EventImgService eventImgService;
+    private final static String BASE_URL = Dotenv.load().get("BASE_URL") + "/event/image/";
 
     @Override
     public Event findById(String id) {
-        if (id.trim().isEmpty()) {
+        if (id.trim().isEmpty())
             throw new BadRequestException("Event id cannot be empty");
-        }
-        return eventDao.findById(id.trim())
+
+        Event event = eventDao.findById(id.trim())
                 .orElseThrow(() -> new ResourceNotFoundException("Event with id " + id + " not found"));
+
+        event.setImagePath(BASE_URL + event.getId());
+
+        return event;
     }
 
     @Override
@@ -37,10 +45,13 @@ public class EventServiceImpl implements EventService {
         final long finalPage = (page == null) ? DEFAULT_PAGE : page;
         final long finalSize = (size == null) ? DEFAULT_SIZE : size;
 
-        if (finalPage < 0 || finalSize < 0) {
+        if (finalPage < 0 || finalSize < 0)
             throw new BadRequestException("Page and size cannot be negative");
-        }
-        return eventDao.findAll(finalPage, finalSize);
+
+        List<Event> events = eventDao.findAll(finalPage, finalSize);
+        events.forEach(e -> e.setImagePath(BASE_URL + e.getId()));
+
+        return events;
     }
 
     @Override
@@ -56,6 +67,21 @@ public class EventServiceImpl implements EventService {
                 new Filter(AvailableColumn.USER_EMAIL, OperatorType.EQUAL, email.trim())
         );
 
-        return eventDao.findAllByCriteria(criteria, finalPage, finalSize);
+        List<Event> events = eventDao.findAllByCriteria(criteria, finalPage, finalSize);
+        events.forEach(e -> e.setImagePath(BASE_URL + e.getId()));
+
+        return events;
+    }
+
+    @Override
+    public Event save(Event event) {
+        String evId = Event.generateId();
+
+        event.setId(evId);
+
+        Event savedEvent = eventDao.save(event);
+        savedEvent.setImagePath(BASE_URL + savedEvent.getId());
+
+        return savedEvent;
     }
 }
