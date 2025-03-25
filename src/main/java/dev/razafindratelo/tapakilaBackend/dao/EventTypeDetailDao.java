@@ -53,7 +53,7 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
                       JSON_AGG(
                             DISTINCT JSONB_BUILD_OBJECT(
                                   'id', ec.event_type_id,
-                                  'event_category', ec.event_category,
+                                  'eventCategory', ec.event_category,
                                   'description', ec.event_category_description
                             )
                       ) FILTER (WHERE ec.event_type_id IS NOT NULL),
