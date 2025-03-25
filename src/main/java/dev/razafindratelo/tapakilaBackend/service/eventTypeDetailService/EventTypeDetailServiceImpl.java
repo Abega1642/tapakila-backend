@@ -30,12 +30,17 @@ public class EventTypeDetailServiceImpl implements EventTypeDetailService {
 
     @Override
     public List<EventTypeDetail> findAll(Long page, Long size) {
-        long finalPage = PaginationFormatUtil.normalizePage(page);
-        long finalSize = PaginationFormatUtil.normalizeSize(size);
+       	long DEFAULT_PAGE = 1L;
+        long DEFAULT_SIZE = 10L;
+        
+        final long finalPage = (page == null) ? DEFAULT_PAGE : page;
+        final long finalSize = (size == null) ? DEFAULT_SIZE : size;
 
-        if (page < 0 || size < 0) {
+		
+        if (finalPage < 0 || finalSize < 0)
             throw new BadRequestException("Page and size cannot be negative");
-        }
+        
+
         return eventTypeDetailDao.findAll(finalPage, finalSize);
     }
 

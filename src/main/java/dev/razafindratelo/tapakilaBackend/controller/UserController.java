@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
@@ -81,5 +82,13 @@ public class UserController {
             @RequestBody UserUpdatePassword userUpdatePassword
     ) {
         return new ResponseEntity<>(userService.updateUserPassword(userUpdatePassword), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/user/{userEmail}/update-profile")
+    public ResponseEntity<User> updateUserProfile(
+            @PathVariable("userEmail") String userEmail,
+            @RequestBody MultipartFile profile
+            ) {
+        return new ResponseEntity<>(userService.updateAvatar(profile, userEmail), HttpStatus.CREATED);
     }
 }
