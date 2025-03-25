@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserProfileService userProfileService;
     private final AccountActivationService accountActivationService;
+    private final static String BASE_URL = "http://localhost:8080/tapakila-api/user/profile/";
 
     @Override
     public List<User> findAll(Long page, Long size) {
@@ -68,11 +69,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     String.format("Email %s is not valid", finalEmail)
             );
         }
-        return userDao.findById(email).orElseThrow(
+        User user = userDao.findById(email).orElseThrow(
                 () -> new ResourceNotFoundException(
                         String.format("User with email %s not found", finalEmail)
                 )
         );
+        String imageUrl = BASE_URL + user.getEmail();
+        user.setImgProfilePath(imageUrl);
+
+        return user;
     }
 
     @Override
@@ -81,7 +86,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         long finalSize = PaginationFormatUtil.normalizeSize(size);
 
         if (username == null || username.trim().isEmpty()) {
-            return findAll(finalPage, finalSize);
+			
+        	List<User> users = findAll(finalPage, finalSize);
+			users.forEach(u -> u.setImgProfilePath(BASE_URL + u.getEmail()));
+
+			return users;
         }
 
         List<Criteria> filters = List.of(
@@ -89,8 +98,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 new Filter(BooleanOperator.OR, AvailableColumn.USER_LAST_NAME, OperatorType.CONTAINS, username)
         );
 
-        return userDao.findAllByCriteria(filters, finalPage, finalSize);
+        List<User> users = userDao.findAllByCriteria(filters, finalPage, finalSize);
 
+		
+		users.forEach(u -> u.setImgProfilePath(BASE_URL + u.getEmail()));
+
+        return users;
     }
 
     @Override
