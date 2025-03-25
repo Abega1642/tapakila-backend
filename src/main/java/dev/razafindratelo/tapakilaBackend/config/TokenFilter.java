@@ -3,7 +3,6 @@ package dev.razafindratelo.tapakilaBackend.config;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.token.AccessToken;
 import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
-import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import jakarta.servlet.FilterChain;
@@ -12,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -35,7 +33,8 @@ public class TokenFilter extends OncePerRequestFilter {
 					"/user/activate-account",
 					"/user/update-password",
 					"/ping-pong",
-                    "/events"
+                    "/events",
+                    "/event/image/"
 	);
 
     @Override
@@ -47,7 +46,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
 		String path = request.getServletPath();
     
-		if (EXCLUDED_PATHS.contains(path)) {
+		if (EXCLUDED_PATHS.stream().anyMatch(path::startsWith)) {
 		    filterChain.doFilter(request, response);
 		    return;
 		}
