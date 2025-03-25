@@ -34,6 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST,"/user/sign-in").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user/update-password").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/events").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/event/image/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/ping-pong").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/tickets-stats/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/events-turnover").hasAuthority("ROLE_ADMIN")
