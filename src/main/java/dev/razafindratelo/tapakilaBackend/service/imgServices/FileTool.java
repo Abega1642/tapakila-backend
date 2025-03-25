@@ -1,4 +1,4 @@
-package dev.razafindratelo.tapakilaBackend.service.userProfileService;
+package dev.razafindratelo.tapakilaBackend.service.imgServices;
 
 import java.io.IOException;
 import java.nio.file.Files;

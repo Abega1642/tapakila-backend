@@ -1,24 +1,22 @@
-package dev.razafindratelo.tapakilaBackend.service.userProfileService;
+package dev.razafindratelo.tapakilaBackend.service.imgServices.userProfileService;
 
 import dev.razafindratelo.tapakilaBackend.dao.FileDao;
 import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.service.imgServices.FileTool;
+import dev.razafindratelo.tapakilaBackend.service.imgServices.ImgCreator;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService {
-    private final static String ROOT_PATH = "assets/images/user";
+    private final static String ROOT_PATH = "src/main/resources/static/assets/image/user";
+    final String BASE_URL = Dotenv.load().get("BASE_URL");
     private final FileDao fileDao;
 
 
@@ -40,6 +38,29 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
+    public String updateProfileImageByUserEmail(String email, MultipartFile file) {
+        email = email.trim();
+
+        if (email.isEmpty())
+            throw new IllegalArgumentException("Email cannot be empty");
+
+        String fileName = file.getOriginalFilename();
+
+        assert fileName != null;
+        fileName = (fileName.contains(".png") ? fileName : fileName.concat(".png"));
+
+        String path = String.format("%s/%s/%s", ROOT_PATH , email, fileName);
+
+        String finalPath = fileDao.updateProfileImageByUserEmail(email, path);
+        User fakeUser = new User();
+        fakeUser.setEmail(email);
+
+        String savedPath = saveUserProfileByImagePath(file, fakeUser);
+
+        return BASE_URL + "/user/profile/" + email;
+    }
+
+    @Override
     public String saveUserProfileByImagePath(MultipartFile file, User user) {
         String name = file.getOriginalFilename();
 
@@ -54,28 +75,18 @@ public class UserProfileServiceImpl implements UserProfileService {
             else throw new IllegalArgumentException("File name cannot null");
 
 
-            String fileDir = String.format("%s/%s", ROOT_PATH, user.getEmail());
-            File directory = new File(fileDir);
-
-
-            if (!directory.exists()) {
-                boolean isCreated = directory.mkdirs();
-                if (!isCreated)
-                    throw new IOException(
-                            String.format("Failed to create directory: %s", directory.getAbsolutePath())
-                    );
-
-            }
-
-            Path DIR_PATH = Paths.get(fileDir);
-            InputStream inputStream = file.getInputStream();
-            Path filePath = DIR_PATH.resolve(name);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            return filePath.toString();
+            String fileDir = String.format("%s/%s", ROOT_PATH , user.getEmail());
+            return ImgCreator.create(file, name, fileDir);
 
         } catch (IOException e) {
             throw new RuntimeException("User profile image cannot be saved", e);
         }
     }
+
+
+
+
+
+
+
 }
