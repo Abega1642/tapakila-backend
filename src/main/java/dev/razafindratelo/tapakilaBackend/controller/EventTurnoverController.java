@@ -4,6 +4,7 @@ import dev.razafindratelo.tapakilaBackend.entity.EventTurnover;
 import dev.razafindratelo.tapakilaBackend.service.eventTurnoverService.EventTurnoverService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import java.util.List;
 public class EventTurnoverController {
     private final EventTurnoverService eventTurnoverService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("events-turnover")
     public ResponseEntity<List<EventTurnover>> finAllEventTurnovers(
             @RequestParam(value = "page", required = false) Long page,
@@ -24,6 +26,7 @@ public class EventTurnoverController {
         return ResponseEntity.ok(eventTurnoverService.finAll(page, size));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("events-turnover/{date}")
     public ResponseEntity<List<EventTurnover>> finAllEventTurnoversAtDate(
             @PathVariable("date") LocalDate date,
@@ -33,6 +36,7 @@ public class EventTurnoverController {
         return ResponseEntity.ok(eventTurnoverService.finAllAtAGivenDate(date, page, size));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("event-turnover/{eventId}")
     public ResponseEntity<EventTurnover> findEventTurnoverById(@PathVariable("eventId") String eventId) {
         return ResponseEntity.ok(eventTurnoverService.findById(eventId));
