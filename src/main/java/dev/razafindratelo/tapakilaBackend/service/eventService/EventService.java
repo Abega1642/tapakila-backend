@@ -10,4 +10,5 @@ public interface EventService {
     Event findById(String id);
     List<Event> findAll(Long page, Long size);
     List<Event> findAllByAdminId(String email, Long page, Long size);
+    Event save(Event event);
 }

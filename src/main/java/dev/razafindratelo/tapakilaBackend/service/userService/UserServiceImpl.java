@@ -23,7 +23,8 @@ import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.activationAccountService.AccountActivationService;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.JwtService;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
-import dev.razafindratelo.tapakilaBackend.service.userProfileService.UserProfileService;
+import dev.razafindratelo.tapakilaBackend.service.imgServices.userProfileService.UserProfileService;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserProfileService userProfileService;
     private final AccountActivationService accountActivationService;
-    private final static String BASE_URL = "http://localhost:8080/tapakila-api/user/profile/";
+    private final static String BASE_URL = Dotenv.load().get("BASE_URL") + "/user/profile/";
 
     @Override
     public List<User> findAll(Long page, Long size) {
@@ -170,9 +170,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User updatedUser = userDao.update(password, emailCriteria).getFirst();
 
-        if (updatedUser == null) throw new RuntimeException("Could not update user password");
+        if (updatedUser == null) {  throw new RuntimeException("Could not update user password");   }
 
-        return updatedUser;
+         updatedUser.setImgProfilePath(BASE_URL + updatedUser.getEmail());
+         return updatedUser;
     }
 
     @Override
@@ -193,6 +194,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         if (activatedUser == null) throw new RuntimeException("Could not activate user");
 
+        activatedUser.setImgProfilePath(BASE_URL + activatedUser.getEmail());
         return activatedUser;
     }
 
@@ -214,27 +216,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return jwtService.generate(user);
     }
-
-    @Override
-    public User updateAvatar(MultipartFile file, String userEmail) {
-        User user = findByEmail(userEmail);
-        String avatarPath = userProfileService.saveUserProfileByImagePath(file, user);
-
-        List<Column> imgPath = List.of(
-                new Column(AvailableColumn.USER_PROFILE_IMAGE_PATH, avatarPath)
-        );
-
-        List<Filter> emailCriteria = List.of(
-                new Filter(AvailableColumn.USER_EMAIL, OperatorType.EQUAL, user.getEmail())
-        );
-
-        User updatedUser = userDao.update(imgPath, emailCriteria).getFirst();
-
-        if (updatedUser == null) throw new RuntimeException("Could not update user password");
-
-        return updatedUser;
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
