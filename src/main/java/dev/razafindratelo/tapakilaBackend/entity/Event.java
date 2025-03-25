@@ -6,6 +6,7 @@ import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,10 @@ public class Event {
     private User createdBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public static String generateId() {
+        return "$Evt-" + UUID.randomUUID().toString();
+    }
 
     @Override
     public String toString() {
