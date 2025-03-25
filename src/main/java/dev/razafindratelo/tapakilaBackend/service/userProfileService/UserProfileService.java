@@ -6,6 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface UserProfileService {
-    byte[] findUserProfileByImagePath(String imagePath);
+    byte[] findUserProfileByUserEmail(String userEmail);
     String saveUserProfileByImagePath(MultipartFile file, User user);
 }

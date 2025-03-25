@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.service.userProfileService;
 
+import dev.razafindratelo.tapakilaBackend.dao.FileDao;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,25 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService {
-    private final static String ROOT_PATH = "assets/images";
+    private final static String ROOT_PATH = "assets/images/user";
+    private final FileDao fileDao;
 
-    @Override
+
     public byte[] findUserProfileByImagePath(String imagePath) {
         if (imagePath.trim().isEmpty())
             throw new IllegalArgumentException("Image path cannot be empty");
 
         return FileTool.getFileBytes(imagePath);
+    }
+
+    @Override
+    public byte[] findUserProfileByUserEmail(String userEmail) {
+        if (userEmail.trim().isEmpty())
+            throw new IllegalArgumentException("Email cannot be empty");
+
+        String imagePath = fileDao.findProfileByUserEmail(userEmail);
+		
+        return findUserProfileByImagePath(imagePath);
     }
 
     @Override
