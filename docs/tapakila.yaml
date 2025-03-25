@@ -98,6 +98,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccountActivation"
+                
+
+  /user/profile/{userEmail}:
+    get:
+      operationId: getUserProfile
+      summary: get the user profile
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responses:
+        200:
+          description: the user profile
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
 
   /user/sign-up:
     post:
@@ -479,6 +499,11 @@ paths:
 
 
 components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
   parameters:
     page:
       in: query
