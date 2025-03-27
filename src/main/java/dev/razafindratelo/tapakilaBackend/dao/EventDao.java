@@ -332,8 +332,9 @@ public class EventDao implements DAO<Event> {
             findStmt.setLong(1, 1);
             findStmt.setLong(2, 0);
             findStmt.setDate(3, Date.valueOf(DEFAULT_DATE));
-            findStmt.setString(4, id);
-
+            findStmt.setDate(4, null);
+            findStmt.setString(5, id);
+			
             ResultSet rs = findStmt.executeQuery();
 
             Event event = Event.builder().build();
