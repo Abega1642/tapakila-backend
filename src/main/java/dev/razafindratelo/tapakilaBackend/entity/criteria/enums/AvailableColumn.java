@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.entity.criteria.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -87,5 +88,16 @@ public enum AvailableColumn {
     AvailableColumn(String value, ValueType valueType) {
         this.value = value;
         this.valueType = valueType;
+    }
+
+
+    @JsonCreator
+    public static AvailableColumn fromString(String value) {
+        for (AvailableColumn type : AvailableColumn.values()) {
+            if (type.name().equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        return null;
     }
 }

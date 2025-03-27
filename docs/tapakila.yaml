@@ -284,7 +284,30 @@ paths:
           content:
             application/json :
               schema:
-                $ref: "#/components/schemas/Event"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+
+  /events/filter:
+    get:
+      operationId: findAllEventsByFilters
+      summary: filter events
+      tags:
+        - Event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/filterDot"
+      responses:
+        200:
+          description: the list of events corresponding to the findAllEventsByFilters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
 
   /event/{eventId}:
     get:
@@ -607,6 +630,22 @@ components:
         $ref: "#/components/schemas/year"
 
   schemas:
+    filterDot:
+      type: object
+      properties:
+        attribute:
+          type: string
+          enum: [eDescription, dateTime, eCategory, type, eLocation, organizer, title, maxTicketPerUser]
+        boolOperator:
+          type: string
+          enum: [AND, OR]
+        operator:
+          type: string
+          enum: [EQUAL, BETWEEN, CONTAINS]
+        value:
+          type: string
+          description: this is the value of the filter and could be an array if we want. For example, suppose "attribute = dateTime", and we want a date range, there fore "operator = BETWEEN" and value = [date1, date2]
+          
     month:
       type: string
       enum: [ JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER ]
