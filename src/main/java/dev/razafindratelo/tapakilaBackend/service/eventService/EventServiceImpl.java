@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.service.eventService;
 
 import dev.razafindratelo.tapakilaBackend.dao.EventDao;
+import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
@@ -13,6 +14,8 @@ import dev.razafindratelo.tapakilaBackend.service.imgServices.eventImgService.Ev
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,5 +86,22 @@ public class EventServiceImpl implements EventService {
         savedEvent.setImagePath(BASE_URL + savedEvent.getId());
 
         return savedEvent;
+    }
+
+    @Override
+    public List<Event> findEventsByFilters(List<FilterDto> filters, Long page, Long size) {
+        long DEFAULT_PAGE = 1;
+        long DEFAULT_SIZE = 10;
+
+        final long fp = (page == null) ? DEFAULT_PAGE : page;
+        final long fs = (size == null) ? DEFAULT_SIZE : size;
+
+        if (fp < 0 || fs < 0)
+            throw new IllegalArgumentException("Page and size cannot be negative");
+
+        List<Criteria> criteria = new ArrayList<>(filters.stream().map(Filter::of).toList());
+        System.out.println(criteria);
+
+        return eventDao.findAllByCriteria(criteria, fp, fs);
     }
 }

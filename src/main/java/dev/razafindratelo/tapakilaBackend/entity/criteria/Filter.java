@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.entity.criteria;
 
+import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.BooleanOperator;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
@@ -29,6 +30,15 @@ public class Filter extends Criteria {
         super(column);
         this.value = value;
         this.operatorType = operatorType;
+    }
+
+    public static Filter of(FilterDto filterDto) {
+        return new Filter(
+                filterDto.getBoolOperator(),
+                filterDto.getAttribute(),
+                filterDto.getOperator(),
+                filterDto.getValue()
+        );
     }
 
 }
