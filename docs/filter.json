@@ -1,0 +1,14 @@
+{
+  "attributes":[
+    "dateTime",
+    "createdAt",
+    "updatedAt",
+    "eCategory",
+    "type",
+    "eDescription",
+    "eLocation",
+    "organizer",
+    "title",
+    "maxTicketPerUser"
+  ]
+}
