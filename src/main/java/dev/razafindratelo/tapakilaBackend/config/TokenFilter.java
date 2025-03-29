@@ -28,14 +28,21 @@ public class TokenFilter extends OncePerRequestFilter {
     private final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.now();
 
 	private static final List<String> EXCLUDED_PATHS = List.of(
-					"/user/sign-in",
-					"/user/sign-up",
-					"/user/activate-account",
-					"/user/update-password",
-					"/ping-pong",
-          "/events",
-          "/event",
-          "/events/filter"
+            "/user/sign-in",
+			"/user/sign-up",
+			"/user/activate-account",
+			"/user/update-password",
+			"/ping-pong",
+            "/events",
+            "/event",
+            "/events/filter",
+            "/time-zones",
+            "/currencies",
+            "/events-status",
+            "/user-roles",
+            "/ticket-types",
+            "/event-categories",
+            "/event-types-enum"
 	);
 
     @Override
