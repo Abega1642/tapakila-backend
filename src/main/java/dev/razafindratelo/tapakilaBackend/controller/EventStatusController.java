@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.NoArgsConstructor;
 
+
+@NoArgsConstructor
 @RestController
 @RequestMapping("/events-status")
 public class EventStatusController {
