@@ -309,6 +309,38 @@ paths:
                 items:
                   $ref: "#/components/schemas/Event"
 
+  /events/titles:
+    get:
+      operationId: findAllEventsDescriptions
+      summary: find all events descriptions
+      tags:
+        - Event
+      responses:
+        200:
+          description: list of pairwise description and event id
+          content:
+            application/json: 
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTitle"
+                  
+  /events/descriptions:
+    get:
+      operationId: findAllEventsDescriptions
+      summary: find all events descriptions
+      tags:
+        - Event
+      responses:
+        200:
+          description: list of pairwise description and event id
+          content:
+            application/json: 
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventDescription"
+
   /event/{eventId}:
     get:
       operationId: findEventById
@@ -752,6 +784,24 @@ components:
         associatedEventId:
           type: string
           example : "$Evt-..."
+
+    EventDescription:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+          example: $Evt-...
+
+    EventTitle:
+      type: object
+      properties:
+        title:
+          type: string
+        id:
+          type: string
+          example: $Evt-...
 
     Event:
       type: object
