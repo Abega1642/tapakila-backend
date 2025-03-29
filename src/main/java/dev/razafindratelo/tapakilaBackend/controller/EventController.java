@@ -1,12 +1,13 @@
 package dev.razafindratelo.tapakilaBackend.controller;
 
-import dev.razafindratelo.tapakilaBackend.dao.EventDescriptionDao;
 import dev.razafindratelo.tapakilaBackend.dto.EventDescription;
+import dev.razafindratelo.tapakilaBackend.dto.EventTitle;
 import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
-import dev.razafindratelo.tapakilaBackend.service.eventDescription.EventDescriptionService;
+import dev.razafindratelo.tapakilaBackend.service.eventDescriptionService.EventDescriptionService;
 import dev.razafindratelo.tapakilaBackend.service.eventService.EventService;
+import dev.razafindratelo.tapakilaBackend.service.eventTitleService.EventTitleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
     private final EventDescriptionService eventDescriptionService;
+    private final EventTitleService eventTitleService;
 
     @GetMapping("events")
     public ResponseEntity<List<Event>> findAllEvents(
@@ -53,5 +55,13 @@ public class EventController {
             @RequestParam(value = "size", required = false) Long size
     ) {
         return ResponseEntity.ok(eventDescriptionService.findAllEvDescription(page, size));
+    }
+
+    @GetMapping("/events/titles")
+    public ResponseEntity<List<EventTitle>> findAllEventTitles(
+            @RequestParam(value = "page", required = false) Long page,
+            @RequestParam(value = "size", required = false) Long size
+    ) {
+        return ResponseEntity.ok(eventTitleService.findAllEventTitles(page, size));
     }
 }

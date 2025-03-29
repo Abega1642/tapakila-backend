@@ -24,8 +24,8 @@ public class EventDescriptionDao {
         List<EventDescription> results = new ArrayList<>();
 
         try (PreparedStatement sqlStmt = connection.prepareStatement(sqlRequest)) {
-            sqlStmt.setLong(1, page);
-            sqlStmt.setLong(2, size);
+            sqlStmt.setLong(1, size);
+            sqlStmt.setLong(2, size * (page - 1));
 
             ResultSet resultSet = sqlStmt.executeQuery();
 

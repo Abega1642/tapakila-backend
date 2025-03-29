@@ -1,4 +1,4 @@
-package dev.razafindratelo.tapakilaBackend.service.eventDescription;
+package dev.razafindratelo.tapakilaBackend.service.eventDescriptionService;
 
 import dev.razafindratelo.tapakilaBackend.dto.EventDescription;
 import org.springframework.stereotype.Service;
