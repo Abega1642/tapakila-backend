@@ -512,7 +512,7 @@ CREATE TABLE payment_mode (
 
 CREATE TABLE ticket (
     id                  VARCHAR(41) PRIMARY KEY,
-    ticket_number       SERIAL8 NOT NULL,
+    ticket_number       INTEGER NOT NULL,
     status	            BOOLEAN NOT NULL DEFAULT true,
     purchased_at        TIMESTAMP NOT NULL DEFAULT current_timestamp,
     qr_code_path        TEXT NOT NULL,
