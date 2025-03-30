@@ -19,7 +19,7 @@ public class Tickets {
     private String ticketOwnerName;
 
     @JsonProperty("ticketType")
-    private Ticket ticketType;
+    private TicketPriceInfo ticketType;
 
     @JsonProperty("purchasedBy")
     private User purchasedBy;
