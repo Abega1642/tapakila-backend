@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode
@@ -28,6 +29,32 @@ public class Tickets {
 
     @JsonProperty("paymentMode")
     private PaymentMode paymentMode;
+
+
+    public Tickets(
+            long ticketNumber,
+            String qrCodePath,
+            String ticketOwnerName,
+            TicketPriceInfo ticketType,
+            User purchasedBy,
+            String associatedEvent,
+            PaymentMode paymentMode
+    ) {
+        this.id = generateId();
+        this.isEnabled = true;
+        this.ticketNumber = ticketNumber;
+        this.qrCodePath = qrCodePath;
+        this.paymentRef = UUID.randomUUID().toString();
+        this.ticketOwnerName = ticketOwnerName;
+        this.ticketType = ticketType;
+        this.purchasedBy = purchasedBy;
+        this.associatedEvent = associatedEvent;
+        this.paymentMode = paymentMode;
+    }
+
+    private static String generateId() {
+        return "$Tkt-" + UUID.randomUUID().toString();
+    }
 
 
     @Override

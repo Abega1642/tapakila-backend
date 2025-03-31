@@ -8,5 +8,6 @@ import java.util.List;
 @Service
 public interface TicketPriceInfoService {
     List<TicketPriceInfo> getAllTicketPriceInfosByEventId(String eventId);
+    TicketPriceInfo getTicketPriceInfoById(String ticketId);
     List<TicketPriceInfo> getAllTicketPriceInfosByEventIdAtAGivenDate(String eventId, LocalDate at);
 }

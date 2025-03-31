@@ -21,6 +21,14 @@ public class TicketPriceInfoServiceImpl implements TicketPriceInfoService {
     }
 
     @Override
+    public TicketPriceInfo getTicketPriceInfoById(String ticketId) {
+        if (ticketId.trim().isEmpty())
+            throw new IllegalArgumentException("Ticket id cannot be null or empty");
+
+        return ticketPriceInfoDao.findTicketPriceInfoById(ticketId, LocalDate.now());
+    }
+
+    @Override
     public List<TicketPriceInfo> getAllTicketPriceInfosByEventIdAtAGivenDate(String eventId, LocalDate at) {
         if (eventId == null || eventId.isEmpty())
             throw new IllegalArgumentException("Event id cannot be null or empty");

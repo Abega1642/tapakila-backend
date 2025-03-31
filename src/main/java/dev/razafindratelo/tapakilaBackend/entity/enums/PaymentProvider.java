@@ -13,6 +13,7 @@ public enum PaymentProvider {
     MTN_MOBILE_MONEY,
     GOOGLE_PAY,
     APPLE_PAY,
+    CASH,
     BITCOIN;
 
     @JsonCreator
