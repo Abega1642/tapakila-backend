@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/ping-pong").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/time-zones").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/ticket-types").permitAll()
+									.requestMatchers(HttpMethod.POST,"/qr-codes").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/currencies").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/events-status").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/user-roles").permitAll()
