@@ -78,6 +78,8 @@ public class TicketsServiceImpl implements TicketsService {
         final long fp = (page == null) ? 1L : page;
         final long fs = (size == null) ? 10L : size;
 
+        userService.findByEmail(email.trim());
+
         if (email.trim().isEmpty())
             throw new IllegalArgumentException("TicketsServiceImpl.findAllByUserEmail :: email cannot be empty");
 
