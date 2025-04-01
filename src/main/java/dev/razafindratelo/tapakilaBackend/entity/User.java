@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @JsonProperty("profileImgPath")
     private String imgProfilePath;
 
+    @JsonProperty("password")
     private String password;
 
     @JsonProperty("userRole")
