@@ -9,6 +9,8 @@ import java.util.List;
 
 @Service
 public interface QRCodeService {
-    List<QRCode> generateQRCode(List<TicketPurchase> ticketPurchase);
-    QRCode generateQRCode(TicketPurchase ticketPurchase) throws WriterException, IOException;
+    List<QRCode> generateQRCode(String eventId, List<TicketPurchase> ticketPurchase);
+    QRCode generateQRCode(String eventId, TicketPurchase ticketPurchase) throws WriterException, IOException;
+    String findQRCodePath(String ticketsId);
+    byte[] findQRCode(String ticketsId);
 }

@@ -25,6 +25,7 @@ public class Tickets {
     @JsonProperty("purchasedBy")
     private User purchasedBy;
 
+	@JsonProperty("associatedEventId")
     private String associatedEvent;
 
     @JsonProperty("paymentMode")

@@ -38,15 +38,34 @@ public class TicketsServiceImpl implements TicketsService {
 
 
     @Override
+    public Tickets findById(String id) {
+        if (id.trim().isEmpty())
+            throw new IllegalArgumentException("Id must not be null");
+
+        return ticketsDao.findByTicketsId(id);
+    }
+
+    @Override
     public Tickets save(TicketPurchase ticket) throws IOException, WriterException {
         User user = userService.findByEmail(ticket.getUserEmail().trim());
 
-        QRCode qrCode = qrCodeService.generateQRCode(ticket);
+        long lastId = ticketsDao.findLastTicketNumber(ticket.getEventId());
+		System.out.println("Last id : " + lastId);
+
+        TicketSignature ticketSignature = new TicketSignature(
+                ticket.getEventId(),
+                ticket.getUserEmail(),
+                ticket.getOwner(),
+                ticket.getTicketPriceInfoId(),
+                Long.toString(lastId)
+        );
+
+        QRCode qrCode = qrCodeService.generateQRCode(ticketSignature.getEventId(), ticketSignature);
 
         TicketPriceInfo tp = ticketPriceInfoService.getTicketPriceInfoById(ticket.getTicketPriceInfoId());
 
         Tickets tkt = new Tickets (
-                1,
+                lastId,
                 qrCode.path().toString(),
                 ticket.getOwner(),
                 tp,

@@ -50,7 +50,7 @@ public class TicketsMapper implements Mapper<Tickets> {
                 rs.getString("ticket_owner_name"),
                 ticket,
                 user,
-                rs.getString("associated_eventId"),
+                rs.getString("associated_event_id"),
                 pm
         );
     }

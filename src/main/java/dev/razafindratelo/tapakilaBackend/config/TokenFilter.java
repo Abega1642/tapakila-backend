@@ -44,7 +44,8 @@ public class TokenFilter extends OncePerRequestFilter {
             "/event-categories",
             "/event-types-enum",
 			"/qr-codes",
-			"/tickets/"
+			"/tickets/",
+			"/buy-tickets"
 	);
 
     @Override
