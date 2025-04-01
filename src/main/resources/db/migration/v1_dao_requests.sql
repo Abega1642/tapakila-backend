@@ -619,7 +619,17 @@ WITH TicketInfo AS (
     FROM ticket t
              JOIN ticket_price tp ON t.id_ticket_price = tp.id
 ),
-     TicketType AS (
+     TicketPriceInfo AS (
+         SELECT
+             tp.id AS ticket_price_id,
+             tp.price AS ticket_price,
+             tp.currency AS ticket_currency,
+             tp.max_number AS ticket_max_number,
+             tp.created_at AS ticket_price_created_at,
+             tp.id_ticket_type AS ticket_type_id
+         FROM ticket_price tp
+     ),
+     TicketTypeInfo AS (
          SELECT
              tt.id AS ticket_type_id,
              tt.ticket_type,
@@ -640,7 +650,7 @@ WITH TicketInfo AS (
                   LEFT JOIN event e ON e.id = tp.id_event
                   LEFT JOIN events_category ec ON e.category = ec.event_category
          GROUP BY ec.id, u.email
-         ORDER BY percentage  DESC
+         ORDER BY percentage DESC
          LIMIT 5
      ),
      PaymentModeInfo AS (
@@ -666,13 +676,13 @@ WITH TicketInfo AS (
              u.is_active,
              u.password,
              COALESCE(
-                             JSON_AGG(
-                             DISTINCT JSONB_BUILD_OBJECT(
-                                     'id', t5c.event_category_id,
-                                     'event_category', t5c.event_category,
-                                     'description', t5c.event_category_description
-                                      )
-                                     ) FILTER (WHERE t5c.event_category_id IS NOT NULL), '[]'
+                 JSON_AGG(
+                     DISTINCT JSONB_BUILD_OBJECT(
+                         'id', t5c.event_category_id,
+                         'event_category', t5c.event_category,
+                         'description', t5c.event_category_description
+                     )
+                 ) FILTER (WHERE t5c.event_category_id IS NOT NULL), '[]'
              ) AS user_top_5_categories
          FROM "user" u
          INNER JOIN Top5Categories AS t5c ON u.email = t5c.user_email
@@ -687,11 +697,18 @@ SELECT
     ti.payment_ref,
     ti.ticket_owner_name,
     JSONB_BUILD_OBJECT(
-            'id', tt.ticket_type_id,
-            'ticketType', tt.ticket_type,
-            'imgPath', tt.ticket_type_img_path,
-            'description', tt.ticket_type_description
-    ) AS corresponding_ticket_type,
+            'id', tp.ticket_price_id,
+            'price', tp.ticket_price,
+            'currency', tp.ticket_currency,
+            'maxNumber', tp.ticket_max_number,
+            'createdAt', tp.ticket_price_created_at,
+            'ticketType', JSONB_BUILD_OBJECT(
+                'id', tt.ticket_type_id,
+                'ticketType', tt.ticket_type,
+                'imgPath', tt.ticket_type_img_path,
+                'description', tt.ticket_type_description
+            )
+    ) AS ticketType,
     JSONB_BUILD_OBJECT(
             'email', ui.email,
             'firstName', ui.first_name,
@@ -715,6 +732,8 @@ SELECT
             'isActive', pm.is_active
     ) AS payment_mode
 FROM TicketInfo ti
-         LEFT JOIN TicketType tt ON tt.ticket_type_id = ti.id_ticket_price
+         LEFT JOIN TicketPriceInfo tp ON tp.ticket_price_id = ti.id_ticket_price
+         LEFT JOIN TicketTypeInfo tt ON tt.ticket_type_id = tp.ticket_type_id
          LEFT JOIN UserInfo ui ON ui.email = ti.user_email
          LEFT JOIN PaymentModeInfo pm ON pm.payment_mode_id = ti.id_payment_mode;
+
