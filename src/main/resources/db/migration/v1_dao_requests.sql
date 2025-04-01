@@ -557,3 +557,45 @@ LEFT JOIN TicketType tkt ON tkt.ticket_type_id = ts.id_ticket_type -- Utiliser i
 GROUP BY ts.associated_event_id
 ORDER BY ts.associated_event_id;
 
+
+-- INSERTION OF TICKET
+SELECT COUNT(*)
+FROM ticket t
+LEFT JOIN ticket_price tp
+    ON t.id_ticket_price = tp.id
+WHERE tp.id_event = ?;
+
+
+INSERT INTO ticket
+(id, ticket_number, qr_code_path, payement_ref, ticket_owner_name, user_email, id_ticket_price, id_payment_mode)
+VALUES
+(?, ?, ?, ?, ?, ?, ?, ?);
+
+-- GET ticket price info alone :
+
+
+WITH TicketType AS (
+    SELECT
+        tt.id AS ticket_type_id,
+        tt.ticket_type AS ticket_type,
+        tt.img_path AS ticket_type_img_path,
+        tt.description AS ticket_type_description
+    FROM tickets_type tt
+)
+SELECT
+    tp.id,
+    tp.price,
+    tp.currency,
+    tp.created_at,
+    tp.max_number,
+    tp.id_event as associated_event_id,
+    JSONB_BUILD_OBJECT(
+            'id', tkt.ticket_type_id,
+            'ticketType', tkt.ticket_type,
+            'imgPath', tkt.ticket_type_img_path,
+            'description', tkt.ticket_type_description
+    ) as corresponding_ticket_type,
+    get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type, ?, ?) as left_tickets
+FROM ticket_price tp
+LEFT JOIN TicketType tkt ON tkt.ticket_type_id = tp.id_ticket_type
+WHERE tp.id_event = ?;

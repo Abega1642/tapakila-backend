@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
+import lombok.NoArgsConstructor;
+
 
 @RestController
 @RequestMapping("/event-types-enum")
+@NoArgsConstructor
 public class EventTypeEnumController {
 
     @GetMapping

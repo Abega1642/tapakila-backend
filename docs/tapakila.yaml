@@ -666,6 +666,29 @@ paths:
                 items:
                   $ref: "#/components/schemas/Currency"
 
+  /buy-tickets:
+    post:
+      operationId: create
+      summary: create tickets (buy tickets)
+      tags:
+        - Ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketPurchase"
+      responses:
+        201:
+          description: list of all created ticket of the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tickets"
+
 components:
   securitySchemes:
       bearerAuth:
@@ -775,6 +798,57 @@ components:
         $ref: "#/components/schemas/year"
 
   schemas:
+    Tickets:
+      type: object
+      properties:
+        id:
+          type: string
+          example: $Tkt-
+        ticketNumber:
+          type: integer
+          default: 1
+        isEnabled:
+          type: boolean
+          example: true
+        purchasedAt:
+          type: string
+          format: date
+        qrCodePath:
+          type: string
+        paymentRef:
+          type: string
+          format: uuid
+        ticketOwnerName:
+          type: string
+        ticketType:
+          $ref: "#/components/schemas/TicketPriceInfo"
+        purchasedBy:
+          $ref: "#/components/schemas/User"
+        associatedEvent:
+          type: string
+        paymentMode:
+          type: string
+          value: "I will do it later"
+
+
+    TicketPurchase:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: $Evt-...
+        userEmail:
+          type: string
+          format: email
+        owner:
+          type: string
+        ticketPriceInfoId:
+          type: string
+          example: $TkP-...
+        quantity:
+          type: integer
+          default: 1
+
     filterDto:
       type: object
       properties:
