@@ -8,7 +8,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import dev.razafindratelo.tapakilaBackend.dto.TicketPurchase;
 import dev.razafindratelo.tapakilaBackend.entity.QRCode;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,6 @@ import java.util.Map;
 
 @Service
 @NoArgsConstructor
-@AllArgsConstructor
 public class QRCodeServiceImpl implements QRCodeService {
     private final static String ROOT_PATH = "src/main/resources/static/assets/image/user";
 
