@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentProvider;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @ToString
 @EqualsAndHashCode

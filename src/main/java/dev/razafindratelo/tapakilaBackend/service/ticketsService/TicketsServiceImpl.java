@@ -72,4 +72,18 @@ public class TicketsServiceImpl implements TicketsService {
 
         return savedTickets;
     }
+
+    @Override
+    public List<Tickets> findAllByUserEmail(String email, Long page, Long size) {
+        final long fp = (page == null) ? 1L : page;
+        final long fs = (size == null) ? 10L : size;
+
+        if (email.trim().isEmpty())
+            throw new IllegalArgumentException("TicketsServiceImpl.findAllByUserEmail :: email cannot be empty");
+
+        if (fp < 0 || fs < 0)
+            throw new IllegalArgumentException("Page or size can't be null");
+
+        return ticketsDao.findAllByUserEmail(email, fp, fs);
+    }
 }

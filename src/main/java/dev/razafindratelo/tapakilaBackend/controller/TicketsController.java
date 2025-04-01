@@ -12,12 +12,21 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/buy-tickets")
+@RequestMapping
 public class TicketsController {
     private final TicketsService ticketsService;
 
-    @PostMapping
+    @PostMapping("/buy-tickets")
     public ResponseEntity<List<Tickets>> create(@RequestBody List<TicketPurchase> tktRequests) throws IOException {
         return new ResponseEntity<>(ticketsService.saveAll(tktRequests), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/tickets/{userEmail}")
+    public ResponseEntity<List<Tickets>> findAllByUserEmail(
+            @PathVariable String userEmail,
+            @RequestParam(value = "page", required = false) Long page,
+            @RequestParam(value = "size", required = false) Long size
+    ) {
+        return ResponseEntity.ok(ticketsService.findAllByUserEmail(userEmail, page, size));
     }
 }

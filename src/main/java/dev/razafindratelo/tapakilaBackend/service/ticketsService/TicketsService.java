@@ -11,4 +11,5 @@ import java.util.List;
 public interface TicketsService {
     Tickets save(TicketPurchase ticket) throws IOException, WriterException;
     List<Tickets> saveAll(List<TicketPurchase> ticketPurchases) throws IOException;
+    List<Tickets> findAllByUserEmail(String email, Long page, Long size);
 }

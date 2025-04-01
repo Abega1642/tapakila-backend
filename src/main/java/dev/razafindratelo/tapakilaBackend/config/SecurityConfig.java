@@ -34,6 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST,"/user/sign-in").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user/update-password").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/events").permitAll()
+								.requestMatchers(HttpMethod.GET, "/tickets/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/event/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/events/**").permitAll()
 								.requestMatchers(HttpMethod.POST,"/events/filter").permitAll()

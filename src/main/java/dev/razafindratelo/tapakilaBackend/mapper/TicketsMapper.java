@@ -2,10 +2,7 @@ package dev.razafindratelo.tapakilaBackend.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.razafindratelo.tapakilaBackend.entity.PaymentMode;
-import dev.razafindratelo.tapakilaBackend.entity.Ticket;
-import dev.razafindratelo.tapakilaBackend.entity.Tickets;
-import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
@@ -18,18 +15,17 @@ public class TicketsMapper implements Mapper<Tickets> {
 
     @Override
     public Tickets mapFrom(ResultSet rs) throws SQLException {
-        String correspondingTicketType = rs.getString("corresponding_ticket_type");
-        String userJson = rs.getString("purchasedBy");
+        String correspondingTicketType = rs.getString("ticket_info");
+        String userJson = rs.getString("purchased_by");
         String paymentTypeJson = rs.getString("payment_mode");
-        String ticketJson = rs.getString("ticket_type");
 
-        Ticket ticket = new Ticket();
+        TicketPriceInfo ticket = null;
         User user = new User();
         PaymentMode pm = null;
 
         try {
             if (correspondingTicketType != null && !correspondingTicketType.isEmpty()) {
-                ticket = objectMapper.readValue(correspondingTicketType, Ticket.class);
+                ticket = objectMapper.readValue(correspondingTicketType, TicketPriceInfo.class);
             }
 
             if (userJson != null && !userJson.isEmpty()) {
@@ -39,8 +35,6 @@ public class TicketsMapper implements Mapper<Tickets> {
             if (paymentTypeJson != null && !paymentTypeJson.isEmpty()) {
                 pm = objectMapper.readValue(paymentTypeJson, PaymentMode.class);
             }
-
-            
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erreur de parsing JSON pour correspondingTicketType : " + e.getMessage(), e);
@@ -54,10 +48,10 @@ public class TicketsMapper implements Mapper<Tickets> {
                 rs.getString("qr_code_path"),
                 rs.getString("payment_ref"),
                 rs.getString("ticket_owner_name"),
-                null,
-                null,
-                null,
-                null
+                ticket,
+                user,
+                rs.getString("associated_eventId"),
+                pm
         );
     }
 }

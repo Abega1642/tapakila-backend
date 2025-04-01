@@ -778,7 +778,7 @@ TicketPriceInfo AS (
             'imgPath', tkt.ticket_type_img_path,
             'description', tkt.ticket_type_description
         ) AS corresponding_ticket_type,
-        get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type, null, (?::date)) AS left_tickets
+        get_event_left_ticket_of_given_ticket_type_at_a_given_date(tp.id_event, tkt.ticket_type, null, (current_date::date)) AS left_tickets
     FROM ticket_price tp
     LEFT JOIN TicketType tkt ON tkt.ticket_type_id = tp.id_ticket_type
 ),
@@ -859,8 +859,8 @@ SELECT
         'userCreatedAt', ui.created_at,
         'password', ui.password,
         'userStatus', ui.is_active
-    ) AS purchasedBy,
-    ti.associated_event_id AS associatedEvent,
+    ) AS purchased_by,
+    ti.associated_event_id AS associated_eventId,
     JSONB_BUILD_OBJECT(
         'id', pm.payment_mode_id,
         'description', pm.payment_mode_description,
@@ -875,5 +875,6 @@ SELECT
 FROM TicketInfo ti
 LEFT JOIN TicketPriceInfo tp ON tp.ticket_price_id = ti.id_ticket_price
 LEFT JOIN UserInfo ui ON ui.email = ti.user_email
-LEFT JOIN PaymentModeInfo pm ON pm.payment_mode_id = ti.id_payment_mode;
+LEFT JOIN PaymentModeInfo pm ON pm.payment_mode_id = ti.id_payment_mode
+WHERE ui.email = ?;
 
