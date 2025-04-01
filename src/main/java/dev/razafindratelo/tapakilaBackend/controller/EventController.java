@@ -9,6 +9,7 @@ import dev.razafindratelo.tapakilaBackend.service.eventDescriptionService.EventD
 import dev.razafindratelo.tapakilaBackend.service.eventService.EventService;
 import dev.razafindratelo.tapakilaBackend.service.eventTitleService.EventTitleService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class EventController {
         throw new NotImplementedException("Find all events by admin not implemented");
     }
 
-    @GetMapping("/events/filter")
+    @PostMapping("/events/filter")
     public ResponseEntity<List<Event>> findAllEventsByFilters(
             @RequestBody List<FilterDto> filters,
             @RequestParam(value = "page", required = false) Long page,
@@ -63,5 +64,12 @@ public class EventController {
             @RequestParam(value = "size", required = false) Long size
     ) {
         return ResponseEntity.ok(eventTitleService.findAllEventTitles(page, size));
+    }
+
+    @PostMapping("/events/create")
+    public ResponseEntity<Event> saveEvent(
+            @RequestBody Event event
+    ) {
+        return new ResponseEntity<>(eventService.save(event), HttpStatus.CREATED);
     }
 }
