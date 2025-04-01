@@ -1,0 +1,18 @@
+############### ID CONVENTION ############
+
+event_type = $EvT-
+event_category = $EvC-
+event = $Evt-
+event_turnover = $Eve-
+
+tickets_type = $Tik-
+tickets = $Tkt-
+ticket_price = $TkP-
+
+payment_mode = $PmD-
+
+account_activation = $AcA-
+############################################
+
+
+‼️ IMPORTANT : All images path should start with "src/main/resources/static/assets"
