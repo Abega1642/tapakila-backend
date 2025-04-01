@@ -1,4 +1,5 @@
 package dev.razafindratelo.tapakilaBackend.dao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.config.ObjectMapperConfig;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventCategoryDetail;
@@ -15,6 +16,7 @@ import dev.razafindratelo.tapakilaBackend.entity.enums.EventCategory;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
+import dev.razafindratelo.tapakilaBackend.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +39,8 @@ class EventDaoTest {
     @BeforeEach
     void setUp() {
         var ds = new DataSource();
-        subject = new EventDao(ds, new EventMapper(new ObjectMapperConfig().objectMapper()));
+        ObjectMapper objectMapper = new ObjectMapperConfig().objectMapper();
+        subject = new EventDao(ds, new EventMapper(objectMapper, new UserMapper(objectMapper)));
     }
 
     @BeforeEach

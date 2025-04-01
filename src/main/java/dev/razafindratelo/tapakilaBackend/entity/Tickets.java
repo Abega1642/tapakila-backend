@@ -1,15 +1,15 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
+@Data
 @EqualsAndHashCode
-@Builder
+@AllArgsConstructor
 public class Tickets {
     private String id;
     private long ticketNumber;
@@ -25,6 +25,7 @@ public class Tickets {
     @JsonProperty("purchasedBy")
     private User purchasedBy;
 
+	@JsonProperty("associatedEventId")
     private String associatedEvent;
 
     @JsonProperty("paymentMode")

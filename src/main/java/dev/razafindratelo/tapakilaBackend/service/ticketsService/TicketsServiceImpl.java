@@ -38,15 +38,34 @@ public class TicketsServiceImpl implements TicketsService {
 
 
     @Override
+    public Tickets findById(String id) {
+        if (id.trim().isEmpty())
+            throw new IllegalArgumentException("Id must not be null");
+
+        return ticketsDao.findByTicketsId(id);
+    }
+
+    @Override
     public Tickets save(TicketPurchase ticket) throws IOException, WriterException {
         User user = userService.findByEmail(ticket.getUserEmail().trim());
 
-        QRCode qrCode = qrCodeService.generateQRCode(ticket);
+        long lastId = ticketsDao.findLastTicketNumber(ticket.getEventId());
+		System.out.println("Last id : " + lastId);
+
+        TicketSignature ticketSignature = new TicketSignature(
+                ticket.getEventId(),
+                ticket.getUserEmail(),
+                ticket.getOwner(),
+                ticket.getTicketPriceInfoId(),
+                Long.toString(lastId)
+        );
+
+        QRCode qrCode = qrCodeService.generateQRCode(ticketSignature.getEventId(), ticketSignature);
 
         TicketPriceInfo tp = ticketPriceInfoService.getTicketPriceInfoById(ticket.getTicketPriceInfoId());
 
-        Tickets tkt = new Tickets(
-            1,
+        Tickets tkt = new Tickets (
+                lastId,
                 qrCode.path().toString(),
                 ticket.getOwner(),
                 tp,
@@ -71,5 +90,21 @@ public class TicketsServiceImpl implements TicketsService {
         });
 
         return savedTickets;
+    }
+
+    @Override
+    public List<Tickets> findAllByUserEmail(String email, Long page, Long size) {
+        final long fp = (page == null) ? 1L : page;
+        final long fs = (size == null) ? 10L : size;
+
+        userService.findByEmail(email.trim());
+
+        if (email.trim().isEmpty())
+            throw new IllegalArgumentException("TicketsServiceImpl.findAllByUserEmail :: email cannot be empty");
+
+        if (fp < 0 || fs < 0)
+            throw new IllegalArgumentException("Page or size can't be null");
+
+        return ticketsDao.findAllByUserEmail(email, fp, fs);
     }
 }

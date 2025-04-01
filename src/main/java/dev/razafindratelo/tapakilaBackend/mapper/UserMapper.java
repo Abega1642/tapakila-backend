@@ -1,14 +1,22 @@
 package dev.razafindratelo.tapakilaBackend.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.razafindratelo.tapakilaBackend.entity.EventCategoryDetail;
+import dev.razafindratelo.tapakilaBackend.entity.Ticket;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@AllArgsConstructor
+@Component
 public class UserMapper implements Mapper<User>{
+    private final ObjectMapper objectMapper;
 
     @Override
     public User mapFrom(ResultSet rs) throws SQLException {
@@ -27,5 +35,19 @@ public class UserMapper implements Mapper<User>{
                 rs.getTimestamp("user_creation_date").toLocalDateTime(),
                 top5Categories
         );
+    }
+
+    public User mapFromJson(String json) throws JsonProcessingException {
+        User user = null;
+
+        try {
+            if (json != null && !json.isEmpty()) {
+                user = objectMapper.readValue(json, User.class);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Erreur de parsing JSON pour correspondingTicketType : " + e.getMessage(), e);
+        }
+
+        return user;
     }
 }

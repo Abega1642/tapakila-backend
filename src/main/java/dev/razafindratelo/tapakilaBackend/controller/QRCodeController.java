@@ -5,11 +5,9 @@ import dev.razafindratelo.tapakilaBackend.dto.TicketPurchase;
 import dev.razafindratelo.tapakilaBackend.service.qrCodeService.QRCodeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,8 +17,19 @@ import java.io.IOException;
 public class QRCodeController {
     private final QRCodeService qrCodeService;
 
-    @PostMapping
-    public ResponseEntity<BufferedImage> generateQRCode(@RequestBody TicketPurchase ticketPurchase) throws WriterException, IOException {
-        return new ResponseEntity<>(qrCodeService.generateQRCode(ticketPurchase).qrCodeImage(), HttpStatus.CREATED);
+    @PostMapping("{eventId}")
+    public ResponseEntity<BufferedImage> generateQRCode(
+            @RequestBody TicketPurchase ticketPurchase,
+            @PathVariable String eventId
+    ) throws WriterException, IOException {
+        return new ResponseEntity<>(qrCodeService.generateQRCode(eventId, ticketPurchase).qrCodeImage(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{ticketsId}")
+    public ResponseEntity<byte[]> getQRCode(@PathVariable String ticketsId) {
+        return	ResponseEntity
+                .status(HttpStatus.OK)
+                .contentType(MediaType.IMAGE_PNG)
+				.body(qrCodeService.findQRCode(ticketsId));
     }
 }

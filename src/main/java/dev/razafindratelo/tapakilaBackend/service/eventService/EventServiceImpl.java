@@ -100,8 +100,11 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("Page and size cannot be negative");
 
         List<Criteria> criteria = new ArrayList<>(filters.stream().map(Filter::of).toList());
-        System.out.println(criteria);
 
-        return eventDao.findAllByCriteria(criteria, fp, fs);
+        List<Event> events = eventDao.findAllByCriteria(criteria, fp, fs);
+
+        events.forEach(e -> e.setImagePath(BASE_URL + e.getId()));
+
+        return events;
     }
 }

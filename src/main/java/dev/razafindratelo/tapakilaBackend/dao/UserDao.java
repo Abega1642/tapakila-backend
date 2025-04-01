@@ -26,6 +26,7 @@ import java.util.Optional;
 @Getter
 public class UserDao implements DAO<User> {
     private final DataSource dataSource;
+    private final UserMapper userMapper;
 
     private List<InnerJoinQuery> getInnerJoins () {
         return List.of (
@@ -163,7 +164,7 @@ public class UserDao implements DAO<User> {
             ResultSet rs = findStmt.executeQuery();
             
             if (rs.next()) {
-                return Optional.of(new UserMapper().mapFrom(rs));
+                return Optional.of(userMapper.mapFrom(rs));
             }
             return Optional.empty();
 
@@ -208,7 +209,7 @@ public class UserDao implements DAO<User> {
 
             while (rs.next()) {
                 users.add(
-                        new UserMapper().mapFrom(rs)
+                        userMapper.mapFrom(rs)
                 );
             }
             return users;
