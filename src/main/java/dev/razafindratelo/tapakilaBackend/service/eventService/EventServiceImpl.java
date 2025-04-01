@@ -102,6 +102,7 @@ public class EventServiceImpl implements EventService {
         List<Criteria> criteria = new ArrayList<>(filters.stream().map(Filter::of).toList());
 
         List<Event> events = eventDao.findAllByCriteria(criteria, fp, fs);
+
         events.forEach(e -> e.setImagePath(BASE_URL + e.getId()));
 
         return events;
