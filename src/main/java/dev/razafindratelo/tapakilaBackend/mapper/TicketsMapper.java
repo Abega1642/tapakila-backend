@@ -40,9 +40,7 @@ public class TicketsMapper implements Mapper<Tickets> {
                 pm = objectMapper.readValue(paymentTypeJson, PaymentMode.class);
             }
 
-            if (ticketJson != null && !ticketJson.isEmpty()) {
-                ticket =
-            }
+            
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erreur de parsing JSON pour correspondingTicketType : " + e.getMessage(), e);
