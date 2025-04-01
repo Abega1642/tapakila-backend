@@ -21,6 +21,7 @@ public class TicketsMapper implements Mapper<Tickets> {
         String correspondingTicketType = rs.getString("corresponding_ticket_type");
         String userJson = rs.getString("purchasedBy");
         String paymentTypeJson = rs.getString("payment_mode");
+        String ticketJson = rs.getString("ticket_type");
 
         Ticket ticket = new Ticket();
         User user = new User();
@@ -37,6 +38,10 @@ public class TicketsMapper implements Mapper<Tickets> {
 
             if (paymentTypeJson != null && !paymentTypeJson.isEmpty()) {
                 pm = objectMapper.readValue(paymentTypeJson, PaymentMode.class);
+            }
+
+            if (ticketJson != null && !ticketJson.isEmpty()) {
+                ticket =
             }
 
         } catch (JsonProcessingException e) {
