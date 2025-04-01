@@ -45,8 +45,8 @@ public class TicketsServiceImpl implements TicketsService {
 
         TicketPriceInfo tp = ticketPriceInfoService.getTicketPriceInfoById(ticket.getTicketPriceInfoId());
 
-        Tickets tkt = new Tickets(
-            1,
+        Tickets tkt = new Tickets (
+                1,
                 qrCode.path().toString(),
                 ticket.getOwner(),
                 tp,

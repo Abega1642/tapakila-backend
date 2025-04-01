@@ -5,7 +5,7 @@ INSERT INTO "event" (
     id, organizer, title, description, date_time, time_zone, location, location_url, image_path, 
     category, status, number_of_ticket, max_ticket_per_user
 ) VALUES (
-    '$Eve-' || gen_random_uuid(),
+    '$Evt-' || gen_random_uuid(),
     'Music Fest Organizers',
     'Annual Summer Music Festival',
     'Join us for the biggest music festival of the year! Featuring top artists from around the world.',
