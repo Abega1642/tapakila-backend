@@ -406,7 +406,7 @@ INSERT INTO "event" (
              'UTC_3_EAST_AFRICA_TIME',
              'La city Ivandry',
              'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
-             'events-posters/Party/Nightclub-parties/Nightclub4.png',
+             'events-posters/Party/Nightclub-parties/Nightclub6.png',
              'NIGHTCLUB_PARTY',
              'PUBLISHED',
              400,
@@ -894,4 +894,193 @@ INSERT INTO ticket_price (
              200,
             (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
              (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     FIFTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Boxing',
+             'Boxing battle',
+             '2025-04-28 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Palais des Sports Mahamasina',
+             'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Sport/Battles/Battle1',
+             'BATTLE',
+             'PUBLISHED',
+             1000,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             400,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             5000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             400,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     SIXTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Basketball match',
+             'Basketball match in Mahamasina',
+             '2025-04-29 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Palais des Sports Mahamasina',
+             'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Sport/Matches/Match1.png',
+             'MATCH',
+             'PUBLISHED',
+             1000,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             400,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             5000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             400,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     SEVENTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Swimming',
+             'Swimming Tournament',
+             '2025-04-30 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Acsa Ambohidahy',
+             'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Sport/Tournaments/Tournament1.png',
+             'TOURNAMENT',
+             'PUBLISHED',
+             300,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
