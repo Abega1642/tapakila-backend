@@ -304,16 +304,33 @@ public class EventDao implements DAO<Event> {
             saveStmt.setInt(13, event.getMaxTicketPerUser());
 
             int affectedRows = saveStmt.executeUpdate();
-            if (affectedRows > 0) {
-                return event;
-            }
+            boolean isCreatorSaved = UserDao.saveWhoCreatedEventWithGivenConnection(
+                    connection,
+                    event.getCreatedBy().getEmail(),
+                    event.getTitle(),
+                    event.getLocationUrl()
+            );
+            List<Boolean> areTheTypeSaved = new ArrayList<>();
+            event.getEventTypeDetail().forEach(t -> areTheTypeSaved.add(
+                    EventTypeDetailDao.saveEventTypeWithGivenConnection(
+                            connection,
+                            event.getTitle(),
+                            event.getLocationUrl(),
+                            t.getEventType()
+                    )
+            ));
 
+            if (affectedRows > 0 && isCreatorSaved && !areTheTypeSaved.contains(Boolean.FALSE))
+                return event;
+
+            throw new SQLException(
+                    "EventDao.save :: error while saving event. Might caused by the event attributes or the user creator, or the type of the event"
+            );
         } catch (SQLException e) {
             throw new RuntimeException(
                     String.format("EventDao.save :: %s", e.getMessage())
             );
         }
-        throw new RuntimeException("EventDao.save :: Failed to save event with id " + event.getId());
     }
 
     @Override

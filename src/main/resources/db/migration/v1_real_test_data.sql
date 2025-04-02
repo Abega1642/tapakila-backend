@@ -1,6 +1,6 @@
 --  THIS FILE HOLDS THE REAL DATA THAT ARE GOING TO BE USED IN THE APP
 
--- WEEKND
+-- WEEKEND
 -- event
 INSERT INTO "event" (
     id, organizer, title, description, date_time, time_zone, location, location_url, image_path, 
@@ -15,11 +15,17 @@ INSERT INTO "event" (
     'Coliseum Antsonjombe',
     'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m1!1e3!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMyNS4xIKXMDSoASAFQAw%3D%3D',
     'events-posters/Music/ConcertLive/Pop/Pop4.png',
-    'LIVE-CONCERT',
+    'LIVE_CONCERT',
     'PUBLISHED',
     10000,
     8
 );
+
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Weeknd' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m1!1e3!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMyNS4xIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'MUSIC')
+    );
 
 INSERT INTO ticket_price (
     id, price, currency, created_at, max_number, id_ticket_type, id_event
@@ -789,32 +795,32 @@ INSERT INTO ticket_price (
 INSERT INTO ticket (
     id, ticket_number, status, purchased_at, qr_code_path, payement_ref,
      ticket_owner_name, user_email, id_ticket_price, id_payment_mode
-) VALUES ($Tkt
+) VALUES (
     '$Tkt-' || gen_random_uuid(),
     6,
     true,
     '2025-03-27 00:00:00',
     '/',
     'ref',
-    'liantsoa',
+    'Liantsoa',
     'liantsoa@gmail.com',
     (SELECT id from ticket_price where price = 30000.0),
-    (SELECT id from payment_mode where provider = 'MVOLA_MADAGASCAR')
+    (SELECT id from payment_mode where provider = 'CASH')
 );
 
-INSERT INTO user 
+INSERT INTO "user"
 (email, profile_img_path, last_name, first_name, 
 password, created_at, user_role, is_active)
 VALUES (
     'hei.liantsoa@gmail.com',
     '/user/hei-liantsoa/profile-img/',
     'ratovo',
-    'liantsoa',
+    'Liantsoa',
     '123',
     '2025-03-27 00:00:00',
     'USER',
     true
-)
+);
 
 -- Batlle1
 INSERT INTO "event" (

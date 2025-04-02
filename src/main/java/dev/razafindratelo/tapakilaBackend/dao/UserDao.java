@@ -103,9 +103,29 @@ public class UserDao implements DAO<User> {
         return new QueryResult(sqlQuery, mainQuery);
     }
 
-    @Override
-    public User save(User user) {
-        Connection connection = dataSource.getConnection(UserDao.class.getName());
+    public static boolean saveWhoCreatedEventWithGivenConnection(Connection connection, String userEmail, String eventTitle, String eventLocationUrl) {
+        String sql =
+                """
+                        INSERT INTO creates (user_email, id_event) VALUES
+                            (
+                                ?,
+                                (SELECT id FROM "event" WHERE title = ? AND location_url = ?)
+                            )
+                """;
+        try (PreparedStatement saveWhoCreatedTheEventStmt = connection.prepareStatement(sql)) {
+            saveWhoCreatedTheEventStmt.setString(1, userEmail);
+            saveWhoCreatedTheEventStmt.setString(2, eventTitle);
+            saveWhoCreatedTheEventStmt.setString(3, eventLocationUrl);
+
+            if (saveWhoCreatedTheEventStmt.executeUpdate() > 0) return true;
+
+            throw new SQLException("UserDao.saveWhoCreatedEventWithGivenConnection :: could not save who created the event");
+        } catch (SQLException e) {
+            throw new RuntimeException("UserDao.saveWhoCreatedEventWithGivenConnection :: " + e.getMessage());
+        }
+    }
+
+    public User saveWithGivenConnection(Connection connection, User user) {
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.USER_EMAIL),
                 Column.from(AvailableColumn.USER_LAST_NAME),
@@ -143,6 +163,12 @@ public class UserDao implements DAO<User> {
         throw new RuntimeException(
                 String.format("UserDao.save :: failed to save user with email = %s",user.getEmail())
         );
+    }
+
+    @Override
+    public User save(User user) {
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
+        return saveWithGivenConnection(connection, user);
     }
 
     @Override
