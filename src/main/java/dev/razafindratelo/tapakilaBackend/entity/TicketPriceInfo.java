@@ -2,6 +2,8 @@ package dev.razafindratelo.tapakilaBackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import dev.razafindratelo.tapakilaBackend.config.LocalDateTimeConfig;
 import dev.razafindratelo.tapakilaBackend.entity.enums.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +26,8 @@ public class TicketPriceInfo {
     private Currency currency;
 
     @JsonProperty("createdAt")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
-	private LocalDateTime createdAt;
+    @JsonDeserialize(using = LocalDateTimeConfig.class)
+    private LocalDateTime createdAt;
 
     @JsonProperty("maxNumber")
     private long maxNumber;

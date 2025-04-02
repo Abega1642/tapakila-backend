@@ -1230,7 +1230,7 @@ INSERT INTO "event" (
              'Tranompokonolona Analakely',
              'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
              'events-posters/Theaters/Theater1.png',
-             'Theater',
+             'THEATER_PLAY',
              'PUBLISHED',
              100,
              4
