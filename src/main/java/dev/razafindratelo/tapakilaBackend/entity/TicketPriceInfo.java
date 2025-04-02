@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class TicketPriceInfo {
     @JsonProperty("id")
-    private String id;
+    private String id = generateTicketPriceInfoId();
 
     @JsonProperty("price")
     private double price;
@@ -41,6 +42,9 @@ public class TicketPriceInfo {
     @JsonProperty("associatedEventId")
     private String associatedEventId;
 
+    private static String generateTicketPriceInfoId() {
+        return "$TkP-" + UUID.randomUUID().toString();
+    }
 
     @Override
     public String toString() {
