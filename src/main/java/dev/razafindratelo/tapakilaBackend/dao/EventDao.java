@@ -1,11 +1,9 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
-import dev.razafindratelo.tapakilaBackend.dao.queryfactory.InnerJoinQuery;
-import dev.razafindratelo.tapakilaBackend.dao.queryfactory.Query;
-import dev.razafindratelo.tapakilaBackend.dao.queryfactory.QueryResult;
-import dev.razafindratelo.tapakilaBackend.dao.queryfactory.UpdateHandler;
+import dev.razafindratelo.tapakilaBackend.dao.queryfactory.*;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
+import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
@@ -76,7 +74,7 @@ public class EventDao implements DAO<Event> {
      * @param extraCriteria : some extra criteria
      * @return: a {@link QueryResult} object that contains the SQL query {@code sqlQuery} and a {@link Query} object
      */
-    private QueryResult makeQuery(List<Criteria> criteria, List<Criteria> extraCriteria) {
+    private ExtraQueryResult makeQuery(List<Criteria> criteria, List<Criteria> extraCriteria) {
         List<Column> columns = new ArrayList<>(getColumns());
         String requestAsColumn =
                 """
@@ -187,10 +185,22 @@ public class EventDao implements DAO<Event> {
                 .groupBy(groupBy)
                 .build();
 
+        Query headerQuery = new Query.Builder()
+                .tableName(TableName.EVENT)
+                .column(columns)
+                .innerJoin(innerJoins)
+                .criteria(criteria)
+                .groupBy(groupBy)
+                .build();
+
         String sqlQuery = """
                 WITH EventCounts AS (
-                    SELECT id_event, COUNT(*) AS all_events_by_id
-                    FROM has_type
+                    SELECT hty.id_event, COUNT(*) AS all_events_by_id
+                    FROM has_type hty
+                    LEFT JOIN event e ON e.id = hty.id_event 
+                """ +
+                headerQuery.getWhereClause() +
+                """
                     GROUP BY id_event
                     ORDER BY id_event
                     LIMIT ? OFFSET ?
@@ -235,12 +245,13 @@ public class EventDao implements DAO<Event> {
                 )
                 """ +
                 mainQuery.getSelectQuery();
-        return new QueryResult(sqlQuery, mainQuery);
+		
+        return new ExtraQueryResult(sqlQuery, headerQuery, mainQuery);
     }
 
     public List<Event> findAllBetweenDates(LocalDate from, LocalDate to) {
         Connection connection = dataSource.getConnection(EventDao.class.getName());
-        QueryResult sqlQuery = makeQuery(List.of(), List.of());
+        ExtraQueryResult sqlQuery = makeQuery(List.of(), List.of());
 
         String finalQuery = sqlQuery.sql().substring(0, 134) + sqlQuery.sql().substring(155);
 
@@ -304,12 +315,14 @@ public class EventDao implements DAO<Event> {
             saveStmt.setInt(13, event.getMaxTicketPerUser());
 
             int affectedRows = saveStmt.executeUpdate();
+
             boolean isCreatorSaved = UserDao.saveWhoCreatedEventWithGivenConnection(
                     connection,
                     event.getCreatedBy().getEmail(),
                     event.getTitle(),
                     event.getLocationUrl()
             );
+
             List<Boolean> areTheTypeSaved = new ArrayList<>();
             event.getEventTypeDetail().forEach(t -> areTheTypeSaved.add(
                     EventTypeDetailDao.saveEventTypeWithGivenConnection(
@@ -337,20 +350,22 @@ public class EventDao implements DAO<Event> {
     public Optional<Event> findById(String id) {
         final LocalDate DEFAULT_DATE = LocalDate.now();
         Connection connection = dataSource.getConnection(EventDao.class.getName());
+
         List<Criteria> criteria = List.of (
                 new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
         );
 
-        QueryResult sqlQuery = makeQuery(criteria, List.of());
+        ExtraQueryResult sqlQuery = makeQuery(criteria, List.of());
         String finaLQuery = sqlQuery.sql();
 
 
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
-            findStmt.setLong(1, 1);
-            findStmt.setLong(2, 0);
-            findStmt.setDate(3, Date.valueOf(DEFAULT_DATE));
-            findStmt.setDate(4, null);
-            findStmt.setString(5, id);
+            findStmt.setString(1, id);
+            findStmt.setLong(2, 1);
+            findStmt.setLong(3, 0);
+            findStmt.setDate(4, Date.valueOf(DEFAULT_DATE));
+            findStmt.setDate(5, null);
+            findStmt.setString(6, id);
 			
             ResultSet rs = findStmt.executeQuery();
 
@@ -439,7 +454,7 @@ public class EventDao implements DAO<Event> {
                 new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
         );
 
-        QueryResult sqlQuery = makeQuery(criteria, extraCriteria);
+        ExtraQueryResult sqlQuery = makeQuery(criteria, extraCriteria);
         String finaLQuery = sqlQuery.sql()
                 + """
                    LIMIT (SELECT COALESCE(SUM(all_events_by_id), 0) FROM EventCounts)
@@ -450,18 +465,20 @@ public class EventDao implements DAO<Event> {
 
         try (PreparedStatement findAllByCriteriaStmt = connection.prepareStatement(finaLQuery)) {
 
-            sqlQuery.query().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, 4);
+            int lastParam = sqlQuery.header().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, 0);
+            sqlQuery.main().completeQueryAndReturnLastParamIndex(findAllByCriteriaStmt, lastParam + 4);
 
-            findAllByCriteriaStmt.setLong(1, size);
-            findAllByCriteriaStmt.setLong(2, size * (page - 1));
+            findAllByCriteriaStmt.setLong(lastParam + 1, size);
+            findAllByCriteriaStmt.setLong(lastParam + 2, size * (page - 1));
 
             if (ticketDateFrom == null) {
-                findAllByCriteriaStmt.setDate(3, null);
+                findAllByCriteriaStmt.setDate(lastParam + 3, null);
             } else {
-                findAllByCriteriaStmt.setDate(3, Date.valueOf(ticketDateFrom));
+                findAllByCriteriaStmt.setDate(lastParam + 3, Date.valueOf(ticketDateFrom));
             }
 
-            findAllByCriteriaStmt.setDate(4, Date.valueOf(ticketDateTo));
+            findAllByCriteriaStmt.setDate(lastParam + 4, Date.valueOf(ticketDateTo));
+
 
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
 

@@ -120,6 +120,15 @@ public class Query {
         return this.query;
     }
 
+    public String getWhereClause() {
+        FilterQueryFactory fqFactory = new FilterQueryFactory();
+        StringBuilder fQuery = fqFactory.makeSubSelectQuery(CriteriaSeparator.extractFilters(criteria));
+
+        return """
+                    WHERE 1=1
+               """ + fQuery.toString();
+    }
+
     public StringBuilder getInsertQuery() {
 
         return new StringBuilder("INSERT INTO ")
@@ -140,9 +149,9 @@ public class Query {
                 .append(updateRefs);
     }
 
-    public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int startParamIndex) throws SQLException {
+    public int completeQueryAndReturnLastParamIndex(PreparedStatement statement, int lastParam) throws SQLException {
         List<Filter> filters = CriteriaSeparator.extractFilters(criteria);
-        int parameterIndex = startParamIndex;
+        int parameterIndex = lastParam;
 
         for (Filter f : filters) {
             if (!f.getColumnName().getValueType().equals(ValueType.REQUEST)) {
@@ -159,6 +168,7 @@ public class Query {
             }
 
         }
+
         return parameterIndex;
     }
 }
