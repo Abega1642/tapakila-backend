@@ -1100,7 +1100,7 @@ INSERT INTO "event" (
              'UTC_3_EAST_AFRICA_TIME',
              'Ccesca Antanimena',
              'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
-             'events-posters/Theaters/Ballets-dances/Ballet1',
+             'events-posters/Theaters/Ballets-dances/Ballet1.png',
              'BALLET_AND_DANCE',
              'PUBLISHED',
              500,
@@ -1163,7 +1163,7 @@ INSERT INTO "event" (
              'UTC_3_EAST_AFRICA_TIME',
              'Cci Ivato',
              'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
-             'events-posters/Theaters/Operas/Opera1',
+             'events-posters/Theaters/Operas/Opera1.png',
              'OPERA',
              'PUBLISHED',
              1000,
@@ -1227,7 +1227,7 @@ INSERT INTO "event" (
              'UTC_3_EAST_AFRICA_TIME',
              'Tranompokonolona Analakely',
              'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
-             'events-posters/Theaters/Theater1',
+             'events-posters/Theaters/Theater1.png',
              'Theater',
              'PUBLISHED',
              100,
@@ -1274,4 +1274,193 @@ INSERT INTO ticket_price (
              60,
             (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
              (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     TWENTY FIRST EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Big Mj',
+             'Big Mj show',
+             '2025-04-10 20:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Sehatra Maitso Antsahamanitra',
+             'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Music/ConcertLive/Afrobeat/Afrobeat2.png',
+             'LIVE_CONCERT',
+             'PUBLISHED',
+             500,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'MUSIC')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             30000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             300,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     TWENTY SECOND EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Esperanza',
+             'Esperanza Spalding show',
+             '2025-04-11 20:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'La city Ivandry',
+             'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Music/ConcertLive/jazz/jazz1.png',
+             'LIVE_CONCERT',
+             'PUBLISHED',
+             600,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'MUSIC')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     TWENTY THIRD EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Esperanza',
+             'Esperanza Spalding show',
+             '2025-04-13 20:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Stade Barea Mahamasina',
+             'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Music/ConcertLive/Jazz/Jazz1.png',
+             'LIVE_CONCERT',
+             'PUBLISHED',
+             800,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'MUSIC')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             30000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             400,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
