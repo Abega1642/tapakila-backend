@@ -12,6 +12,7 @@ public class AttributeMapper {
             case "updatedAt"        -> AvailableColumn.CREATES_UPDATED_AT;
             case "eventId"          -> AvailableColumn.EVENT_ID;
             case "eCategory"        -> AvailableColumn.EVENT_CATEGORY;
+			case "eStatus"        	-> AvailableColumn.EVENT_STATUS;
             case "type"             -> AvailableColumn.EVENT_TYPE__;
             case "eDescription"     -> AvailableColumn.EVENT_DESCRIPTION;
             case "eLocation"        -> AvailableColumn.EVENT_LOCATION;
