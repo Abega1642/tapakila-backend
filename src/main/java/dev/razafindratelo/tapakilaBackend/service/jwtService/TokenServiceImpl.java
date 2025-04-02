@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.service.jwtService;
 
 import dev.razafindratelo.tapakilaBackend.dao.TokenDao;
+import dev.razafindratelo.tapakilaBackend.dto.TokenValidation;
 import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutDto;
 import dev.razafindratelo.tapakilaBackend.dto.logout.LogOutStatus;
 import dev.razafindratelo.tapakilaBackend.entity.User;
@@ -9,6 +10,7 @@ import dev.razafindratelo.tapakilaBackend.entity.token.RefreshToken;
 import dev.razafindratelo.tapakilaBackend.entity.token.Token;
 import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +33,8 @@ public class TokenServiceImpl implements TokenService {
         return tokenDao.findAccessTokenByValue(accessToken)
                 .orElseThrow(() -> new ResourceNotFoundException("TokenService :: Access token not found"));
     }
+
+
 
     @Override
     public RefreshToken findByCreationExpirationDateAndUserEmail(LocalDateTime creation, LocalDateTime expiration, String userEmail) {
@@ -103,5 +107,16 @@ public class TokenServiceImpl implements TokenService {
 
         return tokenDao.saveToken(accessToken, refreshToken)
                 .orElseThrow(() -> new RuntimeException("TokenService :: Error while saving token"));
+    }
+
+    @Override
+    public TokenValidation validateToken(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String accessToken = auth.replace("Bearer ", "");
+
+        final LocalDateTime now = LocalDateTime.now();
+        Token token = findByValue(accessToken);
+
+        return new TokenValidation((token.getExpiresAt().isBefore(now)));
     }
 }
