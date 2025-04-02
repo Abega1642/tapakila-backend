@@ -4,6 +4,7 @@ import dev.razafindratelo.tapakilaBackend.dao.EventDao;
 import dev.razafindratelo.tapakilaBackend.dto.EventDto;
 import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
+import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
@@ -11,6 +12,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
+import dev.razafindratelo.tapakilaBackend.mapper.TicketPriceInfoMapper;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.imgServices.eventImgService.EventImgService;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
@@ -85,6 +87,9 @@ public class EventServiceImpl implements EventService {
         String evId = Event.generateId();
         User createdBy = userService.findByEmail(event.getCreatedBy());
 
+        List<TicketPriceInfo> tpInfos = new ArrayList<>();
+        event.getTicketsInfo().forEach(t -> tpInfos.add(TicketPriceInfoMapper.mapFrom(t, evId)));
+
         Event createdEvent = Event.builder()
                 .id(evId)
                 .createdBy(createdBy)
@@ -103,7 +108,7 @@ public class EventServiceImpl implements EventService {
                 .maxTicketPerUser(event.getMaxTicketPerUser())
                 .createdAt(event.getCreatedAt())
                 .updatedAt(event.getCreatedAt())
-                .leftTickets(event.getTicketsInfo())
+                .leftTickets(tpInfos)
                 .build();
 
         Event savedEvent = eventDao.save(createdEvent);

@@ -2,6 +2,7 @@ package dev.razafindratelo.tapakilaBackend.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.razafindratelo.tapakilaBackend.dto.TicketPriceInfoDto;
 import dev.razafindratelo.tapakilaBackend.entity.Ticket;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.enums.Currency;
@@ -39,6 +40,20 @@ public class TicketPriceInfoMapper implements Mapper<TicketPriceInfo> {
                 correspondingTicket,
                 rs.getLong("left_tickets"),
                 rs.getString("associated_event_id")
+        );
+    }
+
+    public static TicketPriceInfo mapFrom(TicketPriceInfoDto ticketPriceInfoDto, String eventId) {
+
+        return new TicketPriceInfo(
+                ticketPriceInfoDto.getId(),
+                ticketPriceInfoDto.getPrice(),
+                ticketPriceInfoDto.getCurrency(),
+                ticketPriceInfoDto.getCreatedAt(),
+                ticketPriceInfoDto.getMaxNumber(),
+                ticketPriceInfoDto.getTicketType(),
+                ticketPriceInfoDto.getLeftTickets(),
+                eventId
         );
     }
 }
