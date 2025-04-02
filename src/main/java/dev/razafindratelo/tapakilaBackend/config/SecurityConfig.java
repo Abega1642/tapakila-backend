@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/event/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/events/**").permitAll()
 								.requestMatchers(HttpMethod.POST,"/events/filter").permitAll()
+								.requestMatchers(HttpMethod.PUT,"/event/update/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/ping-pong").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/time-zones").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/ticket-types").permitAll()

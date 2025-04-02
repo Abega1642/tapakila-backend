@@ -1,9 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.controller;
 
-import dev.razafindratelo.tapakilaBackend.dto.EventDescription;
-import dev.razafindratelo.tapakilaBackend.dto.EventDto;
-import dev.razafindratelo.tapakilaBackend.dto.EventTitle;
-import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
+import dev.razafindratelo.tapakilaBackend.dto.*;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.service.eventDescriptionService.EventDescriptionService;
@@ -72,5 +69,10 @@ public class EventController {
             @RequestBody EventDto event
     ) {
         return new ResponseEntity<>(eventService.save(event), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/event/update/{eventId}")
+    public ResponseEntity<Event> updateEvent(@PathVariable String eventId, @RequestBody List<UpdatePayload> updatePayloads) {
+        return ResponseEntity.ok(eventService.updateEvent(updatePayloads, eventId));
     }
 }
