@@ -1,11 +1,13 @@
 package dev.razafindratelo.tapakilaBackend.service.ticketPriceInfoService;
 
 import dev.razafindratelo.tapakilaBackend.dao.TicketPriceInfoDao;
+import dev.razafindratelo.tapakilaBackend.entity.Ticket;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,7 +17,24 @@ public class TicketPriceInfoServiceImpl implements TicketPriceInfoService {
 
     @Override
     public List<TicketPriceInfo> saveTicketPriceInfos(List<TicketPriceInfo> ticketPriceInfos, String eventId) {
-        throw new NotImplementedException("SaveTicketPriceInfos not implemented");
+        if (ticketPriceInfos.isEmpty())
+            return ticketPriceInfos;
+
+        if (eventId.trim().isEmpty())
+            throw new IllegalArgumentException("Event id needs to be specified");
+
+        ticketPriceInfos.forEach(tpf -> {
+            if (tpf.getId() == null || tpf.getId().isEmpty() || !tpf.getAssociatedEventId().equals(eventId))
+                throw new IllegalStateException("TicketPriceInfo saveTicketPriceInfos :: associated event doesn't correspond or id empty or null");
+
+            if (tpf.getTicketType() == null)
+                throw new IllegalArgumentException("TicketPriceInfo.saveTicketPriceInfos :: ticketType is null");
+        });
+
+        List<TicketPriceInfo> savedTPFs = new ArrayList<>();
+        ticketPriceInfos.forEach(tpf -> savedTPFs.add(ticketPriceInfoDao.saveEventTicketPriceInfo(tpf)));
+
+        return savedTPFs;
     }
 
     @Override

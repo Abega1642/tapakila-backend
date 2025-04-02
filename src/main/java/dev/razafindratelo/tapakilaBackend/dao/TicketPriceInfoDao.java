@@ -126,28 +126,35 @@ public class TicketPriceInfoDao {
         }
 
     }
-    public TicketPriceInfo saveEventTicketPriceInfo(String eventTitle, String eventLocation, TicketType ticketType) {
-        return saveEventTicketPriceInfoWithConnection(dataSource.getConnection(TicketPriceInfoDao.class.getName()), eventTitle, eventLocation, ticketType);
+    public TicketPriceInfo saveEventTicketPriceInfo (TicketPriceInfo tpf) {
+        Connection connection = dataSource.getConnection(TicketPriceInfo.class.getName());
+        return saveEventTicketPriceInfoWithConnection(connection, tpf);
     }
 
-    public TicketPriceInfo saveEventTicketPriceInfoWithConnection (Connection connection, String eventTitle, String eventLocation, TicketType ticketType) {
+    public TicketPriceInfo saveEventTicketPriceInfoWithConnection (Connection connection, TicketPriceInfo tpf) {
         String sql =
                 """
                         INSERT INTO ticket_price (
                             id, price, currency, created_at, max_number, id_ticket_type, id_event
-                        ) VALUES (
-                                     '$TkP-' || gen_random_uuid(),
-                                     30000.0,
-                                     'MGA',
-                                     '2025-02-01 00:00:00',
-                                     6000,
-                                     (SELECT id from tickets_type where ticket_type = (?::ticket_type)),
-                                     (SELECT id FROM "event" WHERE title = ? AND location_url = ?)
-                                 )
+                        ) VALUES (?, ?, (?::currency), ?, ?, ?, ?)
                 """;
         try (PreparedStatement saveStmt = connection.prepareStatement(sql)) {
-            throw new NotImplementedException("Not implemented");
+            saveStmt.setString(1, tpf.getId());
+            saveStmt.setDouble(2, tpf.getPrice());
+            saveStmt.setString(3, tpf.getCurrency().toString());
+            saveStmt.setTimestamp(4, Timestamp.valueOf(tpf.getCreatedAt()));
+            saveStmt.setLong(5, tpf.getMaxNumber());
+            saveStmt.setString(6, tpf.getTicketType().getId());
+            saveStmt.setString(7, tpf.getAssociatedEventId());
 
+            int saved = saveStmt.executeUpdate();
+
+            if (saved > 0)
+                return tpf;
+
+            throw new SQLException(
+                    "TicketPriceInfoDao.saveEventTicketPriceInfoWithConnection :: Could not save ticket price info" + tpf
+            );
         } catch (SQLException e){
             throw new RuntimeException("TicketPriceInfoDao.saveEventTicketPriceInfoWithConnection :: " + e.getMessage());
         }
