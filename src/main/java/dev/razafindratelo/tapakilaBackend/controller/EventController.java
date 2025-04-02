@@ -1,6 +1,7 @@
 package dev.razafindratelo.tapakilaBackend.controller;
 
 import dev.razafindratelo.tapakilaBackend.dto.EventDescription;
+import dev.razafindratelo.tapakilaBackend.dto.EventDto;
 import dev.razafindratelo.tapakilaBackend.dto.EventTitle;
 import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
@@ -68,7 +69,7 @@ public class EventController {
 
     @PostMapping("/events/create")
     public ResponseEntity<Event> saveEvent(
-            @RequestBody Event event
+            @RequestBody EventDto event
     ) {
         return new ResponseEntity<>(eventService.save(event), HttpStatus.CREATED);
     }
