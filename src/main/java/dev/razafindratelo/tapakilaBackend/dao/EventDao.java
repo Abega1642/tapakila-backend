@@ -3,6 +3,7 @@ package dev.razafindratelo.tapakilaBackend.dao;
 import dev.razafindratelo.tapakilaBackend.dao.queryfactory.*;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
+import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
@@ -314,12 +315,14 @@ public class EventDao implements DAO<Event> {
             saveStmt.setInt(13, event.getMaxTicketPerUser());
 
             int affectedRows = saveStmt.executeUpdate();
+
             boolean isCreatorSaved = UserDao.saveWhoCreatedEventWithGivenConnection(
                     connection,
                     event.getCreatedBy().getEmail(),
                     event.getTitle(),
                     event.getLocationUrl()
             );
+
             List<Boolean> areTheTypeSaved = new ArrayList<>();
             event.getEventTypeDetail().forEach(t -> areTheTypeSaved.add(
                     EventTypeDetailDao.saveEventTypeWithGivenConnection(
@@ -347,6 +350,7 @@ public class EventDao implements DAO<Event> {
     public Optional<Event> findById(String id) {
         final LocalDate DEFAULT_DATE = LocalDate.now();
         Connection connection = dataSource.getConnection(EventDao.class.getName());
+
         List<Criteria> criteria = List.of (
                 new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
         );
@@ -356,11 +360,12 @@ public class EventDao implements DAO<Event> {
 
 
         try (PreparedStatement findStmt = connection.prepareStatement(finaLQuery)) {
-            findStmt.setLong(1, 1);
-            findStmt.setLong(2, 0);
-            findStmt.setDate(3, Date.valueOf(DEFAULT_DATE));
-            findStmt.setDate(4, null);
-            findStmt.setString(5, id);
+            findStmt.setString(1, id);
+            findStmt.setLong(2, 1);
+            findStmt.setLong(3, 0);
+            findStmt.setDate(4, Date.valueOf(DEFAULT_DATE));
+            findStmt.setDate(5, null);
+            findStmt.setString(6, id);
 			
             ResultSet rs = findStmt.executeQuery();
 
