@@ -120,6 +120,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         String finalPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(finalPassword);
+
+        user.setImgProfilePath("src/main/resources/static/assets/image/user/no_image.png");
 		
 		User savedUser = userDao.save(user);
         accountActivationService.create(user.getEmail());
