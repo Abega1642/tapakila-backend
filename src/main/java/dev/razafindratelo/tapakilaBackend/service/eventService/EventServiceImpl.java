@@ -3,15 +3,18 @@ package dev.razafindratelo.tapakilaBackend.service.eventService;
 import dev.razafindratelo.tapakilaBackend.dao.EventDao;
 import dev.razafindratelo.tapakilaBackend.dto.EventDto;
 import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
+import dev.razafindratelo.tapakilaBackend.dto.UpdatePayload;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.User;
+import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
+import dev.razafindratelo.tapakilaBackend.mapper.ColumnMapper;
 import dev.razafindratelo.tapakilaBackend.mapper.TicketPriceInfoMapper;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.imgServices.eventImgService.EventImgService;
@@ -87,8 +90,10 @@ public class EventServiceImpl implements EventService {
         String evId = Event.generateId();
         User createdBy = userService.findByEmail(event.getCreatedBy());
 
-        List<TicketPriceInfo> tpInfos = new ArrayList<>();
-        event.getTicketsInfo().forEach(t -> tpInfos.add(TicketPriceInfoMapper.mapFrom(t, evId)));
+        List<TicketPriceInfo> tpInfos = event.getTicketsInfo()
+                .stream()
+                .map(t -> TicketPriceInfoMapper.mapFrom(t, evId))
+                .toList();
 
         Event createdEvent = Event.builder()
                 .id(evId)
@@ -135,5 +140,20 @@ public class EventServiceImpl implements EventService {
         events.forEach(e -> e.setImagePath(BASE_URL + e.getId()));
 
         return events;
+    }
+
+    @Override
+    public Event updateEvent(List<UpdatePayload> updatePayloads, String eventId) {
+        List<Column> columns = updatePayloads.stream().map(ColumnMapper::mapToColumn).toList();
+
+        List<Filter> colRefs = List.of(
+            new Filter(AvailableColumn.EVENT_ID, OperatorType.EQUAL, eventId)
+        );
+
+        List<Event> updated = eventDao.update(columns, colRefs);
+
+        if (updated.isEmpty()) throw new RuntimeException("Error while updating event");
+
+        return updated.getLast();
     }
 }
