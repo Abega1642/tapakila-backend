@@ -2,7 +2,6 @@ package dev.razafindratelo.tapakilaBackend.dto;
 
 import dev.razafindratelo.tapakilaBackend.entity.EventCategoryDetail;
 import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
-import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.entity.enums.TimeZone;
 import lombok.AllArgsConstructor;
@@ -30,5 +29,5 @@ public class EventDto {
     private EventCategoryDetail category;
     private Set<EventTypeDetail> eventTypes;
     private LocalDateTime createdAt;
-    private List<TicketPriceInfo> ticketsInfo;
+    private List<TicketPriceInfoDto> ticketsInfo;
 }
