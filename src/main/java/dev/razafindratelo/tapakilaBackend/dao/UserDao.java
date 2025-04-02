@@ -147,7 +147,7 @@ public class UserDao implements DAO<User> {
             saveStmt.setString(4, user.getPassword());
             saveStmt.setString(5, user.getImgProfilePath());
             saveStmt.setString(6, user.getUserRole().toString());
-
+			
             int affectedRows = saveStmt.executeUpdate();
 
             if (affectedRows > 0) {
