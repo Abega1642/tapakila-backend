@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventMapper implements Mapper<Event> {
 	private ObjectMapper objectMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Event mapFrom(ResultSet rs) throws SQLException {
@@ -63,7 +64,7 @@ public class EventMapper implements Mapper<Event> {
                     .maxTicketPerUser(rs.getInt("event_max_ticket_per_user"))
                     .createdAt(rs.getTimestamp("event_created_at").toLocalDateTime())
                     .updatedAt(rs.getTimestamp("event_updated_at").toLocalDateTime())
-                    .createdBy(new UserMapper().mapFrom(rs))
+                    .createdBy(userMapper.mapFrom(rs))
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +25,7 @@ public class Tickets {
     @JsonProperty("purchasedBy")
     private User purchasedBy;
 
+	@JsonProperty("associatedEventId")
     private String associatedEvent;
 
     @JsonProperty("paymentMode")

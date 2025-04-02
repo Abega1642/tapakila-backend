@@ -11,16 +11,12 @@ public class TicketPurchase {
     private String userEmail;
     private String owner;
     private String ticketPriceInfoId;
-    private int quantity;
 
     @Override
     public String toString() {
-        return "{" +
-                "\n \t eventId = " + eventId +
+        return "\t eventId = " + eventId +
                 "\n \t userEmail = "  + userEmail +
                 "\n \t owner = " + owner +
-                "\n \t ticketPriceInfoId = " + ticketPriceInfoId +
-                "\n \t quantity = " + quantity +
-                "\n}";
+                "\n \t ticketPriceInfoId = " + ticketPriceInfoId;
     }
 }

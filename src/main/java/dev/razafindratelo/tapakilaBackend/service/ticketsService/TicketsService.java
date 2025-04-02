@@ -9,6 +9,8 @@ import java.util.List;
 
 @Service
 public interface TicketsService {
+    Tickets findById(String id);
     Tickets save(TicketPurchase ticket) throws IOException, WriterException;
     List<Tickets> saveAll(List<TicketPurchase> ticketPurchases) throws IOException;
+    List<Tickets> findAllByUserEmail(String email, Long page, Long size);
 }

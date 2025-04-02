@@ -1,11 +1,13 @@
 package dev.razafindratelo.tapakilaBackend.dao;
 
+import dev.razafindratelo.tapakilaBackend.config.ObjectMapperConfig;
 import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
+import dev.razafindratelo.tapakilaBackend.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -23,7 +25,7 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        subject = new UserDao(new DataSource());
+        subject = new UserDao(new DataSource(), new UserMapper(new ObjectMapperConfig().objectMapper()));
     }
 
     /**

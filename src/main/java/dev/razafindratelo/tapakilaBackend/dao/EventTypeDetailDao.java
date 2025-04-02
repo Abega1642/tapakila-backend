@@ -12,6 +12,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.GroupBy;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
+import dev.razafindratelo.tapakilaBackend.entity.enums.EventType;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventTypeDetailMapper;
 import lombok.AllArgsConstructor;
@@ -134,10 +135,34 @@ public class EventTypeDetailDao implements DAO<EventTypeDetail> {
 
             ///     I think it will be better that only developers can add new types related to SQL enum type.
 
-            return null;
+            throw new NotImplementedException("This method EventTypeDetailDao.save is not implemented");
 
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static boolean saveEventTypeWithGivenConnection(Connection connection, String eventTitle, String eventLocationUrl, EventType eventType) {
+        String sql =
+                """
+                        INSERT INTO has_type (id_event, id_events_type) VALUES
+                    (
+                        (SELECT id FROM "event" WHERE title = ? AND location_url = ?),
+                        (SELECT id FROM events_type WHERE event_type = (?::event_type))
+                    );
+                """;
+        try (PreparedStatement saveTypeStmt = connection.prepareStatement(sql)) {
+            saveTypeStmt.setString(1, eventTitle);
+            saveTypeStmt.setString(2, eventLocationUrl);
+            saveTypeStmt.setString(3, eventType.toString());
+
+            if (saveTypeStmt.executeUpdate() > 0)
+                return true;
+
+            throw new SQLException("EventTypeDetailDao.saveEventTypeWithGivenConnection :: could not save event type");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("EventTypeDetailDao.saveEventTypeWithGivenConnection :: " + e.getMessage());
         }
     }
 

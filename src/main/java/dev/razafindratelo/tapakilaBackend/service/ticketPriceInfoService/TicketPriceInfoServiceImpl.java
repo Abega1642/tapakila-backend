@@ -2,6 +2,7 @@ package dev.razafindratelo.tapakilaBackend.service.ticketPriceInfoService;
 
 import dev.razafindratelo.tapakilaBackend.dao.TicketPriceInfoDao;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
+import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -11,6 +12,11 @@ import java.util.List;
 @Service
 public class TicketPriceInfoServiceImpl implements TicketPriceInfoService {
     private final TicketPriceInfoDao ticketPriceInfoDao;
+
+    @Override
+    public List<TicketPriceInfo> saveTicketPriceInfos(List<TicketPriceInfo> ticketPriceInfos, String eventId) {
+        throw new NotImplementedException("SaveTicketPriceInfos not implemented");
+    }
 
     @Override
     public List<TicketPriceInfo> getAllTicketPriceInfosByEventId(String eventId) {

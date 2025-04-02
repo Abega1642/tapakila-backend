@@ -26,6 +26,7 @@ import java.util.Optional;
 @Getter
 public class UserDao implements DAO<User> {
     private final DataSource dataSource;
+    private final UserMapper userMapper;
 
     private List<InnerJoinQuery> getInnerJoins () {
         return List.of (
@@ -102,9 +103,29 @@ public class UserDao implements DAO<User> {
         return new QueryResult(sqlQuery, mainQuery);
     }
 
-    @Override
-    public User save(User user) {
-        Connection connection = dataSource.getConnection(UserDao.class.getName());
+    public static boolean saveWhoCreatedEventWithGivenConnection(Connection connection, String userEmail, String eventTitle, String eventLocationUrl) {
+        String sql =
+                """
+                        INSERT INTO creates (user_email, id_event) VALUES
+                            (
+                                ?,
+                                (SELECT id FROM "event" WHERE title = ? AND location_url = ?)
+                            )
+                """;
+        try (PreparedStatement saveWhoCreatedTheEventStmt = connection.prepareStatement(sql)) {
+            saveWhoCreatedTheEventStmt.setString(1, userEmail);
+            saveWhoCreatedTheEventStmt.setString(2, eventTitle);
+            saveWhoCreatedTheEventStmt.setString(3, eventLocationUrl);
+
+            if (saveWhoCreatedTheEventStmt.executeUpdate() > 0) return true;
+
+            throw new SQLException("UserDao.saveWhoCreatedEventWithGivenConnection :: could not save who created the event");
+        } catch (SQLException e) {
+            throw new RuntimeException("UserDao.saveWhoCreatedEventWithGivenConnection :: " + e.getMessage());
+        }
+    }
+
+    public User saveWithGivenConnection(Connection connection, User user) {
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.USER_EMAIL),
                 Column.from(AvailableColumn.USER_LAST_NAME),
@@ -145,6 +166,12 @@ public class UserDao implements DAO<User> {
     }
 
     @Override
+    public User save(User user) {
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
+        return saveWithGivenConnection(connection, user);
+    }
+
+    @Override
     public Optional<User> findById(String email) {
         Connection connection = dataSource.getConnection(UserDao.class.getName());
         return findByIdWithGivenConnection(email, connection);
@@ -163,7 +190,7 @@ public class UserDao implements DAO<User> {
             ResultSet rs = findStmt.executeQuery();
             
             if (rs.next()) {
-                return Optional.of(new UserMapper().mapFrom(rs));
+                return Optional.of(userMapper.mapFrom(rs));
             }
             return Optional.empty();
 
@@ -208,7 +235,7 @@ public class UserDao implements DAO<User> {
 
             while (rs.next()) {
                 users.add(
-                        new UserMapper().mapFrom(rs)
+                        userMapper.mapFrom(rs)
                 );
             }
             return users;

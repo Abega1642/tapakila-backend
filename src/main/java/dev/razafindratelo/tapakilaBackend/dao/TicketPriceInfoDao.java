@@ -5,6 +5,7 @@ import dev.razafindratelo.tapakilaBackend.entity.Tickets;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Column;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
+import dev.razafindratelo.tapakilaBackend.entity.enums.TicketType;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.TicketPriceInfoMapper;
 import lombok.AllArgsConstructor;
@@ -124,5 +125,31 @@ public class TicketPriceInfoDao {
             throw new RuntimeException("TicketPriceInfoDao.findAllByEventIdAtAGivenDate :: " +e);
         }
 
+    }
+    public TicketPriceInfo saveEventTicketPriceInfo(String eventTitle, String eventLocation, TicketType ticketType) {
+        return saveEventTicketPriceInfoWithConnection(dataSource.getConnection(TicketPriceInfoDao.class.getName()), eventTitle, eventLocation, ticketType);
+    }
+
+    public TicketPriceInfo saveEventTicketPriceInfoWithConnection (Connection connection, String eventTitle, String eventLocation, TicketType ticketType) {
+        String sql =
+                """
+                        INSERT INTO ticket_price (
+                            id, price, currency, created_at, max_number, id_ticket_type, id_event
+                        ) VALUES (
+                                     '$TkP-' || gen_random_uuid(),
+                                     30000.0,
+                                     'MGA',
+                                     '2025-02-01 00:00:00',
+                                     6000,
+                                     (SELECT id from tickets_type where ticket_type = (?::ticket_type)),
+                                     (SELECT id FROM "event" WHERE title = ? AND location_url = ?)
+                                 )
+                """;
+        try (PreparedStatement saveStmt = connection.prepareStatement(sql)) {
+            throw new NotImplementedException("Not implemented");
+
+        } catch (SQLException e){
+            throw new RuntimeException("TicketPriceInfoDao.saveEventTicketPriceInfoWithConnection :: " + e.getMessage());
+        }
     }
 }
