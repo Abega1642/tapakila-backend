@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenValidationController {
     private TokenService tokenService;
 
-    @GetMapping
+    @GetMapping("/access-token")
     public ResponseEntity<TokenValidation> getTokenValidation(HttpServletRequest request) {
         return ResponseEntity.ok(tokenService.validateToken(request));
+    }
+
+    @GetMapping("/refresh-token/{refreshToken}")
+    public ResponseEntity<TokenValidation> getTokenValidation(@PathVariable String refreshToken) {
+        return ResponseEntity.ok(tokenService.validateRefreshToken(refreshToken));
     }
 }
