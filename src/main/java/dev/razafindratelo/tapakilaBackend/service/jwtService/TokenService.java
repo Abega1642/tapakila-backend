@@ -18,4 +18,5 @@ public interface TokenService {
     RefreshToken findByRefreshToken(String refreshToken);
     Map<String, Token> saveTokens(AccessToken accessToken, RefreshToken refreshToken);
     TokenValidation validateToken(HttpServletRequest accessToken);
+    TokenValidation validateRefreshToken(String refreshToken);
 }

@@ -119,4 +119,12 @@ public class TokenServiceImpl implements TokenService {
 
         return new TokenValidation((token.getExpiresAt().isBefore(now)));
     }
+
+    @Override
+    public TokenValidation validateRefreshToken(String refreshToken) {
+        final LocalDateTime now = LocalDateTime.now();
+        RefreshToken refreshTokenRes = findByRefreshToken(refreshToken);
+
+        return new TokenValidation(refreshTokenRes.getExpiresAt().isBefore(now));
+    }
 }
