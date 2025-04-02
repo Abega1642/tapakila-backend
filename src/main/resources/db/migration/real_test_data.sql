@@ -455,4 +455,254 @@ INSERT INTO ticket_price (
              (SELECT id FROM "event" WHERE title = 'Young Party' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
 
+ --  ##################     EIGHTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Bob tobias',
+             'Bob tobias business conference',
+             '2025-04-07 10:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Sehatra Maitso Antsahamanitra',
+             'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Business/Business-conferences/Conference1.png',
+             'BUSINESS_CONFERENCE',
+             'PUBLISHED',
+             300,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'BUSINESS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             30000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+                  (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             150,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
 
+ --  ##################     NINTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Daniel Gallego',
+             'Religious Conference wit Daniel Gallego',
+             '2025-04-06 10:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'CCESCA Antanimena',
+             'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Church/Religious-conferences/Religious-conference1.png',
+             'RELIGIOUS_CONFERENCE',
+             'PUBLISHED',
+             400,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'RELIGIOUS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+                  (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             150,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+         
+--  ##################     TENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Easter',
+             'Night of Easter celebration',
+             'Religious Conference wit Daniel Gallego',
+             '2025-04-19 9:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Coliseum Antsonjombe',
+             'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Church/Spiritual-songs/Spiritual-song1.png',
+             'SPIRITUAL_SONGS_AND_MUSIC',
+             'PUBLISHED',
+             500,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'RELIGIOUS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+                  (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             150,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     ELEVENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'E-sport',
+             'E-sport Tournament',
+             'Religious Conference wit Daniel Gallego',
+             '2025-04-16 9:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Redzone Ankorondrano',
+             'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Gaming-eSports/Tournaments/Tournament1.png',
+             'ESPORT_TOURNAMENT',
+             'PUBLISHED',
+             200,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+                  (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
