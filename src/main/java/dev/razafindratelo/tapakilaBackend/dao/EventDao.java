@@ -6,6 +6,7 @@ import dev.razafindratelo.tapakilaBackend.entity.EventTypeDetail;
 import dev.razafindratelo.tapakilaBackend.entity.TicketPriceInfo;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.*;
+import dev.razafindratelo.tapakilaBackend.entity.enums.EventStatus;
 import dev.razafindratelo.tapakilaBackend.exception.NotImplementedException;
 import dev.razafindratelo.tapakilaBackend.mapper.EventMapper;
 import lombok.AllArgsConstructor;
@@ -346,10 +347,9 @@ public class EventDao implements DAO<Event> {
         }
     }
 
-    @Override
-    public Optional<Event> findById(String id) {
+    public Optional<Event> findByIdWIthGivenConnection(Connection connection, String id) {
         final LocalDate DEFAULT_DATE = LocalDate.now();
-        Connection connection = dataSource.getConnection(EventDao.class.getName());
+
 
         List<Criteria> criteria = List.of (
                 new Filter (AvailableColumn.EVENT_ID, OperatorType.EQUAL, id)
@@ -366,7 +366,7 @@ public class EventDao implements DAO<Event> {
             findStmt.setDate(4, Date.valueOf(DEFAULT_DATE));
             findStmt.setDate(5, null);
             findStmt.setString(6, id);
-			
+
             ResultSet rs = findStmt.executeQuery();
 
             Event event = Event.builder().build();
@@ -387,8 +387,17 @@ public class EventDao implements DAO<Event> {
     }
 
     @Override
+    public Optional<Event> findById(String id) {
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
+        return findByIdWIthGivenConnection(connection, id);
+    }
+
+    @Override
     public List<Event> findAll(long page, long size) {
-        return findAllByCriteria(List.of(), page, size);
+        List<Criteria> criteria = List.of(
+                new Filter(AvailableColumn.EVENT_STATUS, OperatorType.EQUAL, EventStatus.PUBLISHED.toString())
+        );
+        return findAllByCriteria(criteria, page, size);
     }
 
     public List<Event> findAllWithAGivenTicketDateInterval(LocalDate from, LocalDate to, long page, long size) {
@@ -449,12 +458,17 @@ public class EventDao implements DAO<Event> {
      */
     private List<Event> findAllByCriteriaWithAGivenTicketDateIntervalWithGivenConnection
             (Connection connection, List<Criteria> criteria, LocalDate ticketDateFrom, LocalDate ticketDateTo, long page,long size) {
-
         List<Criteria> extraCriteria = List.of(
                 new Filter(AvailableColumn.EVENT_ID_REQ, OperatorType.IN, "(SELECT id_event FROM EventCounts)")
         );
+        List<Criteria> finalCriteria = new ArrayList<>(criteria);
 
-        ExtraQueryResult sqlQuery = makeQuery(criteria, extraCriteria);
+        finalCriteria.add(
+                new Order(AvailableColumn.EVENT_DATE_TIME, OrderType.DESC)
+        );
+
+        ExtraQueryResult sqlQuery = makeQuery(finalCriteria, extraCriteria);
+
         String finaLQuery = sqlQuery.sql()
                 + """
                    LIMIT (SELECT COALESCE(SUM(all_events_by_id), 0) FROM EventCounts)
@@ -470,7 +484,7 @@ public class EventDao implements DAO<Event> {
 
             findAllByCriteriaStmt.setLong(lastParam + 1, size);
             findAllByCriteriaStmt.setLong(lastParam + 2, size * (page - 1));
-
+		
             if (ticketDateFrom == null) {
                 findAllByCriteriaStmt.setDate(lastParam + 3, null);
             } else {
@@ -479,7 +493,7 @@ public class EventDao implements DAO<Event> {
 
             findAllByCriteriaStmt.setDate(lastParam + 4, Date.valueOf(ticketDateTo));
 
-
+			
             ResultSet rs = findAllByCriteriaStmt.executeQuery();
 
             while (rs.next()) {
@@ -530,6 +544,24 @@ public class EventDao implements DAO<Event> {
 
     @Override
     public Optional<Event> delete(String id) {
-        throw new NotImplementedException("EventDao.delete :: Deleting event not implemented yet");
+        String sql =
+                """
+                UPDATE event SET status = 'CANCELED' WHERE id = ?
+                """;
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
+
+        try (PreparedStatement deletionStmt = connection.prepareStatement(sql)) {
+            deletionStmt.setString(1, id);
+
+            if (deletionStmt.executeUpdate() > 0)
+                return findByIdWIthGivenConnection(connection, id);
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "EventDao.delete :: Error while deleting event"
+            );
+        }
     }
 }
