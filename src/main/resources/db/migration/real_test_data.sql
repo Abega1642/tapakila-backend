@@ -588,9 +588,9 @@ INSERT INTO "event" (
     category, status, number_of_ticket, max_ticket_per_user
 ) VALUES (
              '$Evt-' || gen_random_uuid(),
+            'Salford',
              'Easter',
              'Night of Easter celebration',
-             'Religious Conference wit Daniel Gallego',
              '2025-04-19 9:00:00',
              'UTC_3_EAST_AFRICA_TIME',
              'Coliseum Antsonjombe',
@@ -651,9 +651,9 @@ INSERT INTO "event" (
     category, status, number_of_ticket, max_ticket_per_user
 ) VALUES (
              '$Evt-' || gen_random_uuid(),
+             'Salford',
              'E-sport',
              'E-sport Tournament',
-             'Religious Conference wit Daniel Gallego',
              '2025-04-16 9:00:00',
              'UTC_3_EAST_AFRICA_TIME',
              'Redzone Ankorondrano',
@@ -668,7 +668,7 @@ INSERT INTO "event" (
 INSERT INTO has_type (id_event, id_events_type) VALUES
     (
         (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
-        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+        (SELECT id FROM events_type WHERE event_type = 'EDUCATION')
     );
             --  WHO CREATED IT
 INSERT INTO creates (user_email, id_event) VALUES
@@ -705,4 +705,193 @@ INSERT INTO ticket_price (
              100,
             (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
              (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     TWELTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+            'Salford',
+             'Web Development',
+             'Web Development masterclass',
+             '2025-04-26 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Sweety Ampefiloha',
+             'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Education/Masterclasses/Masterclass1.png',
+             'MASTERCLASS',
+             'PUBLISHED',
+             200,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'SPORTS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+                  (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             5000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     THIRTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Kids Robotic',
+             'Kids Robotic masterclass',
+             '2025-04-19 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Canal Olympia',
+             'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Education/Workshops/Workshop1.png',
+             'MASTERCLASS',
+             'PUBLISHED',
+             400,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'EDUCATION')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             150,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             5000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             150,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     FOURTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Public Speaking',
+             'Public Speaking workshop',
+             '2025-04-22 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Canal Olympia',
+             'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Education/Workshops/Workshop1.png',
+             'WORKSHOP',
+             'PUBLISHED',
+             500,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'EDUCATION')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             10000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             100,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             5000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
