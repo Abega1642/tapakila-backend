@@ -340,6 +340,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/Event"
 
+  /events/update/{eventId}:
+    put: 
+      operationId: updateEvent
+      summary: update an event
+      tags:
+        - Event
+      security:
+        - bearerAuth : []
+      x-roles:
+        - ADMIN
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/UpdatePayload"
+      responses:
+        200:
+          description: update made with success
+          content:
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/Event"
+      
+
   /events/filter:
     get:
       operationId: findAllEventsByFilters
@@ -850,6 +876,18 @@ components:
         $ref: "#/components/schemas/year"
 
   schemas:
+    AvailableColumn:
+      type: string
+      enum: [EVENT_TITLE, EVENT_STATUS, EVENT_ORGANIZER, EVENT_DESCRIPTION, EVENT_DATE_TIME]
+    UpdatePayload:
+      type: object
+      properties:
+        attributeToBeUpdate:
+          $ref: "#/components/schemas/AvailableColumn"
+        updatedValue:
+          type: string
+
+
     Tickets:
       type: object
       properties:
