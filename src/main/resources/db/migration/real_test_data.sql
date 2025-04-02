@@ -318,7 +318,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-01-27 00:00:00',
              100,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Valentine' AND location_url = 'https://www.google.com/maps/place/La+Balan%C3%A7oire/@-18.873963,47.5152788,666m/data=!3m1!1e3!4m6!3m5!1s0x21f081b978c8c7cd:0xa963de6a09f427e1!8m2!3d-18.8739689!4d47.5180846!16s%2Fg%2F11stvs3cjs?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -381,7 +381,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-01-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Night Party' AND location_url = 'https://www.google.com/maps/place/Hotel+Carlton/@-18.9148433,47.515274,631m/data=!3m1!1e3!4m9!3m8!1s0x21f07e0e0292d259:0x810bb6406b272064!5m2!4m1!1i2!8m2!3d-18.9148484!4d47.5178489!16s%2Fm%2F0wfjbn0?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -444,7 +444,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-01-27 00:00:00',
              100,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Young Party' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -507,7 +507,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Bob tobias' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -570,7 +570,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Daniel Gallego' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -633,7 +633,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Easter' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-18.8699731,47.5416333,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -696,7 +696,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'E-sport' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8480807,47.4146735,10098m/data=!3m1!1e3!4m10!1m2!2m1!1sredzone!3m6!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!15sCgdyZWR6b25lkgEPY293b3JraW5nX3NwYWNl4AEA!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -759,7 +759,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-                  (SELECT id from tickets_type where ticket_type = 'VIP').
+                  (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Web Development' AND location_url = 'https://www.google.com/maps/place/Sweety+Space/@-18.9147992,47.5137866,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07fa249d02497:0xed31c5ed5ae25591!8m2!3d-18.9148043!4d47.5163615!16s%2Fg%2F11ht58tvm7?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -822,7 +822,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              100,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Kids Robotic' AND location_url = 'https://www.google.com/maps/place/RedZone+Ankorondrano/@-18.8735794,47.5181853,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810053f21f45:0x58472c0fcc57e4e9!8m2!3d-18.8735845!4d47.5207602!16s%2Fg%2F11mxp3kzxv?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -885,7 +885,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              100,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Public Speaking' AND location_url = 'https://www.google.com/maps/place/CanalOlympia+Iarivo/@-18.8885043,47.4868805,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f0810ca3467cbb:0x74e92108284649df!8m2!3d-18.8885094!4d47.4894554!16s%2Fg%2F11fmdmgnpg?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -948,7 +948,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Boxing' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1011,7 +1011,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Basketball match' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1074,7 +1074,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1138,7 +1138,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              50,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1201,7 +1201,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1265,7 +1265,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              20,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1328,7 +1328,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              100,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Big Mj' AND location_url = 'https://www.google.com/maps/place/Theatre+de+Verdure+Antsahamanitra/@-18.9116045,47.5195971,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e05f8555555:0xec58ce3595942a1e!8m2!3d-18.9116096!4d47.522172!16s%2Fg%2F11kj906rp6?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1391,7 +1391,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/La+city+Ivandry/@-18.8751665,47.5170449,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081cee5e14a9f:0x61982eb38c1d40e!8m2!3d-18.8751716!4d47.5196198!16s%2Fg%2F11g0qlrdz2?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1454,7 +1454,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Esperanza' AND location_url = 'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1517,7 +1517,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Taylor Swift' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1580,7 +1580,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              200,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Linkin Park' AND location_url = 'https://www.google.com/maps/place/Coliseum-Antsonjombe/@-6.968244,-20.3991844,10845516m/data=!3m1!1e3!4m6!3m5!1s0x21f086df7a0fcf57:0x4896ba0a2af4e751!8m2!3d-18.8699782!4d47.5442082!16s%2Fg%2F1td80nwq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
@@ -1643,7 +1643,7 @@ INSERT INTO ticket_price (
              'MGA',
              '2025-03-27 00:00:00',
              100,
-             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id from tickets_type where ticket_type = 'VIP'),
              (SELECT id FROM "event" WHERE title = 'Drew Feig' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          ),
          (
