@@ -1084,3 +1084,194 @@ INSERT INTO ticket_price (
             (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
              (SELECT id FROM "event" WHERE title = 'Swimming' AND location_url = 'https://www.google.com/maps/place/Palais+de+la+Culture+et+des+Sports/@-18.9205828,47.5244095,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a8558d041:0xe0c64c428dd75a7b!8m2!3d-18.9205879!4d47.5269844!16s%2Fg%2F1tlnssxm?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
+
+
+--  ##################     EIGHTEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Ballet',
+             'Ballet show',
+             '2025-04-23 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Ccesca Antanimena',
+             'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Theaters/Ballets-dances/Ballet1',
+             'BALLET_AND_DANCE',
+             'PUBLISHED',
+             500,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'THEATER_AND_SHOWS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             50,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Ballet' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+--  ##################     NINETEENTH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Opera',
+             'Opera show',
+             '2025-04-24 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Cci Ivato',
+             'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Theaters/Operas/Opera1',
+             'OPERA',
+             'PUBLISHED',
+             1000,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'THEATER_AND_SHOWS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             200,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             600,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Opera' AND location_url = 'https://www.google.com/maps/place/CCI+IVATO/@-18.8142774,47.4723262,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f081890f4829cd:0x88d7f3c627aab6b4!8m2!3d-18.8142825!4d47.4749011!16s%2Fg%2F11g7296xxn?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
+
+
+--  ##################     TWENTIETH EVENT    ###################
+            -- INSERTION OF THE EVENT
+INSERT INTO "event" (
+    id, organizer, title, description, date_time, time_zone, location, location_url, image_path,
+    category, status, number_of_ticket, max_ticket_per_user
+) VALUES (
+             '$Evt-' || gen_random_uuid(),
+             'Salford',
+             'Theater',
+             'Theater show',
+             '2025-04-25 8:00:00',
+             'UTC_3_EAST_AFRICA_TIME',
+             'Tranompokonolona Analakely',
+             'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D',
+             'events-posters/Theaters/Theater1',
+             'Theater',
+             'PUBLISHED',
+             100,
+             4
+         );
+            --  INSERTION OF THE TYPE
+INSERT INTO has_type (id_event, id_events_type) VALUES
+    (
+        (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D'),
+        (SELECT id FROM events_type WHERE event_type = 'THEATER_AND_SHOWS')
+    );
+            --  WHO CREATED IT
+INSERT INTO creates (user_email, id_event) VALUES
+    (
+        'tapakila.noreply@gmail.com',
+        (SELECT id FROM "event"  WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+    );
+            --  TICKET PRICE INFOS
+INSERT INTO ticket_price (
+    id, price, currency, created_at, max_number, id_ticket_type, id_event
+) VALUES (
+             '$TkP-' || gen_random_uuid(),
+             20000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             20,
+            (SELECT id from tickets_type where ticket_type = 'STANDARD'),
+             (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             25000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             20,
+             (SELECT id from tickets_type where ticket_type = 'VIP').
+             (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         ),
+         (
+             '$TkP-' || gen_random_uuid(),
+             15000.0,
+             'MGA',
+             '2025-03-27 00:00:00',
+             60,
+            (SELECT id from tickets_type where ticket_type = 'EARLY_BIRD'),
+             (SELECT id FROM "event" WHERE title = 'Theater' AND location_url = 'https://www.google.com/maps/place/Tranompokonolona+Analakely/@-18.9086197,47.5243946,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07f864bb6fc6d:0x435f4407f9d482d8!8m2!3d-18.9086248!4d47.5269695!16s%2Fg%2F11fltw3dxt?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
+         );
