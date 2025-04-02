@@ -1,8 +1,10 @@
 package dev.razafindratelo.tapakilaBackend.service.eventService;
 
 import dev.razafindratelo.tapakilaBackend.dao.EventDao;
+import dev.razafindratelo.tapakilaBackend.dto.EventDto;
 import dev.razafindratelo.tapakilaBackend.dto.FilterDto;
 import dev.razafindratelo.tapakilaBackend.entity.Event;
+import dev.razafindratelo.tapakilaBackend.entity.User;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Criteria;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
@@ -11,6 +13,7 @@ import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
 import dev.razafindratelo.tapakilaBackend.exception.ResourceNotFoundException;
 import dev.razafindratelo.tapakilaBackend.service.PaginationFormatUtil;
 import dev.razafindratelo.tapakilaBackend.service.imgServices.eventImgService.EventImgService;
+import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventServiceImpl implements EventService {
     private final EventDao eventDao;
+	private final UserService userService;
     private final EventImgService eventImgService;
     private final static String BASE_URL = Dotenv.load().get("BASE_URL") + "/event/image/";
 
@@ -77,12 +81,32 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event save(Event event) {
+    public Event save(EventDto event) {
         String evId = Event.generateId();
+        User createdBy = userService.findByEmail(event.getCreatedBy());
 
-        event.setId(evId);
+        Event createdEvent = Event.builder()
+                .id(evId)
+                .createdBy(createdBy)
+                .eventTypeDetail(event.getEventTypes())
+                .organizer(event.getOrganizer())
+                .title(event.getTitle())
+                .description(event.getDescription())
+                .dateTime(event.getDateTime())
+                .timeZone(event.getTimeZone())
+                .location(event.getLocation())
+                .locationUrl(event.getLocationUrl())
+                .imagePath("src/main/resources/static/assets/image/event/no_image.png")
+                .category(event.getCategory())
+                .status(event.getStatus())
+                .numberOfTickets(event.getNumberOfTickets())
+                .maxTicketPerUser(event.getMaxTicketPerUser())
+                .createdAt(event.getCreatedAt())
+                .updatedAt(event.getCreatedAt())
+                .leftTickets(event.getTicketsInfo())
+                .build();
 
-        Event savedEvent = eventDao.save(event);
+        Event savedEvent = eventDao.save(createdEvent);
         savedEvent.setImagePath(BASE_URL + savedEvent.getId());
 
         return savedEvent;
