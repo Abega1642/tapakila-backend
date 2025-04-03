@@ -49,7 +49,9 @@ public class TokenFilter extends OncePerRequestFilter {
 			"/qr-codes",
 			"/tickets/",
 			"/buy-tickets",
-			"/tickets"
+			"/tickets",
+			"/user/",
+			"/user/update-role"
 	);
 
     @Override

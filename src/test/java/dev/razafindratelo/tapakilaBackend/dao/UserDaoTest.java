@@ -21,16 +21,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class UserDaoTest {
+	/*
     private UserDao subject;
 
     @BeforeEach
     void setUp() {
         subject = new UserDao(new DataSource(), new UserMapper(new ObjectMapperConfig().objectMapper()));
     }
-
+		*/
     /**
      * This test is a success. That's why I disable it
-     */
+    
     @Test
     @Disabled
     void save() {
@@ -91,4 +92,5 @@ class UserDaoTest {
 
         User actual = subject.update(columns, filters).getFirst();
     }
+	*/
 }

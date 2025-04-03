@@ -151,6 +151,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         throw new NotImplementedException("UserService.update :: Not implemented yet");
     }
 
+	@Override
+	public User updateUserToAdmin(String userEmail) {
+		List<Column> columns = List.of(
+			new Column(AvailableColumn.USER_ROLE, "ADMIN")			
+		);
+		
+		List<Filter> colRefs = List.of(
+            new Filter(AvailableColumn.USER_EMAIL , OperatorType.EQUAL, userEmail.trim())
+        );
+	
+		List<User> updatedUsers = userDao.update(columns, colRefs);
+		
+		if (updatedUsers.isEmpty()) throw new RuntimeException("Error while updating user");
+	
+		return updatedUsers.getLast();
+	}
+
     @Override
     public User updateUserPassword(UserUpdatePassword userUpdatePassword) {
         AccountActivation acc = accountActivationService.findByEmail(userUpdatePassword.userEmail());

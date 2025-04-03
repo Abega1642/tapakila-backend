@@ -22,6 +22,7 @@ public interface UserService {
     JwtDTO signIn(Login login);
     LogOutDto logOut(HttpServletRequest request);
     User update(User user);
+	User updateUserToAdmin(String userEmail);
     User updateUserPassword(UserUpdatePassword userUpdatePassword);
     User activateAccount(ValidationCode validationCode);
     JwtDTO refreshToken(String userEmail, String refreshToken);

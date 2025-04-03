@@ -89,4 +89,9 @@ public class UserController {
 		return ResponseEntity.ok(Map.of("totalNumber", userService.getUserCounts()));
 	}
 
+	@PutMapping("/user/update-role/{userEmail}")
+	public ResponseEntity<User> changeUserRoleToAdmin(@PathVariable String userEmail) {
+		return ResponseEntity.ok(userService.updateUserToAdmin(userEmail));	
+	}
+
 }

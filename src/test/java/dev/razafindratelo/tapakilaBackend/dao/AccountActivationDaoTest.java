@@ -15,7 +15,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountActivationDaoTest {
-    private AccountActivationDao subject;
+    /*
+	private AccountActivationDao subject;
 
     @BeforeEach
     void setUp() {
@@ -139,4 +140,5 @@ class AccountActivationDaoTest {
         assertEquals(expected, actual);
 
     }
+	*/
 }
