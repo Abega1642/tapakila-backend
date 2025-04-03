@@ -168,6 +168,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+
+  /user/update-role/{userEmail}:
+    post:
+      operationId: changeUserRoleToAdmin
+      summary: change the user role from USER to ADMIN
+      tags:
+        - User
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+      responseS:
+        200:
+          description: the user with role equal to ADMIN
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+                
   /user/sign-in:
     post:
       operationId: signIn
