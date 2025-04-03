@@ -218,6 +218,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JwtDTO"
+
+  /users/total-count:
+    get:
+      operationId: findTotalUsersCount
+      summary: get the total number of users
+      tags:
+        - User
+      responses:
+        200:
+          description: the total number of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalNumber:
+                    type: integer
   /users:
     get:
       operationId: findAllUsers
@@ -242,6 +259,9 @@ paths:
                   type: array
                   items:
                     $ref: "#/components/schemas/User"
+
+  
+
   /user/{userEmail}:
     get:
       operationId: findUserByEmail
@@ -352,7 +372,33 @@ paths:
               schema:
                   type: string
                   format: binary
-
+  
+  /event/update/image/{eventId}:
+    post:
+      operationId: updateEventImg
+      summary: update the event image
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      security:
+        - bearerAuth: []
+      x-roles:
+        - ADMIN
+      requestBody:
+        content:
+          image/png:
+            schema:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: message confirming the image update
+          content:
+            text/plain:
+              schema:
+                type: string
+      
 
   /events/create:
     post: 

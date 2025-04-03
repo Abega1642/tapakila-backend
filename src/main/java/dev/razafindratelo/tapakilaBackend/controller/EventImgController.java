@@ -24,7 +24,7 @@ public class EventImgController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/event/update/image/{eventId}")
-    public ResponseEntity<String> updateUserProfile(
+    public ResponseEntity<String> updateEventImg(
             @PathVariable("eventId") String eventId,
             @RequestBody MultipartFile profile
     ) {
