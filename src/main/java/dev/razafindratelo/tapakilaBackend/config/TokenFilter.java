@@ -50,8 +50,8 @@ public class TokenFilter extends OncePerRequestFilter {
 			"/tickets/",
 			"/buy-tickets",
 			"/tickets",
-			"/user/image/",
-			"/user/update-role"
+			"/user/update-role",
+			"/user/details/"
 	);
 
     @Override
@@ -69,7 +69,6 @@ public class TokenFilter extends OncePerRequestFilter {
 		}
 
         String authHeader = request.getHeader("Authorization");
-		System.out.println(authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() < 10)
             throw new ActionNotAllowedException("No authorization found or authorization header format not valid");

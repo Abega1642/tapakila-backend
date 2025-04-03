@@ -143,7 +143,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public LogOutDto logOut(HttpServletRequest request) {
         String auth = request.getHeader("Authorization");
         String accessToken = auth.replace("Bearer ", "");
-		System.out.println("SLKJSMDKLJFMSLDKJFMK");
         return tokenService.disableTokens(accessToken);
     }
 
