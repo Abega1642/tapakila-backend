@@ -336,6 +336,24 @@ paths:
                   totalNumber:
                     type: integer
 
+  /event/image/{eventId}:
+    get:
+      operationId: getEventImgByEventId
+      summary: get event image
+      tags:
+        - Event
+      parameters:
+        - $ref: "#/components/parameters/eventId"
+      responses:
+        200:
+          description: the event image/png (byte)
+          content:
+            image/png:
+              schema:
+                  type: string
+                  format: binary
+
+
   /events/create:
     post: 
       operationId: saveEvent
