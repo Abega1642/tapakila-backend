@@ -125,6 +125,23 @@ public class UserDao implements DAO<User> {
         }
     }
 
+	public long findTotalUserCount() {
+        String sql = "SELECT COUNT(*) FROM \"user\"";
+        Connection connection = dataSource.getConnection(UserDao.class.getName());
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next())
+                return rs.getLong(1);
+
+            throw new SQLException("UserDao.findTotalUserCount :: erro while counting all users");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("UserDao.findTotalUserCount :: " + e.getMessage());
+        }
+    }
+
     public User saveWithGivenConnection(Connection connection, User user) {
         List<Column> insertColumns = List.of(
                 Column.from(AvailableColumn.USER_EMAIL),

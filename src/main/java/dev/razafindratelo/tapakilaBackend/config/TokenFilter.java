@@ -41,6 +41,7 @@ public class TokenFilter extends OncePerRequestFilter {
             "/events-status",
             "/user-roles",
 			"/event-types",
+			"/users/total-count",
             "/events/total-count",
             "/ticket-types",
             "/event-categories",

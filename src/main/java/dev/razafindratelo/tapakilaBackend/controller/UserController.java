@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -82,5 +83,10 @@ public class UserController {
     ) {
         return new ResponseEntity<>(userService.updateUserPassword(userUpdatePassword), HttpStatus.CREATED);
     }
+
+	@GetMapping("/users/total-count")
+	public ResponseEntity<Map<String, Long>> getTotalUserCounts() {
+		return ResponseEntity.ok(Map.of("totalNumber", userService.getUserCounts()));
+	}
 
 }

@@ -104,6 +104,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return users;
     }
+	
+	@Override
+	public Long getUserCounts() {
+		return userDao.findTotalUserCount();
+	}
 
     @Override
     public User signUp(User user) throws MessagingException {
