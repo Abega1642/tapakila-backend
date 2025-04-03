@@ -83,7 +83,7 @@ INSERT INTO "event" (
              'Stade Barea Mahamasina',
              'https://www.google.com/maps/place/Stade+Barea+Mahamasina/@-18.9194574,47.5233782,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f07e0a5c0d79cf:0xdc643e778a74b324!8m2!3d-18.9194625!4d47.5259531!16zL20vMGJwd3Bu?entry=ttu&g_ep=EgoyMDI1MDMyNS4xIKXMDSoASAFQAw%3D%3D',
              'events-posters/Music/ConcertLive/Afrobeat/Afrobeat1.png',
-             'LIVE-CONCERT',
+             'LIVE_CONCERT',
              'COMPLETED',
              10000,
              4
@@ -1656,3 +1656,5 @@ INSERT INTO ticket_price (
              (SELECT id FROM "event" WHERE title = 'Drew Feig' AND location_url = 'https://www.google.com/maps/place/Centre+Culturel+ESCA/@-18.8974177,47.5195832,631m/data=!3m2!1e3!4b1!4m6!3m5!1s0x21f080aea42995b9:0xeb776d49b50eb79!8m2!3d-18.8974228!4d47.5221581!16s%2Fg%2F1thbn5gq?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D')
          );
 END $$;
+
+-- 
