@@ -17,6 +17,7 @@ public class CorsConfig {
                         .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("*")
+						.exposedHeaders("Authorization", "Cache-Control", "Content-Type")
                         .allowCredentials(false);
             }
         };
