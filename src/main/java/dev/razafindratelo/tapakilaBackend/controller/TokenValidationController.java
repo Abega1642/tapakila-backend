@@ -3,7 +3,7 @@ package dev.razafindratelo.tapakilaBackend.controller;
 import dev.razafindratelo.tapakilaBackend.dto.TokenValidation;
 import dev.razafindratelo.tapakilaBackend.service.jwtService.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/token-checker")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TokenValidationController {
     private TokenService tokenService;
 

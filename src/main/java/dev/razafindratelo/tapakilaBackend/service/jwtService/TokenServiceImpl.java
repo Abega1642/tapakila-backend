@@ -117,7 +117,7 @@ public class TokenServiceImpl implements TokenService {
         final LocalDateTime now = LocalDateTime.now();
         Token token = findByValue(accessToken);
 
-        return new TokenValidation((token.getExpiresAt().isBefore(now)));
+        return new TokenValidation((token.getExpiresAt().isAfter(now)));
     }
 
     @Override
@@ -125,6 +125,6 @@ public class TokenServiceImpl implements TokenService {
         final LocalDateTime now = LocalDateTime.now();
         RefreshToken refreshTokenRes = findByRefreshToken(refreshToken);
 
-        return new TokenValidation(refreshTokenRes.getExpiresAt().isBefore(now));
+        return new TokenValidation(refreshTokenRes.getExpiresAt().isAfter(now));
     }
 }
