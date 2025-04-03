@@ -1,5 +1,6 @@
 package dev.razafindratelo.tapakilaBackend.controller;
 
+import dev.razafindratelo.tapakilaBackend.dto.EventTicketDto;
 import dev.razafindratelo.tapakilaBackend.dto.TicketPurchase;
 import dev.razafindratelo.tapakilaBackend.entity.Tickets;
 import dev.razafindratelo.tapakilaBackend.service.ticketsService.TicketsService;
@@ -23,14 +24,11 @@ public class TicketsController {
     }
 
     @GetMapping("/tickets/{userEmail}")
-    public ResponseEntity<List<Tickets>> findAllByUserEmail(
+    public ResponseEntity<List<EventTicketDto>> findAllByUserEmail(
             @PathVariable String userEmail,
             @RequestParam(value = "page", required = false) Long page,
             @RequestParam(value = "size", required = false) Long size
     ) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_PNG)
-				.body(ticketsService.findAllByUserEmail(userEmail, page, size));
+        return ResponseEntity.ok(ticketsService.findAllByUserEmail(userEmail, page, size));
     }
 }

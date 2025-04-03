@@ -2,10 +2,13 @@ package dev.razafindratelo.tapakilaBackend.service.ticketsService;
 
 import com.google.zxing.WriterException;
 import dev.razafindratelo.tapakilaBackend.dao.TicketsDao;
+import dev.razafindratelo.tapakilaBackend.dto.EventTicketDto;
+import dev.razafindratelo.tapakilaBackend.dto.PrimitiveEventTicketDto;
 import dev.razafindratelo.tapakilaBackend.dto.TicketPurchase;
 import dev.razafindratelo.tapakilaBackend.entity.*;
 import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentProvider;
 import dev.razafindratelo.tapakilaBackend.entity.enums.PaymentType;
+import dev.razafindratelo.tapakilaBackend.service.eventService.EventService;
 import dev.razafindratelo.tapakilaBackend.service.qrCodeService.QRCodeService;
 import dev.razafindratelo.tapakilaBackend.service.ticketPriceInfoService.TicketPriceInfoService;
 import dev.razafindratelo.tapakilaBackend.service.userService.UserService;
@@ -15,6 +18,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -33,6 +38,7 @@ public class TicketsServiceImpl implements TicketsService {
     );
     private final TicketsDao ticketsDao;
     private final UserService userService;
+    private final EventService eventService;
     private final TicketPriceInfoService ticketPriceInfoService;
     private final QRCodeService qrCodeService;
 
@@ -93,7 +99,7 @@ public class TicketsServiceImpl implements TicketsService {
     }
 
     @Override
-    public List<Tickets> findAllByUserEmail(String email, Long page, Long size) {
+    public List<EventTicketDto> findAllByUserEmail(String email, Long page, Long size) {
         final long fp = (page == null) ? 1L : page;
         final long fs = (size == null) ? 10L : size;
 
@@ -105,6 +111,10 @@ public class TicketsServiceImpl implements TicketsService {
         if (fp < 0 || fs < 0)
             throw new IllegalArgumentException("Page or size can't be null");
 
-        return ticketsDao.findAllByUserEmail(email, fp, fs);
+        Set<PrimitiveEventTicketDto> allEventRelatedToUserTicket = ticketsDao.getAllEventRelatedToUserTicket(email, fp, fs);
+
+        return allEventRelatedToUserTicket.stream().map(
+                t -> new EventTicketDto(eventService.findById(t.getEventId()), t.getAssociatedTickets())
+        ).toList();
     }
 }
