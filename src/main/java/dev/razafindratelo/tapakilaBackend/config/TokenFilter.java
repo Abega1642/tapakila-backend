@@ -50,7 +50,7 @@ public class TokenFilter extends OncePerRequestFilter {
 			"/tickets/",
 			"/buy-tickets",
 			"/tickets",
-			"/user/",
+			"/user/image/",
 			"/user/update-role"
 	);
 
@@ -69,12 +69,14 @@ public class TokenFilter extends OncePerRequestFilter {
 		}
 
         String authHeader = request.getHeader("Authorization");
+		System.out.println(authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() < 10)
             throw new ActionNotAllowedException("No authorization found or authorization header format not valid");
 
         String accessTokenValue = authHeader.replace("Bearer ", "");
         AccessToken correspondingAccessToken = tokenService.findByValue(accessTokenValue);
+		
 
         if (!correspondingAccessToken.isValid() || correspondingAccessToken.getExpiresAt().isBefore(DEFAULT_DATE_TIME))
             throw new ActionNotAllowedException("Access token has expired.");

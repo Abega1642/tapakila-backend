@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/currencies").permitAll()
 								.requestMatchers(HttpMethod.GET, "/tickets/**").permitAll()
 								.requestMatchers(HttpMethod.GET, "/users/total-count").permitAll()
-								.requestMatchers(HttpMethod.GET, "/user/**").permitAll()	
+								.requestMatchers(HttpMethod.GET, "/user/image/**").permitAll()	
 								.requestMatchers(HttpMethod.PUT,"/user/update-role/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/events-status").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/user-roles").permitAll()
