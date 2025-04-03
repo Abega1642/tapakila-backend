@@ -750,6 +750,8 @@ paths:
       summary: create tickets (buy tickets)
       tags:
         - Ticket
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -766,6 +768,29 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Tickets"
+
+  /tickets/{userEmail}:
+    get:
+      operationId: findAllByUserEmail
+      summary: get all tickets purchased by user
+      tags:
+        - Ticket
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - $ref: "#/components/parameters/useEmail"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+      responses:
+        200:
+          description: list of all tickets purchased by the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tickets"
+      
 
 components:
   securitySchemes:
