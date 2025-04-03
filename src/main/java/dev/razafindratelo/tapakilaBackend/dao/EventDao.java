@@ -276,6 +276,22 @@ public class EventDao implements DAO<Event> {
         }
     }
 
+    public long findTotalEvent() {
+        String sql = "SELECT COUNT(*) FROM event";
+        Connection connection = dataSource.getConnection(EventDao.class.getName());
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next())
+                return rs.getLong(1);
+
+            throw new SQLException("EventDao.findTotalEvent :: erro while counting all event");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("EventDao.findTotalEvent :: " + e.getMessage());
+        }
+    }
 
     @Override
     public Event save(Event event) {

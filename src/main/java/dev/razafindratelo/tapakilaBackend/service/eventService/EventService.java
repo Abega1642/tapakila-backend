@@ -17,4 +17,5 @@ public interface EventService {
     Event save(EventDto event);
     List<Event> findEventsByFilters(List<FilterDto> filters, Long page, Long size);
     Event updateEvent(List<UpdatePayload> updatedPayloads, String eventId);
+    long findTotalEvent();
 }

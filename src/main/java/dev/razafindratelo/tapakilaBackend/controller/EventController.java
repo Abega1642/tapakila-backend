@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -74,5 +75,10 @@ public class EventController {
     @PutMapping("/event/update/{eventId}")
     public ResponseEntity<Event> updateEvent(@PathVariable String eventId, @RequestBody List<UpdatePayload> updatePayloads) {
         return ResponseEntity.ok(eventService.updateEvent(updatePayloads, eventId));
+    }
+
+    @GetMapping("/events/total-count")
+    public ResponseEntity<Map<String, Long>> getTotalEventCount() {
+        return ResponseEntity.ok(Map.of("totalNumber", eventService.findTotalEvent()));
     }
 }

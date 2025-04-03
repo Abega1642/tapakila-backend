@@ -156,4 +156,9 @@ public class EventServiceImpl implements EventService {
 
         return updated.getLast();
     }
+
+    @Override
+    public long findTotalEvent() {
+        return eventDao.findTotalEvent();
+    }
 }
