@@ -319,6 +319,23 @@ paths:
                 items:
                   $ref: "#/components/schemas/Event"
 
+  /events/total-count:
+    get:
+      operationId: findTotalEventsCount
+      summary: get the total number of events
+      tags:
+        - Event
+      responses:
+        200:
+          description: the total number of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalNumber:
+                    type: integer
+
   /events/create:
     post: 
       operationId: saveEvent

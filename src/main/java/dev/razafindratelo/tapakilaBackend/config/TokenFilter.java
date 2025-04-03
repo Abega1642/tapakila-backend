@@ -40,6 +40,7 @@ public class TokenFilter extends OncePerRequestFilter {
             "/currencies",
             "/events-status",
             "/user-roles",
+			"/event-types",
             "/events/total-count",
             "/ticket-types",
             "/event-categories",

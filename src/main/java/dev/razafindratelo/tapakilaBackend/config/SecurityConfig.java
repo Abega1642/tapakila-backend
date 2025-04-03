@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/currencies").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/events-status").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/user-roles").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/event-types").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/event-types-enum").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/event-categories").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/tickets-stats/**").hasAuthority("ROLE_ADMIN")
