@@ -159,8 +159,11 @@ public class Query {
 
                 if (f.getOperatorType().equals(OperatorType.BETWEEN)) {
                     List<Object> values = (List<Object>) f.getValue();
+
                     statement.setObject(parameterIndex, values.getFirst());
-                    statement.setObject(parameterIndex + 1, values.getLast());
+					parameterIndex++;
+
+                    statement.setObject(parameterIndex, values.getLast());
 
                 } else {
                     statement.setObject(parameterIndex, f.getValue());

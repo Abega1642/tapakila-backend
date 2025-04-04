@@ -13,7 +13,7 @@ public class EventTitleServiceImpl implements EventTitleService {
 
     @Override
     public List<EventTitle> findAllEventTitles(Long page, Long size) {
-        long fp = (page == null) ? 0L : page;
+        long fp = (page == null) ? 1L : page;
         long fs = (size == null) ? 10L : size;
 
         if (fp < 0L || fs < 0L) throw new IllegalArgumentException("page or size is can't be negative");

@@ -29,6 +29,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
 	private static final List<String> EXCLUDED_PATHS = List.of(
             "/user/sign-in",
+			"/user/profile/",
 			"/user/sign-up",
 			"/user/activate-account",
 			"/user/update-password",
