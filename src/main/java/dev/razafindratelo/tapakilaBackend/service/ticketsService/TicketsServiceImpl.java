@@ -37,6 +37,7 @@ public class TicketsServiceImpl implements TicketsService {
             true
     );
     private final TicketsDao ticketsDao;
+	private final String BASE_URL = "http://localhost:8080/tapakila-api/qr-codes/";
     private final UserService userService;
     private final EventService eventService;
     private final TicketPriceInfoService ticketPriceInfoService;
@@ -53,11 +54,11 @@ public class TicketsServiceImpl implements TicketsService {
 
     @Override
     public Tickets save(TicketPurchase ticket) throws IOException, WriterException {
-        User user = userService.findByEmail(ticket.getUserEmail().trim());
+        final User user = userService.findByEmail(ticket.getUserEmail().trim());
 
         long lastId = ticketsDao.findLastTicketNumber(ticket.getEventId());
 
-        TicketSignature ticketSignature = new TicketSignature(
+        final TicketSignature ticketSignature = new TicketSignature(
                 ticket.getEventId(),
                 ticket.getUserEmail(),
                 ticket.getOwner(),
@@ -65,7 +66,7 @@ public class TicketsServiceImpl implements TicketsService {
                 Long.toString(lastId)
         );
 
-        QRCode qrCode = qrCodeService.generateQRCode(ticketSignature.getEventId(), ticketSignature);
+        final QRCode qrCode = qrCodeService.generateQRCode(ticketSignature.getEventId(), ticketSignature);
 
         TicketPriceInfo tp = ticketPriceInfoService.getTicketPriceInfoById(ticket.getTicketPriceInfoId());
 
@@ -111,8 +112,14 @@ public class TicketsServiceImpl implements TicketsService {
 
         Set<PrimitiveEventTicketDto> allEventRelatedToUserTicket = ticketsDao.getAllEventRelatedToUserTicket(email, fp, fs);
 
-        return allEventRelatedToUserTicket.stream().map(
+        var results = allEventRelatedToUserTicket.stream().map(
                 t -> new EventTicketDto(eventService.findById(t.getEventId()), t.getAssociatedTickets())
         ).toList();
+		
+		results.forEach(etd -> {
+			etd.getAssociatedTickets().forEach(tkt -> tkt.setQrCodePath(BASE_URL + tkt.getId()));
+		});
+
+		return results;
     }
 }
