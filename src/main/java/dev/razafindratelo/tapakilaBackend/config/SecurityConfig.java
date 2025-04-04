@@ -67,7 +67,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/events-turnover/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/event-turnover").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/events/user/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/users").permitAll()
+								.requestMatchers(HttpMethod.GET, "/users*").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(

@@ -57,7 +57,7 @@ public class UserController {
         return new ResponseEntity<>(userService.refreshToken(userEmail, refreshToken), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAllUsers(
             @RequestParam(value = "page", required = false) Long page,

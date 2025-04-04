@@ -56,7 +56,6 @@ public class TicketsServiceImpl implements TicketsService {
         User user = userService.findByEmail(ticket.getUserEmail().trim());
 
         long lastId = ticketsDao.findLastTicketNumber(ticket.getEventId());
-		System.out.println("Last id : " + lastId);
 
         TicketSignature ticketSignature = new TicketSignature(
                 ticket.getEventId(),
@@ -91,7 +90,7 @@ public class TicketsServiceImpl implements TicketsService {
             try {
                 savedTickets.add(save(tpu));
             } catch (IOException | WriterException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("TicketsServiceImpl.saveAll :: " + e);
             }
         });
 
@@ -103,7 +102,6 @@ public class TicketsServiceImpl implements TicketsService {
         final long fp = (page == null) ? 1L : page;
         final long fs = (size == null) ? 10L : size;
 
-        userService.findByEmail(email.trim());
 
         if (email.trim().isEmpty())
             throw new IllegalArgumentException("TicketsServiceImpl.findAllByUserEmail :: email cannot be empty");

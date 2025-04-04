@@ -14,6 +14,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.Filter;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.BooleanOperator;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
+import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import dev.razafindratelo.tapakilaBackend.entity.token.RefreshToken;
 import dev.razafindratelo.tapakilaBackend.exception.ActionNotAllowedException;
 import dev.razafindratelo.tapakilaBackend.exception.BadRequestException;
@@ -75,6 +76,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         );
         String imageUrl = BASE_URL + user.getEmail();
         user.setImgProfilePath(imageUrl);
+
+        if (user.getUserRole() == null) user.setUserRole(UserRole.USER);
 
         return user;
     }

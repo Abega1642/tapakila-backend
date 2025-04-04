@@ -9,6 +9,7 @@ import dev.razafindratelo.tapakilaBackend.entity.criteria.*;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.AvailableColumn;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.OperatorType;
 import dev.razafindratelo.tapakilaBackend.entity.criteria.enums.TableName;
+import dev.razafindratelo.tapakilaBackend.entity.enums.UserRole;
 import dev.razafindratelo.tapakilaBackend.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -207,7 +208,9 @@ public class UserDao implements DAO<User> {
             ResultSet rs = findStmt.executeQuery();
             
             if (rs.next()) {
-                return Optional.of(userMapper.mapFrom(rs));
+                var user = userMapper.mapFrom(rs);
+                if (user.getUserRole() == null) user.setUserRole(UserRole.USER);
+                return Optional.of(user);
             }
             return Optional.empty();
 

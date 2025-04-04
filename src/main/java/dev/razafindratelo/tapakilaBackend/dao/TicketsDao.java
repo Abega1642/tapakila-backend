@@ -398,7 +398,7 @@ public class TicketsDao {
             while (rs.next()) {
                 tickets.add(ticketsMapper.mapFrom(rs));
             }
-
+			System.out.println("This is all tickets related to " + userEmail + " and " +  eventId  + " " + tickets);
             return tickets;
 
         } catch (SQLException e) {
@@ -420,7 +420,7 @@ public class TicketsDao {
 
 		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-			stmt.setLong(1, page);
+			stmt.setLong(1, size);
 			stmt.setLong(2, size * (page - 1));
 			ResultSet rs = stmt.executeQuery();
 
@@ -430,6 +430,7 @@ public class TicketsDao {
 
 				results.add(new PrimitiveEventTicketDto(id, tps));
 			}
+			System.out.println("All events " + results);
 
 			return results;
 

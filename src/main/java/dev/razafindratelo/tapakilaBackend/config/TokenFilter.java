@@ -51,7 +51,8 @@ public class TokenFilter extends OncePerRequestFilter {
 			"/buy-tickets",
 			"/tickets",
 			"/user/update-role",
-			"/user/details/"
+			"/user/details/",
+			"/users"
 	);
 
     @Override
