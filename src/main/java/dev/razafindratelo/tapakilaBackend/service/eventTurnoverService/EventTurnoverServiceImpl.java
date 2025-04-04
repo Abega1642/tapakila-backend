@@ -15,16 +15,16 @@ public class EventTurnoverServiceImpl implements EventTurnoverService {
 
     @Override
     public List<EventTurnover> finAll(Long page, Long size) {
-        long finalPage = (page == null) ? 1 : page;
-        long finalSize = (size == null) ? 10 : size;
+        long finalPage = (page == null) ? 1L : page;
+        long finalSize = (size == null) ? 10L : size;
 
         return eventTurnoverDao.findAll(finalPage, finalSize);
     }
 
     @Override
     public List<EventTurnover> finAllAtAGivenDate(LocalDate date, Long page, Long size) {
-        long finalPage = (page == null) ? 1 : page;
-        long finalSize = (size == null) ? 10 : size;
+        long finalPage = (page == null) ? 1L : page;
+        long finalSize = (size == null) ? 10L : size;
 
         return eventTurnoverDao.findAllAtAGivenDate(date, finalPage, finalSize);
     }

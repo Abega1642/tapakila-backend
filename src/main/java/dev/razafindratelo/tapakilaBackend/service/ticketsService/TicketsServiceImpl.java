@@ -122,4 +122,20 @@ public class TicketsServiceImpl implements TicketsService {
 
 		return results;
     }
+
+	@Override
+	public EventTicketDto findAllByUserEmailByEventId(String userEmail, String eventId) {
+		final User user = userService.findByEmail(userEmail);
+		final Event event = eventService.findById(eventId);
+
+		if (event.getId() == null) throw new IllegalArgumentException("Event id not found");
+		
+		var res = ticketsDao.findAllByUserEmailAndEventId(userEmail, eventId);
+
+		var trans = new EventTicketDto(event, res);
+
+		trans.getAssociatedTickets().forEach(tkt -> tkt.setQrCodePath(BASE_URL + tkt.getId()));
+
+		return trans;
+	}
 }

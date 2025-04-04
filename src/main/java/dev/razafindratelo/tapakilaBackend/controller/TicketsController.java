@@ -31,4 +31,12 @@ public class TicketsController {
     ) {
         return ResponseEntity.ok(ticketsService.findAllByUserEmail(userEmail, page, size));
     }
+
+	@GetMapping("/tickets/{userEmail}/{eventId}")
+    public ResponseEntity<EventTicketDto> findAllByUserEmail(
+            @PathVariable String userEmail,
+			@PathVariable String eventId
+    ) {
+        return ResponseEntity.ok(ticketsService.findAllByUserEmailByEventId(userEmail, eventId));
+    }
 }

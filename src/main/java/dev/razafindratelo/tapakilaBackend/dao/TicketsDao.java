@@ -245,6 +245,11 @@ public class TicketsDao {
         }
     }
 
+	public List<Tickets> findAllByUserEmailAndEventId(String email, String evId) {
+		Connection connection = dataSource.getConnection(TicketsDao.class.getName());
+
+		return findAllByUserEmailAndEventId(email, evId, connection);	
+	}
 
     public List<Tickets> findAllByUserEmailAndEventId(String userEmail, String eventId, Connection connection) {
         String sql =
@@ -437,5 +442,8 @@ public class TicketsDao {
 			throw new RuntimeException("TicketsDao.getAllEventRelatedToUserTicket " + e);
 		}
 	}
+
+
+	
 
 }

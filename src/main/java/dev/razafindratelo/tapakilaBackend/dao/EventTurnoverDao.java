@@ -164,7 +164,7 @@ public class EventTurnoverDao {
             findStmt.setInt(2, date.getMonthValue());
             findStmt.setDate(3, null);
             findStmt.setDate(4, Date.valueOf(date));
-            findStmt.setLong(5, page);
+            findStmt.setLong(5, size);
             findStmt.setLong(6, size * (page - 1));
 
             ResultSet rs = findStmt.executeQuery();
