@@ -12,7 +12,7 @@ You can find the frontend side of this Tapakila application here : [https://gith
 
 ## OAS (API SPECIFICATION) :
 
-API documentation of Tapakila App can be found here : [Api_Documentation](docs/api.yml)
+API documentation of Tapakila App can be found here : [Api_Documentation](docs/tapakila.yaml)
 
 ---
 
