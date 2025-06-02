@@ -55,16 +55,16 @@ API documentation of Tapakila App can be found here : [Api_Documentation](docs/t
 
 - **Java** with **Spring Boot**
 - **Spring Security**, **JDBC** (for technical reasons)
-- **PostgreSQL** (or other relational database)
-- **QR Code generation library**
-- **Java mail sender**
+- **PostgreSQL**( with *plpgSQL*)
+- **QR Code generation library - Google zxing**
+- **Java mail**
 - **RESTful APIs**
 
 ---
 
 ## 📫 Contact
 
-For more information, contact the Tapakila Team – 3BEW.
+For more information, contact the Tapakila Team – 3BEW OR send an email to a.razafindratelo@gmail.com
 
 ---
 
