@@ -5,6 +5,16 @@ Tapakila is an event ticketing platform that enables users to browse, purchase, 
 > **Author**: TapakilaTeam - 3BEW
 
 ---
+## Ui/Ux repository :
+You can find the frontend side of this Tapakila application here : [https://github.com/Tsantanny/tapakila-frontend-website.git](https://github.com/Tsantanny/tapakila-frontend-website.git)
+
+---
+
+## OAS (API SPECIFICATION) :
+
+API documentation of Tapakila App can be found here : [Api_Documentation](docs/api.yml)
+
+---
 
 ## 🚀 Features
 
